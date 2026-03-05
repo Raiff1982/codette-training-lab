@@ -85,7 +85,7 @@ def detect_device() -> tuple[str, bool]:
     """
     if torch.cuda.is_available():
         device_name = torch.cuda.get_device_name(0)
-        vram_gb = torch.cuda.get_device_properties(0).total_mem / (1024 ** 3)
+        vram_gb = torch.cuda.get_device_properties(0).total_memory / (1024 ** 3)
         return "cuda", True
     elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
         return "mps", False
@@ -557,7 +557,7 @@ def main():
     logger.info(f"Device: {device}, Quantization: {use_quantization}")
 
     if device == "cuda":
-        vram = torch.cuda.get_device_properties(0).total_mem / (1024 ** 3)
+        vram = torch.cuda.get_device_properties(0).total_memory / (1024 ** 3)
         logger.info(f"GPU: {torch.cuda.get_device_name(0)} ({vram:.1f} GB VRAM)")
 
     try:
