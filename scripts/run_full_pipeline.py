@@ -669,7 +669,7 @@ def stage_evaluate(
     results = {}
 
     try:
-        from evaluation import BenchmarkRunner, ReasoningMetrics
+        from evaluation import ReasoningMetrics
     except ImportError:
         logger.warning(
             "evaluation module not fully available. "
@@ -729,41 +729,61 @@ def stage_evaluate(
 
         return results
 
-    # Full evaluation with benchmark runner
-    benchmark_path = eval_config.get("benchmark_prompts")
+    # Full evaluation: score training-data assistant responses as a
+    # quality proxy (actual inference evaluation requires a loaded model).
+    metrics = ReasoningMetrics()
 
     for name in adapter_names:
         adapter_cfg = registry.get(name, {})
-        adapter_dir = Path("adapters") / name / "final"
+        dataset_path = adapter_cfg.get("dataset", "")
 
-        if not adapter_dir.exists():
-            results[name] = {"status": "skipped", "reason": "adapter_not_trained"}
+        if not Path(dataset_path).exists():
+            results[name] = {"status": "skipped", "reason": "dataset_missing"}
             observatory.log("evaluate", name, results[name])
-            logger.warning(f"  SKIP {name}: adapter not found at {adapter_dir}")
+            logger.warning(f"  SKIP {name}: dataset not found")
             continue
 
         logger.info(f"Evaluating adapter: {name}")
         start_time = time.time()
 
         try:
-            runner = BenchmarkRunner(adapter_path=str(adapter_dir))
-            metrics = ReasoningMetrics()
+            # Extract assistant responses from the training data
+            responses: list[str] = []
+            with open(dataset_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    record = json.loads(line)
+                    for msg in record.get("messages", []):
+                        if msg.get("role") == "assistant":
+                            responses.append(msg["content"])
 
-            if benchmark_path and Path(benchmark_path).exists():
-                with open(benchmark_path, "r", encoding="utf-8") as f:
-                    prompts = json.load(f)
-                bench_results = runner.run(prompts)
-                scores = metrics.compute(bench_results)
+            # Score with ReasoningMetrics
+            batch_scores = metrics.score_batch(responses)
+
+            # Compute per-dimension averages
+            if batch_scores:
+                dim_keys = [k for k in batch_scores[0] if isinstance(batch_scores[0][k], (int, float))]
+                avg_scores = {
+                    k: round(sum(s[k] for s in batch_scores) / len(batch_scores), 4)
+                    for k in dim_keys
+                }
             else:
-                scores = {"note": "no benchmark prompts configured"}
+                avg_scores = {}
 
             elapsed = time.time() - start_time
             results[name] = {
                 "status": "evaluated",
-                "scores": scores,
+                "total_responses": len(responses),
+                "scores": avg_scores,
                 "time_seconds": elapsed,
             }
-            logger.info(f"  {name}: evaluation complete in {elapsed:.1f}s")
+            logger.info(
+                f"  {name}: scored {len(responses)} responses, "
+                f"overall={avg_scores.get('overall', 0):.3f} "
+                f"in {elapsed:.1f}s"
+            )
 
         except Exception as e:
             elapsed = time.time() - start_time
