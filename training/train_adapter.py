@@ -396,7 +396,7 @@ def train(
         gradient_checkpointing_kwargs={"use_reentrant": False},
         optim="adamw_torch",
         report_to="none",
-        remove_unused_columns=False,
+        remove_unused_columns=True,
         seed=42,
         dataloader_pin_memory=True,
         max_grad_norm=1.0,
