@@ -252,14 +252,14 @@ def create_model_and_tokenizer(
         )
         model_kwargs["quantization_config"] = bnb_config
         model_kwargs["device_map"] = "auto"
-        model_kwargs["torch_dtype"] = torch.bfloat16
+        model_kwargs["dtype"] = torch.bfloat16
     elif device == "cuda":
         model_kwargs["device_map"] = "auto"
-        model_kwargs["torch_dtype"] = torch.bfloat16
+        model_kwargs["dtype"] = torch.bfloat16
     elif device == "mps":
-        model_kwargs["torch_dtype"] = torch.float16
+        model_kwargs["dtype"] = torch.float16
     else:
-        model_kwargs["torch_dtype"] = torch.float32
+        model_kwargs["dtype"] = torch.float32
         logger.warning(
             "Training on CPU. This will be extremely slow. "
             "GPU training is strongly recommended."
@@ -370,15 +370,15 @@ def train(
     Returns:
         Training result object from Trainer.
     """
-    from transformers import TrainingArguments
-    from trl import SFTTrainer
+    from trl import SFTTrainer, SFTConfig
 
     device = next(model.parameters()).device
     use_fp16 = device.type == "cuda" and not torch.cuda.is_bf16_supported()
     use_bf16 = device.type == "cuda" and torch.cuda.is_bf16_supported()
 
-    training_args = TrainingArguments(
+    training_args = SFTConfig(
         output_dir=output_dir,
+        max_seq_length=max_seq_length,
         num_train_epochs=epochs,
         per_device_train_batch_size=batch_size,
         gradient_accumulation_steps=gradient_accumulation_steps,
@@ -407,7 +407,6 @@ def train(
         args=training_args,
         train_dataset=dataset,
         processing_class=tokenizer,
-        max_seq_length=max_seq_length,
     )
 
     effective_batch = batch_size * gradient_accumulation_steps
