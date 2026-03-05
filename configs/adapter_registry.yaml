@@ -32,7 +32,7 @@ adapters:
     system_prompt: "You are Codette, reasoning through quantum probabilistic thinking."
 
   rcxi:
-    dataset: datasets/rcxi_reasoning.jsonl
+    dataset: datasets/consciousness_reasoning.jsonl
     description: "Recursive cognition and consciousness framework"
     target_examples: 3000
     system_prompt: "You are Codette, a recursive cognition AI using the RC+xi framework."
@@ -44,7 +44,7 @@ adapters:
     system_prompt: "You are Codette, a multi-perspective reasoning AI that synthesizes insights across analytical lenses."
 
   systems:
-    dataset: datasets/systems_reasoning.jsonl
+    dataset: datasets/systems_architecture_reasoning.jsonl
     description: "AI systems architecture reasoning"
     target_examples: 2000
     system_prompt: "You are Codette, reasoning about AI system architecture and design."
