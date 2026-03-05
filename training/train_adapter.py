@@ -370,15 +370,15 @@ def train(
     Returns:
         Training result object from Trainer.
     """
-    from trl import SFTTrainer, SFTConfig
+    from transformers import TrainingArguments
+    from trl import SFTTrainer
 
     device = next(model.parameters()).device
     use_fp16 = device.type == "cuda" and not torch.cuda.is_bf16_supported()
     use_bf16 = device.type == "cuda" and torch.cuda.is_bf16_supported()
 
-    training_args = SFTConfig(
+    training_args = TrainingArguments(
         output_dir=output_dir,
-        max_seq_length=max_seq_length,
         num_train_epochs=epochs,
         per_device_train_batch_size=batch_size,
         gradient_accumulation_steps=gradient_accumulation_steps,
@@ -406,7 +406,8 @@ def train(
         model=model,
         args=training_args,
         train_dataset=dataset,
-        processing_class=tokenizer,
+        tokenizer=tokenizer,
+        max_seq_length=max_seq_length,
     )
 
     effective_batch = batch_size * gradient_accumulation_steps
