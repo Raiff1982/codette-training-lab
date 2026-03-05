@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Training artifacts (trained models - large binaries)
+adapters/*/
+!adapters/.gitkeep
+*.pt
+*.bin
+*.safetensors
+checkpoint-*/
+
+# Logs
+logs/
+observatory_metrics.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+venv/
+.venv/
