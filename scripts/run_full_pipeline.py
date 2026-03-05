@@ -234,11 +234,13 @@ def stage_generate(
                 logger.warning(f"  {name}: dataset missing at {dataset_path}")
         return results
 
+    seed = pipeline_config.get("pipeline", {}).get("seed", 42)
+    generator = DatasetGenerator(output_dir=output_dir, seed=seed)
+
     for name in adapter_names:
         adapter_cfg = registry.get(name, {})
         dataset_path = adapter_cfg.get("dataset", "")
         target_examples = adapter_cfg.get("target_examples", 2000)
-        system_prompt = adapter_cfg.get("system_prompt", "")
 
         logger.info(f"Generating dataset for: {name}")
         logger.info(f"  Target: {target_examples} examples")
@@ -246,26 +248,20 @@ def stage_generate(
 
         start_time = time.time()
         try:
-            generator = DatasetGenerator(
-                adapter_name=name,
-                system_prompt=system_prompt,
-                target_count=target_examples,
-                include_counterexamples=gen_config.get(
-                    "include_counterexamples", True
-                ),
-                counterexample_ratio=gen_config.get(
-                    "counterexample_ratio", 0.12
-                ),
-                min_response_words=gen_config.get("min_response_words", 50),
-                max_response_words=gen_config.get("max_response_words", 300),
+            generated_path = generator.generate_adapter(
+                adapter=name,
+                count=target_examples,
             )
-            count = generator.generate(output_path=dataset_path)
+            # Count the generated examples
+            count = 0
+            with open(generated_path, "r", encoding="utf-8") as f:
+                count = sum(1 for line in f if line.strip())
             elapsed = time.time() - start_time
 
             results[name] = {
                 "status": "generated",
                 "examples": count,
-                "path": dataset_path,
+                "path": generated_path,
                 "time_seconds": elapsed,
             }
             logger.info(
@@ -451,13 +447,6 @@ def stage_forge(
     logger.info("STAGE 3: Reasoning Forge")
     logger.info("=" * 60)
 
-    forge_config = pipeline_config.get("forge", {})
-    agent_names = forge_config.get(
-        "agents", ["newton", "quantum", "ethics", "philosophy", "davinci", "empathy"]
-    )
-    enable_critic = forge_config.get("enable_critic", True)
-    enable_synthesis = forge_config.get("enable_synthesis", True)
-
     results = {}
 
     try:
@@ -472,11 +461,7 @@ def stage_forge(
         return results
 
     try:
-        forge = ForgeEngine(
-            agent_names=agent_names,
-            enable_critic=enable_critic,
-            enable_synthesis=enable_synthesis,
-        )
+        forge = ForgeEngine()
     except Exception as e:
         logger.error(f"Failed to initialize forge engine: {e}")
         for name in adapter_names:
@@ -521,13 +506,20 @@ def stage_forge(
                     continue
 
                 try:
-                    forge_result = forge.process(user_msg)
-                    if forge_result and forge_result.get("synthesis"):
+                    forge_result = forge.forge_single(user_msg)
+                    synthesis = None
+                    if forge_result:
+                        # forge_single returns a chat-format dict;
+                        # extract the assistant response as the synthesis
+                        for m in forge_result.get("messages", []):
+                            if m.get("role") == "assistant":
+                                synthesis = m.get("content")
+                                break
+                    if synthesis:
                         # Enhance the assistant response with forge synthesis
                         for msg in messages:
                             if msg.get("role") == "assistant":
                                 original = msg["content"]
-                                synthesis = forge_result["synthesis"]
                                 msg["content"] = (
                                     f"{original}\n\n"
                                     f"[Multi-perspective synthesis]: {synthesis}"
