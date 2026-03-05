@@ -252,14 +252,14 @@ def create_model_and_tokenizer(
         )
         model_kwargs["quantization_config"] = bnb_config
         model_kwargs["device_map"] = "auto"
-        model_kwargs["dtype"] = torch.bfloat16
+        model_kwargs["torch_dtype"] = torch.bfloat16
     elif device == "cuda":
         model_kwargs["device_map"] = "auto"
-        model_kwargs["dtype"] = torch.bfloat16
+        model_kwargs["torch_dtype"] = torch.bfloat16
     elif device == "mps":
-        model_kwargs["dtype"] = torch.float16
+        model_kwargs["torch_dtype"] = torch.float16
     else:
-        model_kwargs["dtype"] = torch.float32
+        model_kwargs["torch_dtype"] = torch.float32
         logger.warning(
             "Training on CPU. This will be extremely slow. "
             "GPU training is strongly recommended."
