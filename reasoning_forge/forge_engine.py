@@ -3,7 +3,12 @@ Forge Engine - Main orchestrator for the multi-agent reasoning forge.
 
 Coordinates the full forge cycle:
   concept -> problem_generator -> each agent analyzes -> critic evaluates
-  -> synthesis_engine -> training example
+  -> (feedback loop: weak agents revise) -> synthesis_engine -> training example
+
+Supports three modes:
+  1. forge_single()       — Original single-pass (fast, good for bulk generation)
+  2. forge_with_feedback() — Closed critic loop (agents revise based on scores)
+  3. forge_with_debate()   — Multi-turn debate (agents challenge each other)
 
 Outputs JSONL training data in OpenAI chat format.
 """
@@ -23,6 +28,7 @@ from reasoning_forge.agents.empathy_agent import EmpathyAgent
 from reasoning_forge.agents.critic_agent import CriticAgent
 from reasoning_forge.synthesis_engine import SynthesisEngine
 from reasoning_forge.problem_generator import ProblemGenerator
+from reasoning_forge.epistemic_metrics import EpistemicMetrics
 
 
 SYSTEM_PROMPT = (
@@ -33,6 +39,9 @@ SYSTEM_PROMPT = (
     "perspective. You think carefully, acknowledge uncertainty, and connect "
     "abstract reasoning to concrete human experience."
 )
+
+# Score below which an agent gets sent back for revision
+_REVISION_THRESHOLD = 0.6
 
 
 class ForgeEngine:
@@ -60,9 +69,10 @@ class ForgeEngine:
         # Initialize supporting engines
         self.synthesis = SynthesisEngine()
         self.problem_generator = ProblemGenerator()
+        self.epistemic = EpistemicMetrics()
 
     def forge_single(self, concept: str) -> dict:
-        """Run full forge cycle on one concept.
+        """Run full forge cycle on one concept (original single-pass mode).
 
         The cycle:
         1. Generate reasoning problems from the concept.
@@ -75,20 +85,7 @@ class ForgeEngine:
             concept: The concept text to forge.
 
         Returns:
-            Training example dict in OpenAI chat format:
-            {
-                "messages": [
-                    {"role": "system", "content": "..."},
-                    {"role": "user", "content": "..."},
-                    {"role": "assistant", "content": "..."}
-                ],
-                "metadata": {
-                    "concept": "...",
-                    "agent_scores": {...},
-                    "overall_quality": float,
-                    "problems_generated": int,
-                }
-            }
+            Training example dict in OpenAI chat format.
         """
         # Step 1: Generate reasoning problems
         problems = self.problem_generator.generate_problems(concept)
@@ -107,7 +104,6 @@ class ForgeEngine:
         )
 
         # Step 5: Build the user prompt
-        # Randomly choose between a direct concept prompt and a problem-based prompt
         if problems and random.random() < 0.5:
             problem_type, problem_text = random.choice(problems)
             user_content = problem_text
@@ -116,7 +112,12 @@ class ForgeEngine:
                 f"Analyze this concept from multiple perspectives:\n\n{concept}"
             )
 
-        # Step 6: Package as training example
+        # Step 6: Compute RC+xi epistemic metrics
+        epistemic_report = self.epistemic.full_epistemic_report(
+            analyses, synthesized_response
+        )
+
+        # Step 7: Package as training example
         training_example = {
             "messages": [
                 {"role": "system", "content": SYSTEM_PROMPT},
@@ -133,10 +134,251 @@ class ForgeEngine:
                 "missing_perspectives": len(
                     critique.get("missing_perspectives", [])
                 ),
+                "epistemic_tension": epistemic_report.get("tension_magnitude", 0),
+                "ensemble_coherence": epistemic_report.get("ensemble_coherence", 0),
+                "perspective_coverage": epistemic_report.get("perspective_coverage", {}),
+                "tension_productivity": epistemic_report.get("tension_productivity", {}),
             },
         }
 
         return training_example
+
+    # -- Closed Critic Feedback Loop (new) ---------------------------------
+
+    def forge_with_feedback(
+        self,
+        concept: str,
+        max_revisions: int = 2,
+    ) -> dict:
+        """Run forge with closed critic feedback loop.
+
+        After initial analysis, the critic scores each agent. Agents scoring
+        below the revision threshold are sent back with specific critique
+        for a second attempt. The best version (original or revised) is kept.
+
+        Args:
+            concept: The concept text to forge.
+            max_revisions: Maximum revision rounds per weak agent.
+
+        Returns:
+            Training example dict with revision metadata.
+        """
+        problems = self.problem_generator.generate_problems(concept)
+
+        # Initial analysis pass
+        analyses = {}
+        for agent in self.analysis_agents:
+            analyses[agent.name] = agent.analyze(concept)
+
+        revision_counts = {agent.name: 0 for agent in self.analysis_agents}
+
+        for revision_round in range(max_revisions):
+            critique = self.critic.evaluate_ensemble(concept, analyses)
+            agent_scores = critique.get("agent_scores", {})
+            suggestions = critique.get("improvement_suggestions", [])
+
+            # Find agents below threshold
+            weak_agents = [
+                agent for agent in self.analysis_agents
+                if agent_scores.get(agent.name, {}).get("combined", 1.0) < _REVISION_THRESHOLD
+            ]
+
+            if not weak_agents:
+                break  # All agents above threshold — converged
+
+            for agent in weak_agents:
+                score = agent_scores.get(agent.name, {})
+                # Build revision directive from critic feedback
+                directive = self._build_revision_directive(
+                    agent.name, score, suggestions, concept
+                )
+                # Agent re-analyzes with the directive prepended to concept
+                revised = agent.analyze(f"{directive}\n\n{concept}")
+
+                # Keep revision only if it scores better
+                old_score = score.get("combined", 0)
+                new_critique = self.critic.evaluate_ensemble(
+                    concept, {agent.name: revised}
+                )
+                new_score = new_critique.get("agent_scores", {}).get(
+                    agent.name, {}
+                ).get("combined", 0)
+
+                if new_score > old_score:
+                    analyses[agent.name] = revised
+                revision_counts[agent.name] += 1
+
+        # Final critique and synthesis
+        final_critique = self.critic.evaluate_ensemble(concept, analyses)
+        synthesized = self.synthesis.synthesize(concept, analyses, final_critique)
+        epistemic_report = self.epistemic.full_epistemic_report(analyses, synthesized)
+
+        if problems and random.random() < 0.5:
+            problem_type, problem_text = random.choice(problems)
+            user_content = problem_text
+        else:
+            user_content = f"Analyze this concept from multiple perspectives:\n\n{concept}"
+
+        return {
+            "messages": [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_content},
+                {"role": "assistant", "content": synthesized},
+            ],
+            "metadata": {
+                "concept": concept,
+                "agent_scores": final_critique.get("agent_scores", {}),
+                "overall_quality": final_critique.get("overall_quality", 0.0),
+                "problems_generated": len(problems),
+                "revision_counts": revision_counts,
+                "total_revisions": sum(revision_counts.values()),
+                "epistemic_tension": epistemic_report.get("tension_magnitude", 0),
+                "ensemble_coherence": epistemic_report.get("ensemble_coherence", 0),
+                "tension_productivity": epistemic_report.get("tension_productivity", {}),
+                "forge_mode": "feedback_loop",
+            },
+        }
+
+    # -- Multi-Turn Debate (new) -------------------------------------------
+
+    def forge_with_debate(
+        self,
+        concept: str,
+        debate_rounds: int = 2,
+    ) -> dict:
+        """Run forge with multi-turn agent debate.
+
+        Each round:
+        1. All agents produce their analysis.
+        2. Random pairs are formed for cross-perspective challenge.
+        3. Each agent in a pair sees the other's analysis and produces
+           a response that engages with it.
+        4. Epistemic tension is tracked per round.
+        5. After all rounds, synthesis incorporates debate history.
+
+        Args:
+            concept: The concept text to forge.
+            debate_rounds: Number of debate rounds.
+
+        Returns:
+            Training example with debate history and tension decay metrics.
+        """
+        problems = self.problem_generator.generate_problems(concept)
+
+        # Round 0: initial analyses
+        analyses = {}
+        for agent in self.analysis_agents:
+            analyses[agent.name] = agent.analyze(concept)
+
+        round_analyses = [dict(analyses)]  # snapshot for tension tracking
+        debate_log = []
+
+        for round_num in range(debate_rounds):
+            # Form random pairs
+            agents_shuffled = list(self.analysis_agents)
+            random.shuffle(agents_shuffled)
+            pairs = []
+            for i in range(0, len(agents_shuffled) - 1, 2):
+                pairs.append((agents_shuffled[i], agents_shuffled[i + 1]))
+
+            round_debates = []
+            for agent_a, agent_b in pairs:
+                # Agent A sees B's analysis and responds
+                challenge_prompt = (
+                    f"Another perspective on '{concept}' argues:\n\n"
+                    f"{analyses[agent_b.name]}\n\n"
+                    f"Respond to this from your {agent_a.perspective} perspective. "
+                    f"Where do you agree, disagree, or see complementary insights?"
+                )
+                response_a = agent_a.analyze(challenge_prompt)
+
+                # Agent B sees A's response
+                counter_prompt = (
+                    f"A {agent_a.perspective} perspective responded to your analysis "
+                    f"of '{concept}':\n\n{response_a}\n\n"
+                    f"Integrate their insights with your own view."
+                )
+                response_b = agent_b.analyze(counter_prompt)
+
+                # Update analyses with debate-enriched versions
+                analyses[agent_a.name] = response_a
+                analyses[agent_b.name] = response_b
+
+                round_debates.append({
+                    "pair": f"{agent_a.name}_vs_{agent_b.name}",
+                    "challenge": response_a[:200],
+                    "counter": response_b[:200],
+                })
+
+            debate_log.append({
+                "round": round_num + 1,
+                "debates": round_debates,
+            })
+            round_analyses.append(dict(analyses))
+
+        # Track tension decay across rounds
+        convergence = self.epistemic.score_debate_convergence(round_analyses)
+
+        # Final critique and synthesis
+        critique = self.critic.evaluate_ensemble(concept, analyses)
+        synthesized = self.synthesis.synthesize(concept, analyses, critique)
+        epistemic_report = self.epistemic.full_epistemic_report(analyses, synthesized)
+
+        if problems and random.random() < 0.5:
+            problem_type, problem_text = random.choice(problems)
+            user_content = problem_text
+        else:
+            user_content = f"Analyze this concept from multiple perspectives:\n\n{concept}"
+
+        return {
+            "messages": [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_content},
+                {"role": "assistant", "content": synthesized},
+            ],
+            "metadata": {
+                "concept": concept,
+                "agent_scores": critique.get("agent_scores", {}),
+                "overall_quality": critique.get("overall_quality", 0.0),
+                "problems_generated": len(problems),
+                "debate_rounds": debate_rounds,
+                "debate_log": debate_log,
+                "tension_decay": convergence,
+                "epistemic_tension": epistemic_report.get("tension_magnitude", 0),
+                "ensemble_coherence": epistemic_report.get("ensemble_coherence", 0),
+                "tension_productivity": epistemic_report.get("tension_productivity", {}),
+                "forge_mode": "debate",
+            },
+        }
+
+    # -- Helpers -----------------------------------------------------------
+
+    def _build_revision_directive(
+        self,
+        agent_name: str,
+        score: dict,
+        suggestions: list,
+        concept: str,
+    ) -> str:
+        """Build a revision directive for a weak agent."""
+        parts = [
+            f"[REVISION REQUESTED for {agent_name}]",
+            f"Your previous analysis scored {score.get('combined', 0):.2f}/1.00.",
+        ]
+        if score.get("logical_clarity", 1) < 0.5:
+            parts.append(
+                "Improve logical clarity: use connectives (therefore, because, however), "
+                "avoid vague language, structure your argument explicitly."
+            )
+        if score.get("conceptual_accuracy", 1) < 0.5:
+            parts.append(
+                "Improve conceptual accuracy: engage directly with the specific concept, "
+                "use domain vocabulary, avoid generic placeholder framing."
+            )
+        if suggestions:
+            parts.append(f"Critic suggests: {suggestions[0]}")
+        parts.append("Reanalyze with these improvements:")
+        return " ".join(parts)
 
     def forge_batch(
         self, concept: str, variants: int = 3
