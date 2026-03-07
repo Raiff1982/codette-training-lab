@@ -27,8 +27,20 @@ observatory_metrics.json
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # Env
 .env
 venv/
 .venv/
+
+# GGUF models (multi-GB binaries)
+*.gguf
+*.gguf.backup
+
+# Claude worktrees
+.claude/worktrees/
+
+# Misc
+dataset_quality_log.json
+PLAN.md
