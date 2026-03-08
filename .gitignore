@@ -45,3 +45,5 @@ venv/
 dataset_quality_log.json
 PLAN.md
 datasets/*.jsonl
+*.png
+*.jpg
