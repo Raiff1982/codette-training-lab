@@ -55,6 +55,9 @@ class NodeState:
 
     @classmethod
     def from_array(cls, arr: list) -> "NodeState":
+        if len(arr) < 5:
+            padded = list(arr) + [0.0] * (5 - len(arr))
+            return cls(psi=padded[0], tau=padded[1], chi=padded[2], phi=padded[3], lam=padded[4])
         return cls(psi=arr[0], tau=arr[1], chi=arr[2], phi=arr[3], lam=arr[4])
 
     def energy(self) -> float:
@@ -298,6 +301,18 @@ class QuantumSpiderweb:
         self._global_tension_history.append(1.0 - gamma)
         return round(gamma, 4)
 
+    def _compute_phase_coherence_readonly(self) -> float:
+        """Compute phase coherence without mutating global tension history."""
+        if len(self.nodes) < 2:
+            return 1.0
+        angles = []
+        for node in self.nodes.values():
+            theta = math.atan2(node.state.phi, node.state.psi + 1e-10)
+            angles.append(theta)
+        mean_theta = sum(angles) / len(angles)
+        coherences = [abs(math.cos(a - mean_theta)) for a in angles]
+        return round(sum(coherences) / len(coherences), 4)
+
     # -- attractor detection -----------------------------------------------
 
     def detect_attractors(
@@ -439,7 +454,7 @@ class QuantumSpiderweb:
                 }
                 for g in self.glyphs
             ],
-            "phase_coherence": self.phase_coherence(),
+            "phase_coherence": self._compute_phase_coherence_readonly(),
             "global_tension_history": self._global_tension_history[-20:],
         }
 
@@ -453,5 +468,13 @@ class QuantumSpiderweb:
             node.tension_history = ndata.get("tension_history", [])
             node.is_collapsed = ndata.get("is_collapsed", False)
             node.attractor_id = ndata.get("attractor_id")
+        for gdata in data.get("glyphs", []):
+            web.glyphs.append(IdentityGlyph(
+                glyph_id=gdata["glyph_id"],
+                encoded_tension=gdata["encoded_tension"],
+                stability_score=gdata["stability_score"],
+                source_node=gdata["source_node"],
+                attractor_signature=gdata.get("attractor_signature"),
+            ))
         web._global_tension_history = data.get("global_tension_history", [])
         return web

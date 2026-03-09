@@ -359,7 +359,7 @@ class ReasoningMetrics:
                 overlaps.append(0.0)
         avg_overlap = sum(overlaps) / len(overlaps) if overlaps else 0.0
         # Ideal overlap is moderate (0.1-0.3); too high = repetitive
-        overlap_score = 1.0 - abs(avg_overlap - 0.2) / 0.2
+        overlap_score = 1.0 - abs(avg_overlap - 0.2) / 0.4
         overlap_score = max(overlap_score, 0.0)
 
         # Pronoun / referent continuity
