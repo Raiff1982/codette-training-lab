@@ -17,7 +17,6 @@ import argparse
 import json
 import os
 import sys
-import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -112,7 +111,7 @@ class BenchmarkRunner:
             for prompt in prompts:
                 results["total_prompts"] += 1
                 response = responses.get(prompt)
-                if not response:
+                if response is None:
                     results["missing_responses"] += 1
                     continue
                 scores = self.metrics.score_reasoning(response)

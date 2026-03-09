@@ -175,45 +175,54 @@ class CocoonSync:
     def encrypt_cocoon(self, package: CocoonPackage) -> CocoonPackage:
         """Encrypt cocoon payload with Fernet (AES-128-CBC + HMAC-SHA256).
 
-        Falls back to base64 obfuscation if cryptography is not installed.
+        Returns a new CocoonPackage; does not mutate the input.
+        Falls back to XOR obfuscation if cryptography is not installed.
         """
-        if package.raw_payload is None:
+        import copy
+        result = copy.copy(package)
+
+        if result.raw_payload is None:
             payload_json = json.dumps({
-                "cocoon_id": package.cocoon_id,
-                "node_id": package.node_id,
-                "state": package.state_snapshot,
-                "attractors": package.attractors,
-                "glyphs": package.glyphs,
-                "metrics": package.metrics,
+                "cocoon_id": result.cocoon_id,
+                "node_id": result.node_id,
+                "state": result.state_snapshot,
+                "attractors": result.attractors,
+                "glyphs": result.glyphs,
+                "metrics": result.metrics,
             }, sort_keys=True, default=str)
-            package.raw_payload = payload_json.encode()
+            result.raw_payload = payload_json.encode()
 
         if HAS_CRYPTO:
             fernet = Fernet(self.key_manager.key)
-            encrypted = fernet.encrypt(package.raw_payload)
-            package.raw_payload = encrypted
-            package.encrypted = True
+            encrypted = fernet.encrypt(result.raw_payload)
+            result.raw_payload = encrypted
+            result.encrypted = True
         else:
             # Fallback: XOR obfuscation (not real encryption — placeholder)
-            key_bytes = self.key_manager.key[:len(package.raw_payload)]
+            key_bytes = self.key_manager.key[:len(result.raw_payload)]
             obfuscated = bytes(
                 a ^ b for a, b in
-                zip(package.raw_payload, key_bytes * (len(package.raw_payload) // len(key_bytes) + 1))
+                zip(result.raw_payload, key_bytes * (len(result.raw_payload) // len(key_bytes) + 1))
             )
-            package.raw_payload = obfuscated
-            package.encrypted = True
+            result.raw_payload = obfuscated
+            result.encrypted = True
 
-        return package
+        return result
 
     # -- Step 3: Sign ------------------------------------------------------
 
     def sign_cocoon(self, package: CocoonPackage) -> CocoonPackage:
-        """Sign cocoon with HMAC-SHA256 for integrity verification."""
+        """Sign cocoon with HMAC-SHA256 for integrity verification.
+
+        Returns a new CocoonPackage; does not mutate the input.
+        """
+        import copy
+        result = copy.copy(package)
         hmac_key = self.key_manager.derive_hmac_key()
-        data_to_sign = package.raw_payload or package.payload_hash.encode()
+        data_to_sign = result.raw_payload or result.payload_hash.encode()
         signature = hmac.new(hmac_key, data_to_sign, hashlib.sha256).hexdigest()
-        package.signature = signature
-        return package
+        result.signature = signature
+        return result
 
     # -- Step 4: Verify (receiving end) ------------------------------------
 

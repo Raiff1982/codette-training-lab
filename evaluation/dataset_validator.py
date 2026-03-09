@@ -511,7 +511,11 @@ class DatasetValidator:
         # Verdict
         lines.append("")
         lines.append("-" * 70)
-        if report["invalid"] == 0 and report["exact_duplicates"] == 0:
+        if (report["invalid"] == 0
+                and report["exact_duplicates"] == 0
+                and report.get("near_duplicates", 0) == 0
+                and report.get("too_short", 0) == 0
+                and report.get("empty_content", 0) == 0):
             lines.append("  VERDICT: PASS - Dataset is clean")
         elif report["invalid"] > report["total_lines"] * 0.1:
             lines.append("  VERDICT: FAIL - Too many invalid entries (>10%)")

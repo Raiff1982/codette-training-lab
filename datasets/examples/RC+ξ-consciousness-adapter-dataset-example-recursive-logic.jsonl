@@ -1,0 +1,5 @@
+{"instruction":"What is epistemic tension in the RC+ξ framework?","output":"Epistemic tension measures the magnitude of change between successive internal states and represents the system's response to contradiction or semantic pressure."}
+
+{"instruction":"How does recursive state evolution work?","output":"Recursive state evolution updates the internal representation by combining the previous latent state with new symbolic input and bounded noise."}
+
+{"instruction":"What is an attractor manifold in RC+ξ?","output":"An attractor manifold is a stable region in latent space where recursive updates converge, forming a coherent identity structure."}
