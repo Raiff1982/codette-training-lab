@@ -1,462 +1,357 @@
 #!/usr/bin/env python3
 """
-Codette Batch Adapter Training
-================================
+Codette Shared-Model Batch Adapter Training
+--------------------------------------------
+Loads the base model ONCE and trains multiple LoRA adapters
+sequentially without reloading the 8B model.
 
-Train all adapters defined in the adapter registry sequentially.
-Reads adapter configurations from configs/adapter_registry.yaml,
-trains each one with its specified parameters, and logs metrics
-to the observatory.
-
-Usage:
-    python -m training.train_all_adapters
-    python -m training.train_all_adapters --adapters newton davinci quantum
-    python -m training.train_all_adapters --config configs/adapter_registry.yaml
+Major benefits
+--------------
+* Eliminates repeated model loads
+* Prevents GPU memory fragmentation
+* Speeds multi-adapter training
+* More stable on 8GB GPUs
 """
-
 import argparse
 import json
 import logging
-import os
 import sys
 import time
 from datetime import datetime
 from pathlib import Path
 
+import os
 import yaml
+import torch
+
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
-def setup_logging() -> logging.Logger:
-    """Configure the batch training logger.
+# ---------------------------------------------------------
+# Logging
+# ---------------------------------------------------------
 
-    Returns:
-        Configured logger instance.
-    """
+def setup_logging():
     log_dir = Path("logs")
-    log_dir.mkdir(parents=True, exist_ok=True)
+    log_dir.mkdir(exist_ok=True)
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = log_dir / f"shared_training_{ts}.log"
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_file = log_dir / f"batch_training_{timestamp}.log"
-
-    logger = logging.getLogger("codette.train_all")
+    logger = logging.getLogger("codette.shared_train")
     logger.setLevel(logging.DEBUG)
     logger.handlers.clear()
 
-    fh = logging.FileHandler(str(log_file), encoding="utf-8")
+    fh = logging.FileHandler(log_file)
     fh.setLevel(logging.DEBUG)
-    fh.setFormatter(logging.Formatter(
-        "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    ))
-    logger.addHandler(fh)
-
     ch = logging.StreamHandler(sys.stdout)
     ch.setLevel(logging.INFO)
-    ch.setFormatter(logging.Formatter(
+    fmt = logging.Formatter(
         "%(asctime)s | %(levelname)-8s | %(message)s",
-        datefmt="%H:%M:%S",
-    ))
+        "%H:%M:%S"
+    )
+    fh.setFormatter(fmt)
+    ch.setFormatter(fmt)
+    logger.addHandler(fh)
     logger.addHandler(ch)
-
     return logger
 
 
-def load_adapter_registry(config_path: str) -> dict:
-    """Load the adapter registry from YAML.
+# ---------------------------------------------------------
+# Device Detection
+# ---------------------------------------------------------
 
-    Args:
-        config_path: Path to the adapter_registry.yaml file.
+def detect_device():
+    if torch.cuda.is_available():
+        return "cuda"
+    if hasattr(torch, "xpu") and torch.xpu.is_available():
+        return "xpu"
+    if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+        return "mps"
+    return "cpu"
 
-    Returns:
-        Dictionary mapping adapter names to their configurations.
 
-    Raises:
-        FileNotFoundError: If the config file does not exist.
-        ValueError: If the config is malformed.
-    """
-    path = Path(config_path)
-    if not path.exists():
-        raise FileNotFoundError(f"Adapter registry not found: {config_path}")
+# ---------------------------------------------------------
+# Config Loaders
+# ---------------------------------------------------------
 
+def load_adapter_registry(path):
     with open(path, "r", encoding="utf-8") as f:
-        config = yaml.safe_load(f)
-
-    if not config or "adapters" not in config:
-        raise ValueError(f"Malformed adapter registry: missing 'adapters' key")
-
-    return config["adapters"]
+        cfg = yaml.safe_load(f)
+    return cfg["adapters"]
 
 
-def load_training_config(config_path: str | None = None) -> dict:
-    """Load the default training configuration.
-
-    Args:
-        config_path: Optional path to custom training config.
-
-    Returns:
-        Parsed training configuration dictionary.
-    """
-    if config_path is None:
-        config_path = Path(__file__).parent / "configs" / "default_training.yaml"
-    else:
-        config_path = Path(config_path)
-
-    with open(config_path, "r", encoding="utf-8") as f:
+def load_training_defaults(path=None):
+    if path is None:
+        path = Path("configs/default_training.yaml")
+    with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
-def log_metrics_to_observatory(
-    adapter_name: str,
-    metrics: dict,
-    logger: logging.Logger,
-) -> None:
-    """Log training metrics to the observatory metrics file.
+# ---------------------------------------------------------
+# Dataset Loader
+# ---------------------------------------------------------
 
-    Appends training results to a central metrics JSON file for
-    tracking across all adapter training runs.
+def load_jsonl_dataset(path):
+    from datasets import Dataset
+    rows = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            obj = json.loads(line)
+            if "messages" in obj:
+                rows.append(obj)
+    return Dataset.from_list(rows)
 
-    Args:
-        adapter_name: Name of the trained adapter.
-        metrics: Dictionary of training metrics.
-        logger: Logger instance.
-    """
-    observatory_file = Path("observatory_metrics.json")
 
-    existing_metrics = []
-    if observatory_file.exists():
-        try:
-            with open(observatory_file, "r", encoding="utf-8") as f:
-                existing_metrics = json.load(f)
-                if not isinstance(existing_metrics, list):
-                    existing_metrics = [existing_metrics]
-        except (json.JSONDecodeError, IOError):
-            logger.warning(
-                f"Could not read existing observatory metrics; starting fresh"
+def format_chat_messages(example, tokenizer):
+    text = tokenizer.apply_chat_template(
+        example["messages"],
+        tokenize=False,
+        add_generation_prompt=False,
+    )
+    return {"text": text}
+
+
+# ---------------------------------------------------------
+# Base Model Loader
+# ---------------------------------------------------------
+
+def load_base_model(model_name, device, logger):
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+
+    logger.info("Loading tokenizer")
+    tokenizer = AutoTokenizer.from_pretrained(
+        model_name,
+        trust_remote_code=True
+    )
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+
+    # --- XPU: streaming file I/O loading (no mmap, avoids OOM) ---
+    if device == "xpu":
+        logger.info("Intel Arc — streaming CPU load (no mmap, minimal peak memory)")
+
+        import ctypes
+        import gc
+        import struct as _struct
+        from accelerate import init_empty_weights
+        from accelerate.utils import set_module_tensor_to_device
+        from huggingface_hub import snapshot_download
+        from transformers import AutoConfig
+
+        checkpoint_dir = snapshot_download(model_name)
+        logger.info(f"Checkpoint: {checkpoint_dir}")
+        gc.collect()
+
+        model_config = AutoConfig.from_pretrained(
+            model_name, trust_remote_code=True
+        )
+        with init_empty_weights():
+            model = AutoModelForCausalLM.from_config(
+                model_config, trust_remote_code=True
             )
-            existing_metrics = []
 
-    entry = {
-        "type": "adapter_training",
-        "adapter": adapter_name,
-        "timestamp": datetime.now().isoformat(),
-        **metrics,
-    }
-    existing_metrics.append(entry)
+        _dt = {
+            "BF16": torch.bfloat16, "F16": torch.float16,
+            "F32": torch.float32, "F64": torch.float64,
+            "I64": torch.int64, "I32": torch.int32,
+            "I16": torch.int16, "I8": torch.int8,
+            "U8": torch.uint8, "BOOL": torch.bool,
+        }
 
-    with open(observatory_file, "w", encoding="utf-8") as f:
-        json.dump(existing_metrics, f, indent=2)
+        shard_files = sorted(Path(checkpoint_dir).glob("*.safetensors"))
+        logger.info(f"Loading {len(shard_files)} shards via streaming I/O")
 
-    logger.info(f"Metrics logged to observatory for adapter: {adapter_name}")
+        for i, shard_file in enumerate(shard_files):
+            logger.info(f"  Shard {i+1}/{len(shard_files)}: {shard_file.name}")
+            with open(shard_file, "rb") as fp:
+                header_size = _struct.unpack("<Q", fp.read(8))[0]
+                header = json.loads(fp.read(header_size))
+                data_start = 8 + header_size
+                for name, meta in header.items():
+                    if name == "__metadata__":
+                        continue
+                    start, end = meta["data_offsets"]
+                    nbytes = end - start
+                    buf = bytearray(nbytes)
+                    fp.seek(data_start + start)
+                    fp.readinto(buf)
+                    tensor = torch.frombuffer(
+                        buf, dtype=_dt[meta["dtype"]]
+                    ).reshape(meta["shape"])
+                    set_module_tensor_to_device(
+                        model, name, "cpu",
+                        value=tensor, dtype=torch.bfloat16,
+                    )
+                    del buf, tensor
+            gc.collect()
+            try:
+                k32 = ctypes.windll.kernel32
+                k32.SetProcessWorkingSetSize(k32.GetCurrentProcess(), -1, -1)
+            except Exception:
+                pass
+            logger.info(f"  Shard {i+1}/{len(shard_files)}: done")
 
+        model.tie_weights()
+        model.gradient_checkpointing_enable()
+        return model, tokenizer
 
-def train_single_adapter(
-    adapter_name: str,
-    adapter_config: dict,
-    training_defaults: dict,
-    output_base_dir: str,
-    logger: logging.Logger,
-) -> dict:
-    """Train a single adapter using the train_adapter module.
-
-    This function imports and calls the core training functions
-    from train_adapter.py to execute the actual training loop.
-
-    Args:
-        adapter_name: Name of the adapter to train.
-        adapter_config: Configuration for this specific adapter.
-        training_defaults: Default training parameters from config.
-        output_base_dir: Base directory for adapter outputs.
-        logger: Logger instance.
-
-    Returns:
-        Dictionary of training metrics for this adapter.
-    """
-    from training.train_adapter import (
-        load_jsonl_dataset,
-        create_model_and_tokenizer,
-        format_chat_messages,
-        apply_lora_config,
-        train,
-        detect_device,
+    # --- All other devices ---
+    logger.info("Loading base model (once)")
+    model = AutoModelForCausalLM.from_pretrained(
+        model_name,
+        dtype=torch.bfloat16,
+        device_map="auto",
+        trust_remote_code=True,
     )
 
-    dataset_path = adapter_config["dataset"]
-    output_dir = os.path.join(output_base_dir, adapter_name)
-
-    # Merge overrides with defaults
-    model_cfg = training_defaults["model"]
-    lora_cfg = training_defaults["lora"]
-    train_cfg = training_defaults["training"]
-    overrides = adapter_config.get("training_overrides", {})
-
-    epochs = overrides.get("epochs", train_cfg["epochs"])
-    batch_size = overrides.get("batch_size", train_cfg["batch_size"])
-    learning_rate = overrides.get("learning_rate", train_cfg["learning_rate"])
-    lora_rank = overrides.get("lora_rank", lora_cfg["rank"])
-    max_seq_length = overrides.get("max_seq_length", train_cfg["max_seq_length"])
-
-    logger.info(f"--- Training adapter: {adapter_name} ---")
-    logger.info(f"  Description: {adapter_config.get('description', 'N/A')}")
-    logger.info(f"  Dataset: {dataset_path}")
-    logger.info(f"  Epochs: {epochs}, LR: {learning_rate}, Rank: {lora_rank}")
-
-    # Check dataset exists
-    if not Path(dataset_path).exists():
-        logger.error(f"  Dataset not found: {dataset_path}")
-        return {
-            "status": "error",
-            "error": f"Dataset not found: {dataset_path}",
-            "final_loss": None,
-            "total_steps": 0,
-            "training_time_seconds": 0,
-        }
-
-    start_time = time.time()
-
-    try:
-        # Load dataset
-        raw_dataset = load_jsonl_dataset(dataset_path)
-        logger.info(f"  Loaded {len(raw_dataset)} examples")
-
-        # Detect device
-        device, use_quantization = detect_device()
-        logger.info(f"  Device: {device}, Quantization: {use_quantization}")
-
-        # Load model and tokenizer
-        model, tokenizer = create_model_and_tokenizer(
-            model_cfg["name"], use_quantization, device, logger
-        )
-
-        # Format dataset
-        formatted_dataset = raw_dataset.map(
-            lambda ex: format_chat_messages(ex, tokenizer),
-            remove_columns=raw_dataset.column_names,
-            desc=f"Formatting {adapter_name}",
-        )
-
-        # Apply LoRA
-        model = apply_lora_config(
-            model=model,
-            lora_rank=lora_rank,
-            lora_alpha=lora_cfg["alpha"],
-            lora_dropout=lora_cfg["dropout"],
-            target_modules=lora_cfg["target_modules"],
-            logger=logger,
-        )
-
-        # Train
-        result = train(
-            model=model,
-            tokenizer=tokenizer,
-            dataset=formatted_dataset,
-            output_dir=output_dir,
-            epochs=epochs,
-            batch_size=batch_size,
-            gradient_accumulation_steps=train_cfg["gradient_accumulation_steps"],
-            learning_rate=learning_rate,
-            max_seq_length=max_seq_length,
-            warmup_ratio=train_cfg["warmup_ratio"],
-            logging_steps=train_cfg["logging_steps"],
-            save_steps=train_cfg["save_steps"],
-            logger=logger,
-        )
-
-        elapsed = time.time() - start_time
-        metrics = {
-            "status": "success",
-            "final_loss": result.training_loss,
-            "total_steps": result.global_step,
-            "training_time_seconds": elapsed,
-            "dataset_size": len(raw_dataset),
-            "epochs": epochs,
-            "learning_rate": learning_rate,
-            "lora_rank": lora_rank,
-        }
-
-        logger.info(
-            f"  Adapter {adapter_name} trained successfully "
-            f"(loss={result.training_loss:.4f}, {elapsed:.1f}s)"
-        )
-
-        return metrics
-
-    except Exception as e:
-        elapsed = time.time() - start_time
-        logger.error(f"  Training failed for {adapter_name}: {e}", exc_info=True)
-        return {
-            "status": "error",
-            "error": str(e),
-            "final_loss": None,
-            "total_steps": 0,
-            "training_time_seconds": elapsed,
-        }
+    model.gradient_checkpointing_enable()
+    return model, tokenizer
 
 
-def print_summary(results: dict[str, dict], logger: logging.Logger) -> None:
-    """Print a training summary table.
+# ---------------------------------------------------------
+# Apply LoRA
+# ---------------------------------------------------------
 
-    Args:
-        results: Dictionary mapping adapter names to their metrics.
-        logger: Logger instance.
-    """
-    logger.info("")
-    logger.info("=" * 72)
-    logger.info("TRAINING SUMMARY")
-    logger.info("=" * 72)
+def attach_lora(model, lora_cfg, logger):
+    from peft import LoraConfig, get_peft_model, TaskType
+
+    config = LoraConfig(
+        r=lora_cfg["rank"],
+        lora_alpha=lora_cfg["alpha"],
+        lora_dropout=lora_cfg["dropout"],
+        target_modules=lora_cfg["target_modules"],
+        task_type=TaskType.CAUSAL_LM,
+        bias="none"
+    )
+    logger.info("Attaching LoRA adapter")
+    model = get_peft_model(model, config)
+    trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    total = sum(p.numel() for p in model.parameters())
     logger.info(
-        f"{'Adapter':<20} {'Status':<10} {'Loss':<10} "
-        f"{'Steps':<8} {'Time':<12}"
+        f"Trainable params: {trainable:,}/{total:,}"
     )
-    logger.info("-" * 72)
+    return model
 
-    total_time = 0.0
-    success_count = 0
-    error_count = 0
 
-    for name, metrics in results.items():
-        status = metrics.get("status", "unknown")
-        loss = metrics.get("final_loss")
-        steps = metrics.get("total_steps", 0)
-        elapsed = metrics.get("training_time_seconds", 0)
-        total_time += elapsed
+def detach_lora(model):
+    return model.base_model
 
-        loss_str = f"{loss:.4f}" if loss is not None else "N/A"
-        time_str = f"{elapsed:.1f}s"
 
-        if status == "success":
-            success_count += 1
-        else:
-            error_count += 1
+# ---------------------------------------------------------
+# Training
+# ---------------------------------------------------------
 
-        logger.info(
-            f"{name:<20} {status:<10} {loss_str:<10} "
-            f"{steps:<8} {time_str:<12}"
-        )
+def train_adapter(model, tokenizer, dataset, train_cfg, output_dir):
+    from transformers import TrainingArguments
+    from trl import SFTTrainer
 
-    logger.info("-" * 72)
-    logger.info(
-        f"Total: {success_count} succeeded, {error_count} failed, "
-        f"{total_time:.1f}s total time"
+    device = next(model.parameters()).device
+    use_bf16 = device.type in ("cuda", "xpu")
+    use_fp16 = device.type == "mps"
+
+    args = TrainingArguments(
+        output_dir=output_dir,
+        num_train_epochs=train_cfg["epochs"],
+        per_device_train_batch_size=train_cfg["batch_size"],
+        gradient_accumulation_steps=train_cfg["gradient_accumulation_steps"],
+        learning_rate=train_cfg["learning_rate"],
+        warmup_ratio=train_cfg.get("warmup_ratio", 0.03),
+        logging_steps=train_cfg["logging_steps"],
+        save_steps=train_cfg["save_steps"],
+        fp16=use_fp16,
+        bf16=use_bf16,
+        report_to="none",
     )
-    logger.info("=" * 72)
+
+    trainer = SFTTrainer(
+        model=model,
+        args=args,
+        train_dataset=dataset,
+        tokenizer=tokenizer,
+        dataset_text_field="text",
+        max_seq_length=train_cfg["max_seq_length"],
+    )
+
+    result = trainer.train()
+    trainer.save_model(output_dir)
+    return result
 
 
-def parse_args() -> argparse.Namespace:
-    """Parse command-line arguments."""
-    parser = argparse.ArgumentParser(
-        description="Train all Codette adapters from the registry",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    )
-    parser.add_argument(
-        "--config",
-        type=str,
-        default="configs/adapter_registry.yaml",
-        help="Path to adapter registry YAML",
-    )
-    parser.add_argument(
-        "--training-config",
-        type=str,
-        default=None,
-        help="Path to training defaults YAML",
-    )
-    parser.add_argument(
-        "--adapters",
-        nargs="+",
-        default=None,
-        help="Specific adapter names to train (default: all)",
-    )
-    parser.add_argument(
-        "--output-dir",
-        type=str,
-        default="adapters",
-        help="Base output directory for trained adapters",
-    )
-    parser.add_argument(
-        "--skip-observatory",
-        action="store_true",
-        help="Skip logging metrics to observatory",
-    )
-    return parser.parse_args()
-
+# ---------------------------------------------------------
+# Main Training Loop
+# ---------------------------------------------------------
 
 def main():
-    """Main entry point for batch adapter training."""
-    args = parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--registry",
+        default="configs/adapter_registry.yaml"
+    )
+    args = parser.parse_args()
+
     logger = setup_logging()
+    registry = load_adapter_registry(args.registry)
+    defaults = load_training_defaults()
+    device = detect_device()
+    logger.info(f"Device detected: {device}")
 
-    logger.info("=== Codette Batch Adapter Training ===")
-    logger.info(f"Registry: {args.config}")
+    model_cfg = defaults["model"]
+    lora_cfg = defaults["lora"]
+    train_cfg = defaults["training"]
 
-    # Load configurations
-    try:
-        registry = load_adapter_registry(args.config)
-        training_defaults = load_training_config(args.training_config)
-    except (FileNotFoundError, ValueError) as e:
-        logger.error(f"Configuration error: {e}")
-        sys.exit(1)
+    # -----------------------------------------------------
+    # Load model ONCE
+    # -----------------------------------------------------
+    model, tokenizer = load_base_model(
+        model_cfg["name"],
+        device,
+        logger
+    )
 
-    # Determine which adapters to train
-    if args.adapters:
-        adapter_names = args.adapters
-        unknown = [n for n in adapter_names if n not in registry]
-        if unknown:
-            logger.error(
-                f"Unknown adapters: {unknown}. "
-                f"Available: {list(registry.keys())}"
-            )
-            sys.exit(1)
-    else:
-        adapter_names = list(registry.keys())
+    # -----------------------------------------------------
+    # Train adapters sequentially
+    # -----------------------------------------------------
+    for name, cfg in registry.items():
+        logger.info("")
+        logger.info(f"===== TRAINING ADAPTER: {name} =====")
 
-    logger.info(f"Training {len(adapter_names)} adapters: {adapter_names}")
+        dataset_path = cfg["dataset"]
+        raw_dataset = load_jsonl_dataset(dataset_path)
 
-    # Train each adapter
-    results: dict[str, dict] = {}
-    total_start = time.time()
+        cpu_workers = max(1, os.cpu_count() - 1)
+        logger.info(f"Tokenizing with {cpu_workers} workers")
+        dataset = raw_dataset.map(
+            lambda ex: format_chat_messages(ex, tokenizer),
+            remove_columns=raw_dataset.column_names,
+            num_proc=cpu_workers,
+            desc=f"Tokenizing {name}",
+        )
 
-    for i, adapter_name in enumerate(adapter_names, 1):
+        model = attach_lora(model, lora_cfg, logger)
+
+        out_dir = Path("adapters") / name
+        out_dir.mkdir(parents=True, exist_ok=True)
+
+        start = time.time()
+        result = train_adapter(
+            model,
+            tokenizer,
+            dataset,
+            train_cfg,
+            str(out_dir)
+        )
+        elapsed = time.time() - start
+
         logger.info(
-            f"\n[{i}/{len(adapter_names)}] Training: {adapter_name}"
+            f"{name} complete — loss {result.training_loss:.4f} "
+            f"in {elapsed:.1f}s"
         )
 
-        adapter_config = registry[adapter_name]
-        metrics = train_single_adapter(
-            adapter_name=adapter_name,
-            adapter_config=adapter_config,
-            training_defaults=training_defaults,
-            output_base_dir=args.output_dir,
-            logger=logger,
-        )
-
-        results[adapter_name] = metrics
-
-        # Log to observatory
-        if not args.skip_observatory:
-            log_metrics_to_observatory(adapter_name, metrics, logger)
-
-    total_elapsed = time.time() - total_start
-    logger.info(f"\nAll training completed in {total_elapsed:.1f}s")
-
-    # Print summary
-    print_summary(results, logger)
-
-    # Save full results
-    results_path = Path("logs") / "batch_training_results.json"
-    with open(results_path, "w", encoding="utf-8") as f:
-        json.dump(
-            {
-                "timestamp": datetime.now().isoformat(),
-                "total_time_seconds": total_elapsed,
-                "adapters": results,
-            },
-            f,
-            indent=2,
-        )
-    logger.info(f"Full results saved to: {results_path}")
-
-    # Exit with error if any adapter failed
-    if any(m.get("status") == "error" for m in results.values()):
-        sys.exit(1)
+        model = detach_lora(model)
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        elif hasattr(torch, "xpu") and torch.xpu.is_available():
+            torch.xpu.empty_cache()
 
 
 if __name__ == "__main__":

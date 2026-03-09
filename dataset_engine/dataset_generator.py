@@ -152,7 +152,7 @@ class DatasetGenerator:
             self._stats["total_generated"] = len(examples)
 
             # Progress reporting
-            if len(examples) % 500 == 0:
+            if len(examples) > 0 and len(examples) % 500 == 0:
                 elapsed = time.time() - start_time
                 rate = len(examples) / elapsed if elapsed > 0 else 0
                 logger.info(

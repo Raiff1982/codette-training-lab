@@ -6,7 +6,6 @@ vs deterministic outcomes, entanglement and correlations, and wave-particle
 duality analogies.
 """
 
-import random
 from reasoning_forge.agents.base_agent import ReasoningAgent
 
 

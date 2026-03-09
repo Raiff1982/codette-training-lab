@@ -195,10 +195,12 @@ class ForgeEngine:
                 # Agent re-analyzes with the directive prepended to concept
                 revised = agent.analyze(f"{directive}\n\n{concept}")
 
-                # Keep revision only if it scores better
+                # Keep revision only if it scores better (evaluate in full ensemble context)
                 old_score = score.get("combined", 0)
+                test_analyses = dict(analyses)
+                test_analyses[agent.name] = revised
                 new_critique = self.critic.evaluate_ensemble(
-                    concept, {agent.name: revised}
+                    concept, test_analyses
                 )
                 new_score = new_critique.get("agent_scores", {}).get(
                     agent.name, {}
@@ -274,12 +276,14 @@ class ForgeEngine:
         debate_log = []
 
         for round_num in range(debate_rounds):
-            # Form random pairs
+            # Form random pairs (odd agent out debates the first agent)
             agents_shuffled = list(self.analysis_agents)
             random.shuffle(agents_shuffled)
             pairs = []
             for i in range(0, len(agents_shuffled) - 1, 2):
                 pairs.append((agents_shuffled[i], agents_shuffled[i + 1]))
+            if len(agents_shuffled) % 2 == 1:
+                pairs.append((agents_shuffled[-1], agents_shuffled[0]))
 
             round_debates = []
             for agent_a, agent_b in pairs:
