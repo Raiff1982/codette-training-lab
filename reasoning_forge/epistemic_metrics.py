@@ -89,6 +89,17 @@ _PERSPECTIVE_VOCAB = {
         "community", "relationship", "wellbeing", "vulnerability",
         "understanding", "perspective", "human", "care", "dignity",
     },
+    "Consciousness": {
+        "awareness", "recursive", "self-referential", "metacognition",
+        "emergence", "cognition", "reflection", "introspection",
+        "sentience", "subjective", "qualia", "binding", "attention",
+        "intentionality", "phenomenal",
+    },
+    "SystemsArchitecture": {
+        "modular", "scalable", "interface", "pattern", "component",
+        "microservice", "pipeline", "throughput", "latency", "resilience",
+        "abstraction", "coupling", "cohesion", "architecture",
+    },
 }
 
 

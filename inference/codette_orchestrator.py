@@ -53,13 +53,12 @@ ADAPTER_DIR = Path(r"J:\codette-training-lab\adapters")
 ADAPTER_GGUF_MAP = {
     "newton": ADAPTER_DIR / "newton-lora-f16.gguf",
     "davinci": ADAPTER_DIR / "davinci-lora-f16.gguf",
-    # Add as they get trained:
-    # "empathy": ADAPTER_DIR / "empathy-lora-f16.gguf",
-    # "philosophy": ADAPTER_DIR / "philosophy-lora-f16.gguf",
-    # "quantum": ADAPTER_DIR / "quantum-lora-f16.gguf",
-    # "consciousness": ADAPTER_DIR / "consciousness-lora-f16.gguf",
-    # "multi_perspective": ADAPTER_DIR / "multi_perspective-lora-f16.gguf",
-    # "systems_architecture": ADAPTER_DIR / "systems_architecture-lora-f16.gguf",
+    "empathy": ADAPTER_DIR / "empathy-lora-f16.gguf",
+    "philosophy": ADAPTER_DIR / "philosophy-lora-f16.gguf",
+    "quantum": ADAPTER_DIR / "quantum-lora-f16.gguf",
+    "consciousness": ADAPTER_DIR / "consciousness-lora-f16.gguf",
+    "multi_perspective": ADAPTER_DIR / "multi_perspective-lora-f16.gguf",
+    "systems_architecture": ADAPTER_DIR / "systems_architecture-lora-f16.gguf",
 }
 
 # System prompts per adapter
@@ -205,16 +204,44 @@ class CodetteOrchestrator:
         return clean_text, total_tokens, tool_results_log
 
     def _needs_tools(self, query: str) -> bool:
-        """Detect if a query likely needs file/code tool access."""
-        tool_keywords = [
-            "show me", "read", "file", "code", "pipeline", "config",
-            "adapter", "dataset", "directory", "folder", "project",
-            "source", "script", "how does", "where is", "find",
-            "search", "look at", "check", "what's in", "list",
-            "architecture", "implementation", "training",
-        ]
+        """Detect if a query is asking about the Codette PROJECT/CODEBASE.
+
+        Only trigger tools for questions about the project itself, not for
+        general domain questions like 'How does gravity work?'.
+        """
         q = query.lower()
-        return any(kw in q for kw in tool_keywords)
+
+        # Must mention the project/codebase context explicitly
+        project_anchors = [
+            "codette", "this project", "the project", "the codebase",
+            "this repo", "the repo", "our code", "the code",
+            "show me the", "read the file", "read file",
+            "what files", "which files", "list files",
+        ]
+        has_project_context = any(anchor in q for anchor in project_anchors)
+
+        # Specific code/project keywords (only trigger WITH project context)
+        code_keywords = [
+            "pipeline", "config", "adapter", "dataset", "directory",
+            "folder", "source", "script", "implementation",
+            "server", "forge", "spiderweb", "cocoon",
+        ]
+
+        # Strong triggers that always mean "look at the codebase"
+        strong_triggers = [
+            "show me the code", "read the file", "what's in the",
+            "look at the file", "open the file", "search the code",
+            "project structure", "project summary", "file structure",
+            "what files", "which files", "list files", "list the",
+        ]
+
+        if any(t in q for t in strong_triggers):
+            return True
+
+        if has_project_context and any(kw in q for kw in code_keywords):
+            return True
+
+        return False
 
     def _auto_gather_context(self, query: str) -> str:
         """Server-side tool execution: gather relevant file context BEFORE
@@ -304,15 +331,16 @@ class CodetteOrchestrator:
         if self.verbose:
             print(f"  Reason: {route.reasoning}")
 
-        # If query needs tools, gather context server-side and inject it
-        if self._needs_tools(query):
-            print(f"  [tool-eligible query — auto-gathering context]")
-            return self._tool_augmented_generate(query, route)
-
+        # Multi-perspective first (most important routing decision)
         if route.multi_perspective and len(route.all_adapters) > 1:
             return self._multi_perspective_generate(query, route)
-        else:
-            return self._single_generate(query, route)
+
+        # Only use tools for explicit codebase/project queries
+        if self._needs_tools(query):
+            print(f"  [project query — auto-gathering context]")
+            return self._tool_augmented_generate(query, route)
+
+        return self._single_generate(query, route)
 
     def _tool_augmented_generate(self, query: str, route: RouteResult):
         """Generate with auto-gathered file context injected into the prompt."""
@@ -408,18 +436,32 @@ Based on the context above, answer the user's question. Reference specific files
         }
 
     def _synthesize(self, query: str, perspectives: dict):
-        """Combine multiple perspective responses into a unified answer."""
+        """Combine multiple perspective responses into a unified answer.
+
+        Enhanced with DreamReweaver creative bridges when available.
+        """
         combined = "\n\n".join(
             f"**{name.upper()} PERSPECTIVE:**\n{text}"
             for name, text in perspectives.items()
         )
+
+        # Try DreamReweaver creative framing (VIVARA enhancement)
+        dream_frame = ""
+        try:
+            from reasoning_forge.dream_reweaver import DreamReweaver
+            dreamer = DreamReweaver(creativity=0.3)
+            dream = dreamer.synthesize(perspectives, query=query)
+            if dream.creative_frame:
+                dream_frame = f"\n\nCreative synthesis guidance:\n{dream.creative_frame}\n"
+        except Exception:
+            pass  # Graceful fallback — works without DreamReweaver
 
         synthesis_prompt = f"""You received this question: "{query}"
 
 Multiple reasoning perspectives have weighed in:
 
 {combined}
-
+{dream_frame}
 Synthesize these perspectives into a single, coherent response that:
 1. Preserves the unique insights from each perspective
 2. Notes where perspectives complement or tension each other

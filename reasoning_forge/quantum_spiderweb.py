@@ -430,6 +430,87 @@ class QuantumSpiderweb:
 
         return (mean_tension < self.tension_threshold and is_decreasing), mean_tension
 
+    # -- entropy measurement (VIVARA-inspired) --------------------------------
+
+    def shannon_entropy(self) -> float:
+        """Compute Shannon entropy of the node state distribution.
+
+        Higher entropy = more diverse cognitive states (exploring).
+        Lower entropy = more uniform states (converged/stuck).
+        """
+        if not self.nodes or not HAS_NUMPY:
+            return 0.0
+
+        # Discretize the psi dimension into bins
+        psi_values = [n.state.psi for n in self.nodes.values()]
+        arr = np.array(psi_values)
+
+        # Histogram with 10 bins
+        counts, _ = np.histogram(arr, bins=10)
+        probs = counts / counts.sum()
+        probs = probs[probs > 0]  # Remove zeros for log
+
+        return -float(np.sum(probs * np.log2(probs)))
+
+    def decoherence_rate(self, window: int = 10) -> float:
+        """Rate of coherence loss over recent history.
+
+        Positive = losing coherence (decoherencing).
+        Negative = gaining coherence (converging).
+        Zero = stable.
+        """
+        if len(self._global_tension_history) < window:
+            return 0.0
+
+        recent = self._global_tension_history[-window:]
+        if len(recent) < 2:
+            return 0.0
+
+        # Linear regression slope of tension over the window
+        n = len(recent)
+        x_mean = (n - 1) / 2.0
+        y_mean = sum(recent) / n
+        numerator = sum((i - x_mean) * (recent[i] - y_mean) for i in range(n))
+        denominator = sum((i - x_mean) ** 2 for i in range(n))
+
+        if denominator == 0:
+            return 0.0
+        return round(numerator / denominator, 6)
+
+    # -- lifeform spawning (VIVARA-inspired) --------------------------------
+
+    def spawn_lifeform(self, seed: str, connect_to: int = 3) -> str:
+        """Spawn a new high-coherence node from a conceptual seed.
+
+        Inspired by VIVARA's lifeform spawning: when a conversation topic
+        generates high enough resonance, it becomes its own node in the web.
+
+        Args:
+            seed: A seed string (e.g., topic name) to generate the node ID
+            connect_to: How many existing nodes to connect to
+
+        Returns:
+            The new node's ID
+        """
+        import hashlib as _hashlib
+        node_id = f"life_{_hashlib.md5(seed.encode()).hexdigest()[:8]}"
+
+        if node_id in self.nodes:
+            return node_id  # Already exists
+
+        # High-coherence birth state (psi=0.8, balanced other dims)
+        state = NodeState(psi=0.8, tau=0.0, chi=0.7, phi=0.3, lam=0.5)
+        self.add_node(node_id, state)
+
+        # Connect to existing nodes (random subset)
+        import random as _random
+        existing = [nid for nid in self.nodes if nid != node_id]
+        peers = _random.sample(existing, min(connect_to, len(existing)))
+        for peer in peers:
+            self.connect(node_id, peer)
+
+        return node_id
+
     # -- serialization -----------------------------------------------------
 
     def to_dict(self) -> Dict:

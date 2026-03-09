@@ -42,6 +42,18 @@ try:
 except ImportError:
     HAS_COCOON = False
 
+try:
+    from reasoning_forge.dream_reweaver import DreamReweaver
+    HAS_DREAMER = True
+except ImportError:
+    HAS_DREAMER = False
+
+try:
+    from reasoning_forge.quantum_optimizer import QuantumOptimizer, QualitySignal
+    HAS_OPTIMIZER = True
+except ImportError:
+    HAS_OPTIMIZER = False
+
 # Agent names matching the 8 adapters
 AGENT_NAMES = [
     "newton", "davinci", "empathy", "philosophy",
@@ -80,6 +92,8 @@ class CodetteSession:
         self.spiderweb = None
         self.metrics_engine = None
         self.cocoon_sync = None
+        self.dream_reweaver = None
+        self.optimizer = None
 
         # Metrics history
         self.coherence_history: List[float] = []
@@ -87,6 +101,8 @@ class CodetteSession:
         self.attractors: List[Dict] = []
         self.glyphs: List[Dict] = []
         self.perspective_usage: Dict[str, int] = {}
+        self.lifeforms: List[str] = []  # Spawned concept nodes
+        self.dream_history: List[Dict] = []  # Dream field results
 
         # Initialize subsystems
         self._init_cocoon()
@@ -109,6 +125,12 @@ class CodetteSession:
                 )
             except Exception:
                 self.cocoon_sync = None
+
+        if HAS_DREAMER:
+            self.dream_reweaver = DreamReweaver(creativity=0.3)
+
+        if HAS_OPTIMIZER:
+            self.optimizer = QuantumOptimizer()
 
     def add_message(self, role: str, content: str, metadata: Optional[Dict] = None):
         """Add a message to the session history."""
@@ -140,14 +162,16 @@ class CodetteSession:
 
         # Propagate belief through the spiderweb from the active adapter
         try:
-            if adapter_name in [n.node_id for n in self.spiderweb.nodes.values()]:
+            if adapter_name in self.spiderweb.nodes:
                 node = self.spiderweb.nodes[adapter_name]
                 # Boost the active adapter's psi (thought magnitude)
                 node.state.psi = min(node.state.psi + 0.1, 2.0)
                 node.state.tau += 0.05  # Temporal progression
 
-                # Propagate belief outward
-                self.spiderweb.propagate_belief(adapter_name, max_hops=2)
+                # Propagate the boosted belief outward (BUG FIX: pass belief state)
+                self.spiderweb.propagate_belief(
+                    adapter_name, belief=node.state, max_hops=2
+                )
 
             # If multi-perspective, entangle the participating agents
             if perspectives and len(perspectives) > 1:
@@ -179,6 +203,23 @@ class CodetteSession:
             # Check convergence
             is_converging, mean_tension = self.spiderweb.check_convergence()
             self.tension_history.append(mean_tension)
+
+            # Feed quality signal to optimizer if available
+            if HAS_OPTIMIZER and self.optimizer:
+                try:
+                    signal = QualitySignal(
+                        timestamp=time.time(),
+                        adapter=adapter_name,
+                        coherence=coherence,
+                        tension=mean_tension,
+                        productivity=0.5,  # Default, updated by epistemic report
+                        response_length=0,
+                        multi_perspective=perspectives is not None and len(perspectives) > 1,
+                        user_continued=True,
+                    )
+                    self.optimizer.record_signal(signal)
+                except Exception:
+                    pass
 
         except Exception as e:
             print(f"  [cocoon] Spiderweb update error: {e}")
@@ -218,11 +259,8 @@ class CodetteSession:
                 state["spiderweb"] = {
                     "nodes": {
                         nid: {
-                            "state": [
-                                n["state"]["psi"], n["state"]["tau"],
-                                n["state"]["chi"], n["state"]["phi"],
-                                n["state"]["lam"],
-                            ],
+                            # BUG FIX: to_dict() stores state as a list [psi,tau,chi,phi,lam]
+                            "state": n["state"],
                             "neighbors": n.get("neighbors", []),
                             "tension_history": n.get("tension_history", [])[-10:],
                         }
@@ -231,6 +269,10 @@ class CodetteSession:
                     "phase_coherence": web_dict.get("phase_coherence", 0),
                     "attractors": self.attractors,
                     "glyphs": self.glyphs[-10:],  # Last 10
+                    # New VIVARA-inspired metrics
+                    "entropy": self.spiderweb.shannon_entropy(),
+                    "decoherence_rate": self.spiderweb.decoherence_rate(),
+                    "lifeforms": self.lifeforms[-20:],
                 }
             except Exception:
                 state["spiderweb"] = None
@@ -247,6 +289,15 @@ class CodetteSession:
             "glyph_count": len(self.glyphs),
         }
 
+        # Optimizer tuning state
+        if HAS_OPTIMIZER and self.optimizer:
+            state["optimizer"] = self.optimizer.get_tuning_report()
+        else:
+            state["optimizer"] = None
+
+        # Dream history
+        state["dream_history"] = self.dream_history[-10:]
+
         return state
 
     def to_dict(self) -> Dict:
@@ -261,10 +312,17 @@ class CodetteSession:
             "attractors": self.attractors,
             "glyphs": self.glyphs,
             "perspective_usage": self.perspective_usage,
+            "lifeforms": self.lifeforms,
+            "dream_history": self.dream_history,
         }
         if self.spiderweb:
             try:
                 data["spiderweb_state"] = self.spiderweb.to_dict()
+            except Exception:
+                pass
+        if HAS_OPTIMIZER and self.optimizer:
+            try:
+                data["optimizer_state"] = self.optimizer.to_dict()
             except Exception:
                 pass
         return data
@@ -280,10 +338,17 @@ class CodetteSession:
         self.attractors = data.get("attractors", [])
         self.glyphs = data.get("glyphs", [])
         self.perspective_usage = data.get("perspective_usage", {})
+        self.lifeforms = data.get("lifeforms", [])
+        self.dream_history = data.get("dream_history", [])
 
         if self.spiderweb and "spiderweb_state" in data:
             try:
                 self.spiderweb = QuantumSpiderweb.from_dict(data["spiderweb_state"])
+            except Exception:
+                pass
+        if HAS_OPTIMIZER and self.optimizer and "optimizer_state" in data:
+            try:
+                self.optimizer = QuantumOptimizer.from_dict(data["optimizer_state"])
             except Exception:
                 pass
 
