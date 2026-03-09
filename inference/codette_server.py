@@ -133,6 +133,11 @@ def _worker_thread():
                                           if isinstance(result.get("adapters"), list) else "base")
                 perspectives = result.get("perspectives")
 
+                # For single-adapter responses, create a perspectives dict
+                # so the spiderweb always updates
+                if not perspectives:
+                    perspectives = {adapter_used: result["response"]}
+
                 _session.add_message("user", query)
                 _session.add_message("assistant", result["response"], metadata={
                     "adapter": adapter_used,
@@ -143,9 +148,9 @@ def _worker_thread():
 
                 _session.update_after_response(route, adapter_used, perspectives)
 
-                # Compute epistemic metrics if multi-perspective
+                # Compute epistemic metrics (always, not just multi-perspective)
                 epistemic = None
-                if perspectives and len(perspectives) > 1:
+                if perspectives and len(perspectives) >= 1:
                     epistemic = _session.compute_epistemic_report(
                         perspectives, result["response"]
                     )
@@ -181,6 +186,11 @@ def _worker_thread():
             # Add epistemic report if available
             if epistemic:
                 response_data["epistemic"] = epistemic
+
+            # Add tool usage info if any tools were called
+            tools_used = result.get("tools_used", [])
+            if tools_used:
+                response_data["tools_used"] = tools_used
 
             response_q.put(response_data)
 

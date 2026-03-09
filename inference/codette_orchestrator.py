@@ -30,9 +30,17 @@ except Exception:
 
 from llama_cpp import Llama
 
-# Import the router
+# Import the router and tools
 sys.path.insert(0, str(Path(__file__).parent))
 from adapter_router import AdapterRouter, RouteResult
+from codette_tools import (
+    ToolRegistry, parse_tool_calls, strip_tool_calls, has_tool_calls,
+    build_tool_system_prompt,
+)
+
+# Tool system
+_tool_registry = ToolRegistry()
+MAX_TOOL_ROUNDS = 3  # Max tool call → result → generate cycles
 
 # ================================================================
 # Configuration
@@ -68,7 +76,7 @@ ADAPTER_PROMPTS = {
 }
 
 GEN_KWARGS = dict(
-    max_tokens=400,
+    max_tokens=1024,
     temperature=0.7,
     top_p=0.9,
     stop=["<|eot_id|>", "<|end_of_text|>"],
@@ -78,7 +86,7 @@ GEN_KWARGS = dict(
 class CodetteOrchestrator:
     """Intelligent adapter orchestrator using llama.cpp GGUF inference."""
 
-    def __init__(self, n_ctx=2048, n_gpu_layers=0, verbose=False):
+    def __init__(self, n_ctx=4096, n_gpu_layers=0, verbose=False):
         self.n_ctx = n_ctx
         self.n_gpu_layers = n_gpu_layers
         self.verbose = verbose
@@ -126,24 +134,154 @@ class CodetteOrchestrator:
         if self.verbose:
             print(f"({time.time()-start:.1f}s)")
 
-    def generate(self, query: str, adapter_name=None, system_prompt=None):
-        """Generate a response using a specific adapter."""
+    def generate(self, query: str, adapter_name=None, system_prompt=None,
+                 enable_tools=True):
+        """Generate a response using a specific adapter, with optional tool use.
+
+        If the model outputs <tool>...</tool> tags, tools are executed and
+        results are fed back for up to MAX_TOOL_ROUNDS cycles.
+        """
         self._load_model(adapter_name)
 
         if system_prompt is None:
             system_prompt = ADAPTER_PROMPTS.get(adapter_name, ADAPTER_PROMPTS["_base"])
 
-        result = self._llm.create_chat_completion(
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": query},
-            ],
-            **GEN_KWARGS,
-        )
+        # Augment system prompt with tool instructions
+        if enable_tools:
+            system_prompt = build_tool_system_prompt(system_prompt, _tool_registry)
 
-        text = result["choices"][0]["message"]["content"].strip()
-        tokens = result["usage"]["completion_tokens"]
-        return text, tokens
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": query},
+        ]
+
+        total_tokens = 0
+        tool_results_log = []
+
+        for round_num in range(MAX_TOOL_ROUNDS + 1):
+            result = self._llm.create_chat_completion(
+                messages=messages,
+                **GEN_KWARGS,
+            )
+
+            text = result["choices"][0]["message"]["content"].strip()
+            total_tokens += result["usage"]["completion_tokens"]
+
+            # Check for tool calls
+            if enable_tools and has_tool_calls(text):
+                calls = parse_tool_calls(text)
+                if calls and round_num < MAX_TOOL_ROUNDS:
+                    # Execute tools
+                    tool_output_parts = []
+                    for tool_name, args, kwargs in calls:
+                        print(f"  [tool] {tool_name}({args})")
+                        result_text = _tool_registry.execute(tool_name, args, kwargs)
+                        tool_output_parts.append(
+                            f"<tool_result name=\"{tool_name}\">\n{result_text}\n</tool_result>"
+                        )
+                        tool_results_log.append({
+                            "tool": tool_name,
+                            "args": args,
+                            "result_preview": result_text[:200],
+                        })
+
+                    # Add assistant's tool-calling message and tool results
+                    messages.append({"role": "assistant", "content": text})
+                    messages.append({
+                        "role": "user",
+                        "content": "Tool results:\n\n" + "\n\n".join(tool_output_parts)
+                            + "\n\nNow provide your complete answer incorporating the tool results above. Do not call any more tools."
+                    })
+
+                    if self.verbose:
+                        print(f"  [tool round {round_num + 1}] {len(calls)} tool(s) executed, re-generating...")
+                    continue
+
+            # No tool calls (or final round) — we're done
+            # Strip any leftover tool tags from final response
+            clean_text = strip_tool_calls(text) if has_tool_calls(text) else text
+            break
+
+        return clean_text, total_tokens, tool_results_log
+
+    def _needs_tools(self, query: str) -> bool:
+        """Detect if a query likely needs file/code tool access."""
+        tool_keywords = [
+            "show me", "read", "file", "code", "pipeline", "config",
+            "adapter", "dataset", "directory", "folder", "project",
+            "source", "script", "how does", "where is", "find",
+            "search", "look at", "check", "what's in", "list",
+            "architecture", "implementation", "training",
+        ]
+        q = query.lower()
+        return any(kw in q for kw in tool_keywords)
+
+    def _auto_gather_context(self, query: str) -> str:
+        """Server-side tool execution: gather relevant file context BEFORE
+        sending to the model, so the model doesn't need to call tools itself.
+
+        This is the reliable approach for small models that can't do
+        structured tool calling consistently.
+        """
+        q = query.lower()
+        context_parts = []
+
+        # Map query keywords to automatic tool calls
+        auto_lookups = []
+
+        if any(k in q for k in ["pipeline", "training", "train"]):
+            auto_lookups.append(("read_file", ["scripts/run_full_pipeline.py", 1, 60]))
+            auto_lookups.append(("read_file", ["configs/adapter_registry.yaml", 1, 51]))
+
+        if any(k in q for k in ["adapter", "lora", "perspective"]):
+            auto_lookups.append(("read_file", ["configs/adapter_registry.yaml", 1, 51]))
+
+        if any(k in q for k in ["config", "setting"]):
+            auto_lookups.append(("read_file", ["configs/adapter_registry.yaml", 1, 51]))
+            auto_lookups.append(("list_files", ["configs/"]))
+
+        if any(k in q for k in ["architecture", "structure", "project", "overview"]):
+            auto_lookups.append(("project_summary", []))
+
+        if any(k in q for k in ["server", "web", "ui", "interface"]):
+            auto_lookups.append(("read_file", ["inference/codette_server.py", 1, 50]))
+
+        if any(k in q for k in ["spiderweb", "cocoon", "quantum"]):
+            auto_lookups.append(("read_file", ["reasoning_forge/quantum_spiderweb.py", 1, 50]))
+
+        if any(k in q for k in ["epistemic", "tension", "coherence", "metric"]):
+            auto_lookups.append(("read_file", ["reasoning_forge/epistemic_metrics.py", 1, 50]))
+
+        if any(k in q for k in ["dataset", "data"]):
+            auto_lookups.append(("list_files", ["datasets/", "*.jsonl"]))
+
+        if any(k in q for k in ["paper", "research", "publication"]):
+            auto_lookups.append(("file_info", ["paper/codette_paper.pdf"]))
+            auto_lookups.append(("read_file", ["paper/codette_paper.tex", 1, 40]))
+
+        if any(k in q for k in ["forge", "reasoning", "agent"]):
+            auto_lookups.append(("list_files", ["reasoning_forge/"]))
+            auto_lookups.append(("read_file", ["reasoning_forge/epistemic_metrics.py", 1, 40]))
+
+        # If no specific match, do a code search
+        if not auto_lookups:
+            # Extract key terms for search
+            skip = {"show", "me", "the", "what", "is", "how", "does", "where",
+                    "can", "you", "tell", "about", "look", "at", "find", "check"}
+            terms = [w for w in q.split() if w not in skip and len(w) > 2]
+            if terms:
+                auto_lookups.append(("search_code", [terms[0]]))
+
+        # Execute lookups
+        tool_log = []
+        for tool_name, args in auto_lookups[:3]:  # Max 3 lookups
+            print(f"  [auto-tool] {tool_name}({args})")
+            result = _tool_registry.execute(tool_name, args, {})
+            context_parts.append(f"=== {tool_name}({', '.join(str(a) for a in args)}) ===\n{result}")
+            tool_log.append({"tool": tool_name, "args": args, "result_preview": result[:200]})
+
+        context = "\n\n".join(context_parts)
+        return context, tool_log
 
     def route_and_generate(self, query: str, max_adapters=2,
                            strategy="keyword", force_adapter=None):
@@ -166,25 +304,67 @@ class CodetteOrchestrator:
         if self.verbose:
             print(f"  Reason: {route.reasoning}")
 
+        # If query needs tools, gather context server-side and inject it
+        if self._needs_tools(query):
+            print(f"  [tool-eligible query — auto-gathering context]")
+            return self._tool_augmented_generate(query, route)
+
         if route.multi_perspective and len(route.all_adapters) > 1:
             return self._multi_perspective_generate(query, route)
         else:
             return self._single_generate(query, route)
 
-    def _single_generate(self, query: str, route: RouteResult):
-        """Generate with a single adapter."""
+    def _tool_augmented_generate(self, query: str, route: RouteResult):
+        """Generate with auto-gathered file context injected into the prompt."""
         start = time.time()
-        text, tokens = self.generate(query, route.primary)
+
+        # Gather context server-side (reliable, no model cooperation needed)
+        context, tool_log = self._auto_gather_context(query)
+
+        # Build augmented query with context
+        augmented_query = f"""The user asked: {query}
+
+Here is relevant project context to help you answer:
+
+{context}
+
+Based on the context above, answer the user's question. Reference specific files, line numbers, and code when relevant. Be specific and factual."""
+
+        # Generate with context (disable model-side tools since we did it server-side)
+        text, tokens, _ = self.generate(augmented_query, route.primary, enable_tools=False)
         elapsed = time.time() - start
         tps = tokens / elapsed if elapsed > 0 else 0
 
         print(f"  [{route.primary}] ({tokens} tok, {tps:.1f} tok/s)")
+        if tool_log:
+            print(f"  [auto-tools: {', '.join(t['tool'] for t in tool_log)}]")
+
         return {
             "response": text,
             "adapter": route.primary,
             "route": route,
             "tokens": tokens,
             "time": elapsed,
+            "tools_used": tool_log,
+        }
+
+    def _single_generate(self, query: str, route: RouteResult):
+        """Generate with a single adapter."""
+        start = time.time()
+        text, tokens, tool_log = self.generate(query, route.primary, enable_tools=False)
+        elapsed = time.time() - start
+        tps = tokens / elapsed if elapsed > 0 else 0
+
+        print(f"  [{route.primary}] ({tokens} tok, {tps:.1f} tok/s)")
+        if tool_log:
+            print(f"  [tools used: {', '.join(t['tool'] for t in tool_log)}]")
+        return {
+            "response": text,
+            "adapter": route.primary,
+            "route": route,
+            "tokens": tokens,
+            "time": elapsed,
+            "tools_used": tool_log,
         }
 
     def _multi_perspective_generate(self, query: str, route: RouteResult):
@@ -199,7 +379,8 @@ class CodetteOrchestrator:
                 continue
 
             start = time.time()
-            text, tokens = self.generate(query, adapter_name)
+            text, tokens, _tool_log = self.generate(query, adapter_name,
+                                                     enable_tools=False)
             elapsed = time.time() - start
             tps = tokens / elapsed if elapsed > 0 else 0
             total_tokens += tokens
@@ -253,7 +434,7 @@ Synthesized response:"""
                 {"role": "system", "content": ADAPTER_PROMPTS["multi_perspective"]},
                 {"role": "user", "content": synthesis_prompt},
             ],
-            max_tokens=500,
+            max_tokens=1024,
             temperature=0.7,
             top_p=0.9,
             stop=["<|eot_id|>", "<|end_of_text|>"],

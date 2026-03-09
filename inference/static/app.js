@@ -62,18 +62,104 @@ function initUI() {
     newBtn.addEventListener('click', newChat);
 
     panelBtn.addEventListener('click', () => {
-        document.getElementById('side-panel').classList.toggle('collapsed');
+        const panel = document.getElementById('side-panel');
+        panel.classList.toggle('collapsed');
+        // Update button label
+        panelBtn.textContent = panel.classList.contains('collapsed') ? 'Cocoon' : 'Close';
     });
 
     maxAdapters.addEventListener('input', () => {
         document.getElementById('max-adapters-value').textContent = maxAdapters.value;
     });
 
-    // Mic button placeholder
+    // Voice input via Web Speech API
+    initVoice(micBtn);
+
+    // TTS toggle — read responses aloud when enabled
+    const ttsToggle = document.getElementById('tts-toggle');
+    if (ttsToggle) {
+        ttsToggle.addEventListener('change', () => {
+            if (ttsToggle.checked && !window.speechSynthesis) {
+                ttsToggle.checked = false;
+                ttsToggle.parentElement.title = 'Speech synthesis not supported';
+            }
+        });
+    }
+}
+
+// ── Voice Input ──
+let _recognition = null;
+let _isRecording = false;
+
+function initVoice(micBtn) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        micBtn.title = 'Voice not supported in this browser';
+        micBtn.style.opacity = '0.3';
+        micBtn.style.cursor = 'not-allowed';
+        return;
+    }
+
+    _recognition = new SpeechRecognition();
+    _recognition.continuous = false;
+    _recognition.interimResults = true;
+    _recognition.lang = 'en-US';
+
+    const input = document.getElementById('chat-input');
+
+    _recognition.onstart = () => {
+        _isRecording = true;
+        micBtn.classList.add('recording');
+        micBtn.title = 'Listening... click to stop';
+    };
+
+    _recognition.onresult = (event) => {
+        let transcript = '';
+        let isFinal = false;
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+            if (event.results[i].isFinal) isFinal = true;
+        }
+        // Show interim results in the input box
+        input.value = transcript;
+        input.style.height = 'auto';
+        input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+
+        if (isFinal) {
+            stopVoice(micBtn);
+        }
+    };
+
+    _recognition.onerror = (event) => {
+        console.log('Speech recognition error:', event.error);
+        stopVoice(micBtn);
+        if (event.error === 'not-allowed') {
+            micBtn.title = 'Microphone access denied';
+        }
+    };
+
+    _recognition.onend = () => {
+        stopVoice(micBtn);
+    };
+
     micBtn.addEventListener('click', () => {
-        micBtn.classList.toggle('recording');
-        // Voice integration hooks into existing VoiceEngine
+        if (_isRecording) {
+            _recognition.stop();
+            stopVoice(micBtn);
+        } else {
+            try {
+                _recognition.start();
+            } catch (e) {
+                console.log('Speech recognition start error:', e);
+            }
+        }
     });
+}
+
+function stopVoice(micBtn) {
+    _isRecording = false;
+    micBtn.classList.remove('recording');
+    micBtn.title = 'Voice input';
 }
 
 // ── Status Polling ──
@@ -86,6 +172,10 @@ function pollStatus() {
                 setTimeout(pollStatus, 2000);
             } else if (status.state === 'ready') {
                 hideLoadingScreen();
+            } else if (status.state === 'error') {
+                // Model failed to load — show error and dismiss loading screen
+                hideLoadingScreen();
+                updateStatus({ state: 'error', message: status.message || 'Model failed to load' });
             } else if (status.state === 'idle') {
                 // Model not loaded yet, keep polling
                 setTimeout(pollStatus, 3000);
@@ -238,7 +328,17 @@ function sendMessage() {
             time: data.time,
             perspectives: data.perspectives,
             multi_perspective: data.multi_perspective,
+            tools_used: data.tools_used,
         });
+
+        // Speak response if TTS is enabled
+        const ttsOn = document.getElementById('tts-toggle');
+        if (ttsOn && ttsOn.checked && window.speechSynthesis) {
+            const utter = new SpeechSynthesisUtterance(data.response);
+            utter.rate = 1.0;
+            utter.pitch = 1.0;
+            window.speechSynthesis.speak(utter);
+        }
 
         // Update cocoon state
         if (data.cocoon) {
@@ -285,8 +385,14 @@ function addMessage(role, content, meta = {}) {
         html += `<div class="confidence-bar"><div class="confidence-fill" style="width:${conf*100}%;background:${color}"></div></div>`;
         html += `<span>${(conf*100).toFixed(0)}%</span>`;
         html += `</div>`;
-        html += `<div class="message-text">${escapeHtml(content)}</div>`;
+        html += `<div class="message-text">${renderMarkdown(content)}</div>`;
         html += `<div class="message-meta">${meta.tokens || '?'} tokens | ${tps} tok/s | ${(meta.time||0).toFixed(1)}s</div>`;
+
+        // Tool usage indicator
+        if (meta.tools_used && meta.tools_used.length > 0) {
+            const toolNames = meta.tools_used.map(t => t.tool).join(', ');
+            html += `<div class="tools-badge">🔧 Tools: ${toolNames}</div>`;
+        }
 
         // Multi-perspective expandable
         if (meta.perspectives && Object.keys(meta.perspectives).length > 1) {
@@ -298,7 +404,7 @@ function addMessage(role, content, meta = {}) {
                 const pc = COLORS[name] || COLORS._base;
                 html += `<div class="perspective-card" style="border-left-color:${pc}">`;
                 html += `<div class="perspective-card-header" style="color:${pc}">${name}</div>`;
-                html += `<div>${escapeHtml(text)}</div></div>`;
+                html += `<div>${renderMarkdown(text)}</div></div>`;
             }
             html += `</div>`;
         }
@@ -362,14 +468,24 @@ function updateCocoonUI(state) {
 }
 
 function updateEpistemicUI(epistemic) {
-    // Could expand this with more detail
     if (epistemic.ensemble_coherence !== undefined) {
-        document.getElementById('metric-coherence').textContent =
-            epistemic.ensemble_coherence.toFixed(4);
+        const val = epistemic.ensemble_coherence;
+        document.getElementById('metric-coherence').textContent = val.toFixed(4);
+        document.getElementById('bar-coherence').style.width = (val * 100) + '%';
     }
     if (epistemic.tension_magnitude !== undefined) {
-        document.getElementById('metric-tension').textContent =
-            epistemic.tension_magnitude.toFixed(4);
+        const val = epistemic.tension_magnitude;
+        document.getElementById('metric-tension').textContent = val.toFixed(4);
+        document.getElementById('bar-tension').style.width = Math.min(val * 100, 100) + '%';
+    }
+    // Update ethical alignment if available
+    if (epistemic.ethical_alignment !== undefined) {
+        document.getElementById('metric-eta').textContent =
+            epistemic.ethical_alignment.toFixed(3);
+    } else if (epistemic.mean_coherence !== undefined) {
+        // Fall back: derive eta from mean coherence as a proxy
+        document.getElementById('metric-eta').textContent =
+            epistemic.mean_coherence.toFixed(3);
     }
 }
 
@@ -381,20 +497,47 @@ function newChat() {
             // Clear chat
             const area = document.getElementById('chat-area');
             area.innerHTML = '';
-            // Show welcome
+            // Show welcome with starter cards
             const welcome = document.createElement('div');
             welcome.className = 'welcome';
             welcome.id = 'welcome';
             welcome.innerHTML = `
                 <h2>What would you like to explore?</h2>
                 <p>Codette routes your question to the best reasoning perspective automatically.</p>
+                <div class="welcome-grid">
+                    <div class="welcome-card" onclick="askQuestion('Explain why objects fall to the ground')">
+                        <div class="welcome-card-title" style="color:var(--newton)">Newton</div>
+                        <div class="welcome-card-desc">Explain why objects fall to the ground</div>
+                    </div>
+                    <div class="welcome-card" onclick="askQuestion('Design a creative solution for sustainable cities')">
+                        <div class="welcome-card-title" style="color:var(--davinci)">DaVinci</div>
+                        <div class="welcome-card-desc">Design a creative solution for sustainable cities</div>
+                    </div>
+                    <div class="welcome-card" onclick="askQuestion('How do I cope with feeling overwhelmed?')">
+                        <div class="welcome-card-title" style="color:var(--empathy)">Empathy</div>
+                        <div class="welcome-card-desc">How do I cope with feeling overwhelmed?</div>
+                    </div>
+                    <div class="welcome-card" onclick="askQuestion('What is consciousness and can AI have it?')">
+                        <div class="welcome-card-title" style="color:var(--consciousness)">Consciousness</div>
+                        <div class="welcome-card-desc">What is consciousness and can AI have it?</div>
+                    </div>
+                </div>
             `;
             area.appendChild(welcome);
             // Reset metrics
             document.getElementById('metric-coherence').textContent = '0.00';
             document.getElementById('metric-tension').textContent = '0.00';
+            document.getElementById('metric-eta').textContent = '--';
             document.getElementById('bar-coherence').style.width = '0%';
             document.getElementById('bar-tension').style.width = '0%';
+            document.getElementById('cocoon-attractors').textContent = '0';
+            document.getElementById('cocoon-glyphs').textContent = '0';
+            // Reset spiderweb
+            if (spiderwebViz) {
+                spiderwebViz._initDefaultState();
+                spiderwebViz.coherence = 0;
+                spiderwebViz.attractors = [];
+            }
             loadSessions();
         });
 }
@@ -438,6 +581,9 @@ function loadSession(sessionId) {
         if (data.state) {
             updateCocoonUI(data.state);
         }
+    })
+    .catch(err => {
+        console.log('Failed to load session:', err);
     });
 }
 
@@ -446,4 +592,41 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+function renderMarkdown(text) {
+    // Lightweight markdown renderer — no dependencies
+    let html = escapeHtml(text);
+
+    // Code blocks: ```lang\n...\n```
+    html = html.replace(/```(\w*)\n([\s\S]*?)```/g,
+        '<pre class="code-block"><code>$2</code></pre>');
+
+    // Inline code: `code`
+    html = html.replace(/`([^`\n]+)`/g, '<code class="inline-code">$1</code>');
+
+    // Bold: **text** or __text__
+    html = html.replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/__([^_\n]+?)__/g, '<strong>$1</strong>');
+
+    // Headers: ### text (on its own line) — before bullets to avoid conflict
+    html = html.replace(/^### (.+)$/gm, '<div class="md-h3">$1</div>');
+    html = html.replace(/^## (.+)$/gm, '<div class="md-h2">$1</div>');
+    html = html.replace(/^# (.+)$/gm, '<div class="md-h1">$1</div>');
+
+    // Bullet lists: - item or * item — before italic to prevent * conflicts
+    html = html.replace(/^[\-\*] (.+)$/gm, '<div class="md-li">$1</div>');
+
+    // Numbered lists: 1. item
+    html = html.replace(/^\d+\. (.+)$/gm, '<div class="md-li md-oli">$1</div>');
+
+    // Italic: *text* or _text_ — AFTER bullets, restricted to single line
+    html = html.replace(/(?<!\w)\*([^*\n]+?)\*(?!\w)/g, '<em>$1</em>');
+    html = html.replace(/(?<!\w)_([^_\n]+?)_(?!\w)/g, '<em>$1</em>');
+
+    // Line breaks (preserve double newlines as paragraph breaks)
+    html = html.replace(/\n\n/g, '<br><br>');
+    html = html.replace(/\n/g, '<br>');
+
+    return html;
 }

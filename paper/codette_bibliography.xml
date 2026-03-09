@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Annotated XML Bibliography for Codette IEEE Synthesis
+  All entries include verification status, DOI resolution, and construct mapping
+  Generated: 2026-03-08
+-->
+<bibliography>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- CODETTE PRIMARY PUBLICATIONS (All verified, open-access) -->
+  <!-- ════════════════════════════════════════════════════════ -->
+
+  <entry id="harrison2026codettefull" type="preprint" status="VERIFIED" access="open">
+    <title>Codette: A Sovereign Modular Cognitive Architecture for Ethical Multi-Agent AI</title>
+    <authors><author orcid="0009-0003-7005-8187">Jonathan Harrison</author></authors>
+    <venue>Zenodo</venue>
+    <year>2026</year>
+    <doi>10.5281/zenodo.18913936</doi>
+    <url>https://doi.org/10.5281/zenodo.18913936</url>
+    <license>CC BY 4.0</license>
+    <archive>CERN Data Centre (permanent)</archive>
+    <constructs>RC+xi, Reasoning Forge, AEGIS, QuantumSpiderweb, Memory Cocoons, Adapter Training, All Experimental Benchmarks</constructs>
+    <sections>
+      <section id="3" label="Theoretical Foundation">RC+xi formalism: Eq. 1-3 (state evolution, tension, convergence), 6 axioms</section>
+      <section id="4.2" label="Reasoning Forge">Mean-field consensus update: Eq. 4, 5-agent + 11-agent synchronization</section>
+      <section id="4.3" label="QuantumSpiderweb">5D cognitive graph, propagation, entanglement, collapse operations</section>
+      <section id="4.4" label="Memory Cocoons">CognitionCocooner, DreamReweaver, encrypted persistence</section>
+      <section id="4.6" label="AEGIS">Ethical governance: Eq. 9, recursive anchor, kill-switch, audit trail</section>
+      <section id="5" label="Adapter Training Lab">LoRA/QLoRA config, 8 adapters, CPU pipelines (Sec 5.3)</section>
+      <section id="6" label="Formal Methods">Definitions 1-9, Theorem 1 (convergence), Table: theoretical antecedents</section>
+      <section id="7" label="Experiments">Tables 4-8: adapter scores, convergence, emergence, cocoon meta-analysis, uniqueness</section>
+    </sections>
+    <equations>
+      <eq id="1">A_{n+1} = f(A_n, s_n) + epsilon_n (recursive state evolution)</eq>
+      <eq id="2">epsilon_n = ||A_{n+1} - A_n||^2 (epistemic tension)</eq>
+      <eq id="3">lim epsilon_n = 0 implies A_n -> A* (convergence)</eq>
+      <eq id="4">lim |x_i(t) - x_j(t)| -> 0 (consensus)</eq>
+      <eq id="5">E = hbar * omega (Planck-orbital node interaction)</eq>
+      <eq id="6">S = alpha * psi_1 * psi_2* (entanglement sync)</eq>
+      <eq id="7">I(t) = kappa * [f_base + Delta_f * coherence(t) + beta*H(t)] (intent modulation)</eq>
+      <eq id="8">integral |F(k)|^2 dk &lt; epsilon_threshold (cocoon stability)</eq>
+      <eq id="9">M(t) = lambda*R(t-dt) + H(t) + gamma*Learn(t) + mu*Regret(t) (ethical anchor)</eq>
+      <eq id="10">A_{n+1}^i = f(A_n^i, 1/N sum_j A_n^j) + epsilon_n^i (forge update)</eq>
+      <eq id="11">Gamma = 1/N sum |cos(theta_i - theta_bar)| (phase coherence)</eq>
+      <eq id="12">s_i = (psi, tau, chi, phi, lambda) in R^5 (state vector, Def 1)</eq>
+      <eq id="13">E_i = ||s_i||^2 (node energy, Def 2)</eq>
+      <eq id="14">xi_ij = ||s_i - s_j||^2 (pairwise tension, Def 3)</eq>
+      <eq id="15-16">b_h = rho^h * b_0, beta_h = 0.3 * rho^h (belief propagation, Def 4)</eq>
+      <eq id="17">|mu_h - mu_k| > delta_anomaly (anomaly rejection, Def 5)</eq>
+      <eq id="18-19">S_ij = alpha*psi_i*(-psi_j), state blend (entanglement, Def 6)</eq>
+      <eq id="20">theta_i = atan2(phi_i, psi_i) (phase angle, Def 7)</eq>
+      <eq id="21">||s_i - c_k|| &lt;= r_max (attractor detection, Def 8)</eq>
+      <eq id="22">sigma_i = (1 + E_spec)^-1, threshold 0.3 (glyph stability, Def 9)</eq>
+      <eq id="23-24">xi_W &lt; xi_thresh AND decreasing trend (Theorem 1: convergence)</eq>
+      <eq id="25">xi_ij^sem = 1 - cosine(v_i, v_j) (semantic tension)</eq>
+      <eq id="26">Gamma^sem = 1/N sum cosine(v_i, c) (ensemble coherence)</eq>
+      <eq id="27">P = xi_bar * C_synth (tension productivity)</eq>
+      <eq id="28">delta_R = (xi_1 - xi_R) / xi_1 (debate convergence)</eq>
+    </equations>
+    <benchmarks>
+      <benchmark metric="ethical_alignment_aegis" value="0.826" unit="fraction" />
+      <benchmark metric="phase_coherence_gamma" value="0.27 -> 0.994" unit="dimensionless" config="11 agents, d=32, kappa=0.15, 100 steps" />
+      <benchmark metric="tension_decay" value="0.713" unit="fraction" config="120 steps, d=64" />
+      <benchmark metric="cocoon_coherence" value="0.994 +/- 0.001" unit="cosine" config="20 cocoons" />
+      <benchmark metric="cocoon_phase_stability" value="0.969 +/- 0.005" unit="dimensionless" />
+      <benchmark metric="attractor_radius" value="0.093" unit="L2 distance" config="d=64, 50 late-stage states" />
+      <benchmark metric="glyph_svd_capture" value="0.999" unit="fraction" config="4 components" />
+      <benchmark metric="spectral_energy" value="76.57" unit="dimensionless" config="threshold=100, margin=23.4%" />
+      <benchmark metric="ethical_drift" value="0.012" unit="absolute" config="50 timesteps, lambda=0.95" />
+      <benchmark metric="embodied_200agent_gamma" value="0.9894" config="200 agents" />
+      <benchmark metric="embodied_200agent_eta" value="0.908" config="200 agents" />
+      <benchmark metric="embodied_tension_decay" value="0.912" config="200 agents" />
+      <benchmark metric="training_pipeline_time" value="933.18" unit="seconds" config="seed=42, 20500 examples" />
+    </benchmarks>
+    <code_artifacts>
+      <artifact path="reasoning_forge/epistemic_metrics.py" construct="EpistemicMetrics" />
+      <artifact path="reasoning_forge/quantum_spiderweb.py" construct="QuantumSpiderweb, NodeState" />
+      <artifact path="reasoning_forge/cocoon_sync.py" construct="CocoonSync, CocoonKeyManager" />
+      <artifact path="research/experiments/codette_embodied_sim_fixed.py" construct="200-agent embodied simulation" />
+      <artifact path="scripts/run_full_pipeline.py" construct="Training pipeline" />
+      <artifact path="configs/adapter_registry.yaml" construct="Adapter configuration" />
+    </code_artifacts>
+  </entry>
+
+  <entry id="harrison2025aegisnexus" type="preprint" status="VERIFIED" access="open">
+    <title>AEGIS-Nexus: Unified Cognitive Framework for Ethical Signal Processing</title>
+    <authors><author orcid="0009-0003-7005-8187">Jonathan Harrison</author></authors>
+    <venue>Zenodo</venue>
+    <year>2025</year>
+    <doi>10.5281/zenodo.16644058</doi>
+    <url>https://doi.org/10.5281/zenodo.16644058</url>
+    <license>CC BY 4.0</license>
+    <constructs>AEGIS ethical governance, recursive ethical anchor, signal processing</constructs>
+  </entry>
+
+  <entry id="harrison2025dreamcore" type="preprint" status="VERIFIED" access="open">
+    <title>Codette DreamCore: Memory Anchoring and Wake-State Emotional Mapping Engine</title>
+    <authors><author orcid="0009-0003-7005-8187">Jonathan Harrison</author></authors>
+    <venue>Zenodo</venue>
+    <year>2025</year>
+    <doi>10.5281/zenodo.16388758</doi>
+    <url>https://doi.org/10.5281/zenodo.16388758</url>
+    <license>CC BY 4.0</license>
+    <constructs>Memory Cocoons, DreamReweaver, emotional mapping</constructs>
+  </entry>
+
+  <entry id="harrison2025dreamreal" type="preprint" status="VERIFIED" access="open">
+    <title>The Day the Dream Became Real: Recursive Memory and Emergent Identity in Ethical AI</title>
+    <authors><author orcid="0009-0003-7005-8187">Jonathan Harrison</author></authors>
+    <venue>Zenodo</venue>
+    <year>2025</year>
+    <doi>10.5281/zenodo.15685769</doi>
+    <url>https://doi.org/10.5281/zenodo.15685769</url>
+    <license>CC BY 4.0</license>
+    <constructs>Recursive identity, persistent memory, emergent cognition</constructs>
+  </entry>
+
+  <entry id="harrison2025ethics" type="preprint" status="VERIFIED" access="open">
+    <title>AI Ethics in Realtime (Codette &amp; Pidette)</title>
+    <authors><author orcid="0009-0003-7005-8187">Jonathan Harrison</author></authors>
+    <venue>Zenodo</venue>
+    <year>2025</year>
+    <doi>10.5281/zenodo.15214462</doi>
+    <url>https://doi.org/10.5281/zenodo.15214462</url>
+    <license>CC BY 4.0</license>
+    <constructs>Real-time ethics, AEGIS companion, Pi2_0</constructs>
+  </entry>
+
+  <entry id="harrison2025codetteethical" type="preprint" status="VERIFIED" access="open">
+    <title>Codette: An Ethical, Multi-Agent, Quantum-Inspired AI Development Environment</title>
+    <authors><author orcid="0009-0003-7005-8187">Jonathan Harrison</author></authors>
+    <venue>Zenodo</venue>
+    <year>2025</year>
+    <doi>10.5281/zenodo.16894230</doi>
+    <url>https://doi.org/10.5281/zenodo.16894230</url>
+    <license>CC BY 4.0</license>
+    <constructs>Full development environment</constructs>
+  </entry>
+
+  <entry id="harrison2025codettefinal" type="preprint" status="VERIFIED" access="open">
+    <title>Codette Framework Final AGI</title>
+    <authors><author orcid="0009-0003-7005-8187">Jonathan Harrison</author></authors>
+    <venue>Zenodo</venue>
+    <year>2025</year>
+    <doi>10.5281/zenodo.16728523</doi>
+    <url>https://doi.org/10.5281/zenodo.16728523</url>
+    <license>CC BY 4.0</license>
+    <constructs>Architecture specification</constructs>
+  </entry>
+
+  <entry id="harrison2025healdette" type="preprint" status="VERIFIED" access="open">
+    <title>Healdette: Ancestry-Aware Antibody Design Pipeline</title>
+    <authors><author orcid="0009-0003-7005-8187">Jonathan Harrison</author></authors>
+    <venue>Zenodo</venue>
+    <year>2025</year>
+    <doi>10.5281/zenodo.17227517</doi>
+    <url>https://doi.org/10.5281/zenodo.17227517</url>
+    <license>CC BY 4.0</license>
+    <constructs>Related system: computational antibody design</constructs>
+  </entry>
+
+  <entry id="harrison2026recursive" type="preprint" status="VERIFIED" access="open">
+    <title>Recursive AI with Codette</title>
+    <authors><author orcid="0009-0003-7005-8187">Jonathan Harrison</author></authors>
+    <venue>Zenodo</venue>
+    <year>2026</year>
+    <doi>10.5281/zenodo.18167802</doi>
+    <url>https://doi.org/10.5281/zenodo.18167802</url>
+    <license>CC BY 4.0</license>
+    <constructs>RC+xi theory, recursive cognition</constructs>
+  </entry>
+
+  <entry id="harrison2025citizenscience" type="preprint" status="VERIFIED" access="open">
+    <title>Citizen-Science Quantum and Chaos Simulations Orchestrated by the Codette AI Suite</title>
+    <authors><author orcid="0009-0003-7005-8187">Jonathan Harrison</author></authors>
+    <venue>Zenodo</venue>
+    <year>2025</year>
+    <doi>10.5281/zenodo.15342466</doi>
+    <url>https://doi.org/10.5281/zenodo.15342466</url>
+    <license>CC BY 4.0</license>
+    <constructs>QuantumSpiderweb deployment, citizen-science orchestration</constructs>
+  </entry>
+
+  <entry id="harrison2025codettehf" type="model_repository" status="VERIFIED" access="open">
+    <title>Codette (Revision a265948)</title>
+    <authors><author orcid="0009-0003-7005-8187">Jonathan Harrison</author></authors>
+    <venue>Hugging Face</venue>
+    <year>2025</year>
+    <doi>10.57967/hf/5073</doi>
+    <url>https://huggingface.co/Raiff1982/codette-lora-adapters</url>
+    <constructs>8 LoRA adapters (safetensors + GGUF), training configs, adapter registry</constructs>
+    <model_details>
+      <base_model>meta-llama/Llama-3.1-8B-Instruct</base_model>
+      <quantization>QLoRA 4-bit NF4</quantization>
+      <lora_rank>16</lora_rank>
+      <lora_alpha>32</lora_alpha>
+      <target_modules>q_proj, v_proj</target_modules>
+      <trainable_params>13631488 / 4554231808 (0.3%)</trainable_params>
+      <total_examples>20500</total_examples>
+      <adapters>
+        <adapter name="newton" examples="3000" />
+        <adapter name="davinci" examples="2500" />
+        <adapter name="empathy" examples="2500" />
+        <adapter name="philosophy" examples="2000" />
+        <adapter name="quantum" examples="2000" />
+        <adapter name="consciousness" examples="3000" />
+        <adapter name="multi_perspective" examples="2500" />
+        <adapter name="systems_architecture" examples="2000" />
+      </adapters>
+    </model_details>
+    <hardware>
+      <machine>HP OmniBook 7 Flip 16</machine>
+      <cpu>Intel Core Ultra 7 256V (Lunar Lake)</cpu>
+      <gpu>Intel Arc 140V (8 GB)</gpu>
+      <ram>16 GB</ram>
+      <pytorch>2.10.0+xpu</pytorch>
+      <cpu_training_time>8-24 hours per adapter</cpu_training_time>
+      <gpu_training_time>10-20 minutes per adapter (NVIDIA A10G)</gpu_training_time>
+    </hardware>
+  </entry>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- CANONICAL LITERATURE (All verified, standard references) -->
+  <!-- ════════════════════════════════════════════════════════ -->
+
+  <entry id="khalil2002nonlinear" type="book" status="VERIFIED" access="standard">
+    <title>Nonlinear Systems</title>
+    <authors><author>Hassan K. Khalil</author></authors>
+    <venue>Prentice Hall</venue>
+    <edition>3rd</edition>
+    <year>2002</year>
+    <relevance>Lyapunov stability theory used for RC+xi convergence guarantees</relevance>
+  </entry>
+
+  <entry id="strogatz2015nonlinear" type="book" status="VERIFIED" access="standard">
+    <title>Nonlinear Dynamics and Chaos</title>
+    <authors><author>Steven H. Strogatz</author></authors>
+    <venue>Westview Press</venue>
+    <edition>2nd</edition>
+    <year>2015</year>
+    <relevance>Attractor dynamics, bifurcations, fixed-point analysis for cognitive state space</relevance>
+  </entry>
+
+  <entry id="olfatisaber2007consensus" type="journal" status="VERIFIED" access="standard">
+    <title>Consensus and Cooperation in Networked Multi-Agent Systems</title>
+    <authors>
+      <author>Reza Olfati-Saber</author>
+      <author>J. Alex Fax</author>
+      <author>Richard M. Murray</author>
+    </authors>
+    <venue>Proceedings of the IEEE</venue>
+    <volume>95</volume>
+    <number>1</number>
+    <pages>215-233</pages>
+    <year>2007</year>
+    <relevance>Consensus dynamics on graphs: theoretical basis for Reasoning Forge synchronization</relevance>
+  </entry>
+
+  <entry id="ren2005consensus" type="journal" status="VERIFIED" access="standard">
+    <title>Consensus Seeking in Multiagent Systems Under Dynamically Changing Interaction Topologies</title>
+    <authors>
+      <author>Wei Ren</author>
+      <author>Randal W. Beard</author>
+    </authors>
+    <venue>IEEE Transactions on Automatic Control</venue>
+    <volume>50</volume>
+    <number>5</number>
+    <pages>655-661</pages>
+    <year>2005</year>
+    <relevance>Consensus under dynamic topologies: basis for entanglement synchronization</relevance>
+  </entry>
+
+  <entry id="kuramoto1984chemical" type="book" status="VERIFIED" access="standard">
+    <title>Chemical Oscillations, Waves, and Turbulence</title>
+    <authors><author>Yoshiki Kuramoto</author></authors>
+    <venue>Springer Series in Synergetics, vol. 19</venue>
+    <year>1984</year>
+    <relevance>Kuramoto model: phase coherence Gamma is a real-valued analogue of the Kuramoto order parameter</relevance>
+  </entry>
+
+  <entry id="acebron2005kuramoto" type="journal" status="VERIFIED" access="standard">
+    <title>The Kuramoto Model: A Simple Paradigm for Synchronization Phenomena</title>
+    <authors>
+      <author>Juan A. Acebron</author>
+      <author>Luis L. Bonilla</author>
+      <author>Conrad J. Perez Vicente</author>
+      <author>Felix Ritort</author>
+      <author>Renato Spigler</author>
+    </authors>
+    <venue>Reviews of Modern Physics</venue>
+    <volume>77</volume>
+    <number>1</number>
+    <pages>137-185</pages>
+    <year>2005</year>
+    <relevance>Comprehensive Kuramoto review: synchronization theory underlying phase coherence metric</relevance>
+  </entry>
+
+  <entry id="beer2000dynamical" type="journal" status="VERIFIED" access="standard">
+    <title>Dynamical Approaches to Cognitive Science</title>
+    <authors><author>Randall D. Beer</author></authors>
+    <venue>Trends in Cognitive Sciences</venue>
+    <volume>4</volume>
+    <number>3</number>
+    <pages>91-99</pages>
+    <year>2000</year>
+    <relevance>Dynamical cognition: foundational perspective for RC+xi as cognitive dynamical system</relevance>
+  </entry>
+
+  <entry id="kelso1995dynamic" type="book" status="VERIFIED" access="standard">
+    <title>Dynamic Patterns: The Self-Organization of Brain and Behavior</title>
+    <authors><author>J. A. Scott Kelso</author></authors>
+    <venue>MIT Press</venue>
+    <year>1995</year>
+    <relevance>Coordination dynamics, self-organization: glyph formation and spectral analysis</relevance>
+  </entry>
+
+  <entry id="baars1997theatre" type="journal" status="VERIFIED" access="standard">
+    <title>In the Theatre of Consciousness: Global Workspace Theory</title>
+    <authors><author>Bernard J. Baars</author></authors>
+    <venue>Journal of Consciousness Studies</venue>
+    <volume>4</volume>
+    <number>4</number>
+    <pages>292-309</pages>
+    <year>1997</year>
+    <relevance>GWT: RC+xi departs by not requiring symbolic broadcast</relevance>
+  </entry>
+
+  <entry id="friston2010free" type="journal" status="VERIFIED" access="standard">
+    <title>The Free-Energy Principle: A Unified Brain Theory?</title>
+    <authors><author>Karl Friston</author></authors>
+    <venue>Nature Reviews Neuroscience</venue>
+    <volume>11</volume>
+    <pages>127-138</pages>
+    <year>2010</year>
+    <relevance>FEP: RC+xi departs by not requiring sensory prediction</relevance>
+  </entry>
+
+  <entry id="tononi2004information" type="journal" status="VERIFIED" access="standard">
+    <title>An Information Integration Theory of Consciousness</title>
+    <authors><author>Giulio Tononi</author></authors>
+    <venue>BMC Neuroscience</venue>
+    <volume>5</volume>
+    <number>42</number>
+    <year>2004</year>
+    <relevance>IIT: RC+xi departs by using latent rather than information-theoretic space</relevance>
+  </entry>
+
+  <entry id="hu2021lora" type="preprint" status="VERIFIED" access="open">
+    <title>LoRA: Low-Rank Adaptation of Large Language Models</title>
+    <authors>
+      <author>Edward J. Hu</author><author>Yelong Shen</author><author>Phillip Wallis</author>
+      <author>Zeyuan Allen-Zhu</author><author>Yuanzhi Li</author><author>Shean Wang</author>
+      <author>Lu Wang</author><author>Weizhu Chen</author>
+    </authors>
+    <venue>arXiv:2106.09685</venue>
+    <year>2021</year>
+    <relevance>LoRA: foundational PEFT method used in all Codette adapters</relevance>
+  </entry>
+
+  <entry id="dettmers2023qlora" type="conference" status="VERIFIED" access="open">
+    <title>QLoRA: Efficient Finetuning of Quantized Language Models</title>
+    <authors>
+      <author>Tim Dettmers</author><author>Artidoro Pagnoni</author>
+      <author>Ari Holtzman</author><author>Luke Zettlemoyer</author>
+    </authors>
+    <venue>NeurIPS 2023</venue>
+    <year>2023</year>
+    <relevance>QLoRA 4-bit quantization: enables Codette's consumer-hardware training</relevance>
+  </entry>
+
+  <entry id="lasry2007mean" type="journal" status="VERIFIED" access="standard">
+    <title>Mean Field Games</title>
+    <authors><author>Jean-Michel Lasry</author><author>Pierre-Louis Lions</author></authors>
+    <venue>Japanese Journal of Mathematics</venue>
+    <volume>2</volume>
+    <number>1</number>
+    <pages>229-260</pages>
+    <year>2007</year>
+    <relevance>Mean-field theory: basis for Reasoning Forge mean-field coupling</relevance>
+  </entry>
+
+  <entry id="garcez2019neural" type="journal" status="VERIFIED" access="standard">
+    <title>Neural-Symbolic Computing: Principled Integration of ML and Reasoning</title>
+    <authors>
+      <author>Artur d'Avila Garcez</author><author>Marco Gori</author>
+      <author>Luis C. Lamb</author><author>Luciano Serafini</author>
+      <author>Michael Spranger</author><author>Son N. Tran</author>
+    </authors>
+    <venue>Journal of Applied Logics</venue>
+    <volume>6</volume>
+    <number>4</number>
+    <pages>611-632</pages>
+    <year>2019</year>
+    <relevance>Neuro-symbolic AI: Codette's explainable reasoning graph</relevance>
+  </entry>
+
+  <entry id="wooldridge2009introduction" type="book" status="VERIFIED" access="standard">
+    <title>An Introduction to MultiAgent Systems</title>
+    <authors><author>Michael Wooldridge</author></authors>
+    <venue>John Wiley &amp; Sons</venue>
+    <year>2009</year>
+    <relevance>MAS foundations: heterogeneous agent negotiation</relevance>
+  </entry>
+
+  <entry id="wu2023autogen" type="preprint" status="VERIFIED" access="open">
+    <title>AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation</title>
+    <authors><author>Qingyun Wu</author><author>et al.</author></authors>
+    <venue>arXiv:2308.08155</venue>
+    <year>2023</year>
+    <relevance>AutoGen: comparison framework (message-passing vs. attractor-based sync)</relevance>
+  </entry>
+
+  <entry id="grattafiori2024llama" type="preprint" status="VERIFIED" access="open">
+    <title>The Llama 3 Herd of Models</title>
+    <authors><author>Aaron Grattafiori</author><author>et al.</author></authors>
+    <venue>arXiv:2407.21783</venue>
+    <year>2024</year>
+    <relevance>Base model: Llama-3.1-8B-Instruct</relevance>
+  </entry>
+
+  <entry id="wei2022chain" type="conference" status="VERIFIED" access="open">
+    <title>Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</title>
+    <authors><author>Jason Wei</author><author>et al.</author></authors>
+    <venue>NeurIPS 2022</venue>
+    <year>2022</year>
+    <relevance>CoT: iterative reasoning baseline</relevance>
+  </entry>
+
+  <entry id="shinn2023reflexion" type="conference" status="VERIFIED" access="open">
+    <title>Reflexion: Language Agents with Verbal Reinforcement Learning</title>
+    <authors><author>Noah Shinn</author><author>et al.</author></authors>
+    <venue>NeurIPS 2023</venue>
+    <year>2023</year>
+    <relevance>Self-reflection: recursive reasoning baseline</relevance>
+  </entry>
+
+  <entry id="good1966speculations" type="journal" status="VERIFIED" access="standard">
+    <title>Speculations Concerning the First Ultraintelligent Machine</title>
+    <authors><author>Irving John Good</author></authors>
+    <venue>Advances in Computers</venue>
+    <volume>6</volume>
+    <pages>31-88</pages>
+    <year>1966</year>
+    <relevance>Recursive self-improvement: historical foundation</relevance>
+  </entry>
+
+  <entry id="mehrabi2021survey" type="journal" status="VERIFIED" access="standard">
+    <title>A Survey on Bias and Fairness in Machine Learning</title>
+    <authors><author>Ninareh Mehrabi</author><author>et al.</author></authors>
+    <venue>ACM Computing Surveys</venue>
+    <volume>54</volume>
+    <number>6</number>
+    <pages>1-35</pages>
+    <year>2021</year>
+    <relevance>Bias/fairness: context for AEGIS governance</relevance>
+  </entry>
+
+  <entry id="bender2021dangers" type="conference" status="VERIFIED" access="open">
+    <title>On the Dangers of Stochastic Parrots</title>
+    <authors><author>Emily M. Bender</author><author>et al.</author></authors>
+    <venue>ACM FAccT 2021</venue>
+    <pages>610-623</pages>
+    <year>2021</year>
+    <relevance>LLM risks: motivation for ethical governance</relevance>
+  </entry>
+
+  <entry id="bommasani2021opportunities" type="preprint" status="VERIFIED" access="open">
+    <title>On the Opportunities and Risks of Foundation Models</title>
+    <authors><author>Rishi Bommasani</author><author>et al.</author></authors>
+    <venue>arXiv:2108.07258</venue>
+    <year>2021</year>
+    <relevance>Foundation model gaps: motivation for modular architecture</relevance>
+  </entry>
+
+  <entry id="pfeiffer2020adapterhub" type="conference" status="VERIFIED" access="open">
+    <title>AdapterHub: A Framework for Adapting Transformers</title>
+    <authors><author>Jonas Pfeiffer</author><author>et al.</author></authors>
+    <venue>EMNLP 2020 System Demonstrations</venue>
+    <pages>46-54</pages>
+    <year>2020</year>
+    <relevance>Adapter architecture: PEFT framework</relevance>
+  </entry>
+
+  <entry id="lialin2023scaling" type="preprint" status="VERIFIED" access="open">
+    <title>Scaling Down to Scale Up: A Guide to Parameter-Efficient Fine-Tuning</title>
+    <authors><author>Vladislav Lialin</author><author>Vijeta Deshpande</author><author>Anna Rumshisky</author></authors>
+    <venue>arXiv:2303.15647</venue>
+    <year>2023</year>
+    <relevance>PEFT survey: landscape context for LoRA/QLoRA</relevance>
+  </entry>
+
+  <entry id="schuld2018supervised" type="book" status="VERIFIED" access="standard">
+    <title>Supervised Learning with Quantum Computers</title>
+    <authors><author>Maria Schuld</author><author>Francesco Petruccione</author></authors>
+    <venue>Springer</venue>
+    <year>2018</year>
+    <relevance>Quantum-inspired ML: context for QuantumSpiderweb metaphors</relevance>
+  </entry>
+
+  <entry id="vaswani2017attention" type="conference" status="VERIFIED" access="open">
+    <title>Attention Is All You Need</title>
+    <authors><author>Ashish Vaswani</author><author>et al.</author></authors>
+    <venue>NeurIPS 2017</venue>
+    <pages>5998-6008</pages>
+    <year>2017</year>
+    <relevance>Transformer architecture: base model foundation</relevance>
+  </entry>
+
+</bibliography>

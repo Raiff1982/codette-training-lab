@@ -239,10 +239,15 @@ body {
 }
 
 .message-text {
-    white-space: pre-wrap;
     word-wrap: break-word;
+    overflow-wrap: break-word;
     font-size: 14px;
     line-height: 1.7;
+}
+
+/* Keep pre-wrap only for user messages (no markdown rendering) */
+.message-user .message-text {
+    white-space: pre-wrap;
 }
 
 .message-meta {
@@ -252,6 +257,17 @@ body {
 }
 
 /* Perspectives expandable */
+.tools-badge {
+    margin-top: 8px;
+    padding: 4px 10px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    border-radius: 12px;
+    color: #10b981;
+    font-size: 11px;
+    display: inline-block;
+}
+
 .perspectives-toggle {
     margin-top: 10px;
     padding: 8px 12px;
@@ -696,15 +712,97 @@ body {
     font-size: 11px;
 }
 
+/* ── Markdown Rendering ── */
+.md-h1 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 12px 0 6px;
+    color: var(--text-primary);
+}
+
+.md-h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 10px 0 4px;
+    color: var(--text-primary);
+}
+
+.md-h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 8px 0 4px;
+    color: var(--text-secondary);
+}
+
+.md-li {
+    padding-left: 16px;
+    position: relative;
+    margin: 2px 0;
+}
+
+.md-li::before {
+    content: '\2022';
+    position: absolute;
+    left: 4px;
+    color: var(--accent);
+}
+
+.md-oli::before {
+    content: counter(md-ol) '.';
+    counter-increment: md-ol;
+}
+
+.code-block {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    overflow-x: auto;
+    font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre;
+}
+
+.code-block code {
+    background: none;
+    padding: 0;
+    border: none;
+    font-size: inherit;
+}
+
+.inline-code {
+    background: rgba(148, 163, 184, 0.15);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    font-size: 0.9em;
+}
+
+.message-text strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.message-text em {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
-    .side-panel { display: none; }
-    .side-panel.mobile-open {
-        display: flex;
+    .side-panel {
+        display: none;
         position: fixed;
         right: 0; top: 0; bottom: 0;
         z-index: 50;
         box-shadow: -8px 0 24px rgba(0,0,0,0.5);
+    }
+    /* On mobile, un-collapsing the panel shows it as an overlay */
+    .side-panel:not(.collapsed) {
+        display: flex;
     }
     .welcome-grid { grid-template-columns: 1fr; }
 }

@@ -1,0 +1,450 @@
+% ============================================================
+% IEEE-Style Synthesis: Codette Cognitive Architecture
+% Recursive Convergence, Multi-Agent Consensus, and
+% Ethical Governance in Modular AI Systems
+%
+% Generated from verified Zenodo/HuggingFace bibliographic records
+% All DOIs resolve to open-access CC BY 4.0 publications
+% ============================================================
+\documentclass[conference]{IEEEtran}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!70!black,
+  citecolor=green!50!black,
+  urlcolor=blue!60!black,
+}
+
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+
+\newcommand{\rcxi}{RC+$\xi$}
+\newcommand{\codette}{\textsc{Codette}}
+
+% ============================================================
+\title{Recursive Convergence, Multi-Agent Consensus, and Ethical Governance in Modular Cognitive AI: A Synthesis of the Codette Framework}
+
+\author{
+\IEEEauthorblockN{Jonathan Harrison}
+\IEEEauthorblockA{
+Raiff's Bits LLC, Bridge City, Texas, USA\\
+ORCID: 0009-0003-7005-8187\\
+}
+}
+
+% ============================================================
+\begin{document}
+\maketitle
+
+% ============================================================
+\begin{abstract}
+This paper presents a rigorous synthesis of the \codette{} cognitive architecture, a sovereign modular framework integrating dynamical systems theory, multi-agent consensus dynamics, and embedded ethical governance for transparent, explainable AI reasoning. The framework introduces three formally specified innovations: (1)~the RC+$\xi$ (Recursive Convergence + Epistemic Tension) formalism, which models cognitive state evolution as a constrained dynamical system with Lyapunov-like convergence guarantees~\cite{harrison2026codettefull}; (2)~a multi-agent Reasoning Forge implementing mean-field consensus synchronization across heterogeneous cognitive agents~\cite{harrison2026codettefull,olfatisaber2007consensus}; and (3)~the AEGIS ethical governance system functioning as a reinforcement-aligned recursive regulator~\cite{harrison2025aegisnexus}. The architecture is grounded in established theory from nonlinear dynamics~\cite{khalil2002nonlinear,strogatz2015nonlinear}, coupled oscillator synchronization~\cite{kuramoto1984chemical,acebron2005kuramoto}, dynamical cognition~\cite{beer2000dynamical,kelso1995dynamic}, and parameter-efficient fine-tuning~\cite{hu2021lora,dettmers2023qlora}. Nine formal definitions and one convergence theorem are presented, mapping directly to executable open-source code. Experimental benchmarks demonstrate multi-agent phase coherence $\Gamma = 0.99$ within 10 iterations across 11 agents, 71.3\% epistemic tension decay confirming attractor convergence, 82.6\% ethical alignment (AEGIS constraint satisfaction), and cocoon memory stability of 0.994 coherence across 20 persistent sessions~\cite{harrison2026codettefull}. All constructs, code, and model artifacts are published under open-access licenses with permanent DOIs.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Cognitive Architecture, Multi-Agent Consensus, Dynamical Systems, Ethical AI, Recursive Convergence, LoRA, Attractor Dynamics, Explainable AI, Neuro-Symbolic Computing
+\end{IEEEkeywords}
+
+% ============================================================
+\section{Introduction}
+\label{sec:intro}
+
+Modern large language models (LLMs) achieve remarkable generative performance but lack stable ethical alignment, modular multi-perspective cognition, and explainable reasoning architectures~\cite{bender2021dangers,bommasani2021opportunities}. The gap between raw capability and trustworthy multi-dimensional reasoning motivates frameworks that embed governance, explainability, and cognitive pluralism at the architectural level.
+
+The \codette{} framework~\cite{harrison2026codettefull} addresses these challenges through a novel integration of three established research traditions:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Dynamical systems theory}~\cite{khalil2002nonlinear,strogatz2015nonlinear}: Cognitive state evolution is modeled as a constrained dynamical system with attractor convergence, drawing from Lyapunov stability analysis and nonlinear dynamics.
+  \item \textbf{Multi-agent consensus dynamics}~\cite{olfatisaber2007consensus,ren2005consensus}: Heterogeneous reasoning agents synchronize through shared cognitive attractors via mean-field coupling~\cite{lasry2007mean}, analogous to Kuramoto oscillator synchronization~\cite{kuramoto1984chemical,acebron2005kuramoto}.
+  \item \textbf{Neuro-symbolic AI with embedded ethics}~\cite{garcez2019neural}: The AEGIS system~\cite{harrison2025aegisnexus} provides architectural ethical governance with recursive feedback, moving beyond post-hoc safety filtering.
+\end{enumerate}
+
+This synthesis presents the complete formal specification of \codette{}'s mathematical foundations, establishes precise relationships to canonical literature, reports experimental validation, and provides all bibliographic anchors for independent verification.
+
+The \codette{} research program spans 11 Zenodo publications with permanent CERN-archived DOIs~\cite{harrison2025ethics,harrison2025dreamreal,harrison2025dreamcore,harrison2025aegisnexus,harrison2025codetteethical,harrison2025codettefinal,harrison2025healdette,harrison2026recursive,harrison2025citizenscience,harrison2026codettefull}, 25 Hugging Face models~\cite{harrison2025codettehf}, and 52 GitHub repositories, all under open-access licenses.
+
+% ============================================================
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Dynamical Systems in Cognitive Modeling}
+
+Dynamical approaches to cognition model mental processes as trajectories in state space, with attractor landscapes governing stability and transitions~\cite{beer2000dynamical}. Kelso's coordination dynamics~\cite{kelso1995dynamic} demonstrates self-organization in brain and behavior through coupled oscillator systems. Strogatz~\cite{strogatz2015nonlinear} provides the mathematical toolkit---fixed points, limit cycles, bifurcations, and Lyapunov stability---that underpins attractor-based cognitive modeling. The RC+$\xi$ framework~\cite{harrison2026codettefull} applies these principles to multi-agent AI cognition, defining convergence as attractor formation in a 5-dimensional latent state space.
+
+\subsection{Multi-Agent Consensus Dynamics}
+
+Consensus protocols for networked agents are well-established in control theory~\cite{olfatisaber2007consensus,ren2005consensus}. Olfati-Saber et al.~\cite{olfatisaber2007consensus} formalize consensus on graphs with convergence guarantees under various topologies. Mean-field game theory~\cite{lasry2007mean} extends these results to large populations. The Kuramoto model~\cite{kuramoto1984chemical} provides a canonical framework for phase synchronization of coupled oscillators, with the order parameter $r = |\frac{1}{N}\sum_i e^{i\theta_i}|$ measuring collective synchronization~\cite{acebron2005kuramoto}. \codette{}'s phase coherence metric $\Gamma$ is a real-valued analogue of this order parameter~\cite{harrison2026codettefull}.
+
+Multi-agent systems (MAS) in AI enable collaborative problem-solving through heterogeneous agent negotiation~\cite{wooldridge2009introduction}. AutoGen~\cite{wu2023autogen} employs role-based assignment with message-passing. \codette{}'s Reasoning Forge~\cite{harrison2026codettefull} departs by synchronizing agents through shared cognitive attractors rather than explicit message-passing.
+
+\subsection{Recursive Reasoning and Self-Reflection}
+
+Chain-of-thought prompting~\cite{wei2022chain} and verbal self-reflection~\cite{shinn2023reflexion} demonstrate iterative LLM reasoning refinement. Good~\cite{good1966speculations} established the theoretical foundations of recursive self-improvement. The RC+$\xi$ framework~\cite{harrison2026codettefull} formalizes recursive reasoning as a dynamical process with Lyapunov-like stability guarantees~\cite{khalil2002nonlinear}, providing convergence criteria absent from prompting-based approaches.
+
+\subsection{Consciousness Theories in AI}
+
+Computational consciousness theories---Baars' Global Workspace Theory (GWT)~\cite{baars1997theatre}, Friston's Free Energy Principle (FEP)~\cite{friston2010free}, Tononi's Integrated Information Theory (IIT)~\cite{tononi2004information}---have informed AI architecture design. The RC+$\xi$ framework~\cite{harrison2026codettefull} departs from all three: it does not require symbolic broadcast (GWT), sensory prediction (FEP), or information-theoretic integration (IIT), instead defining functional cognitive convergence as attractor formation in latent state space~\cite{beer2000dynamical}.
+
+\subsection{Parameter-Efficient Fine-Tuning}
+
+LoRA~\cite{hu2021lora}, QLoRA~\cite{dettmers2023qlora}, and AdapterHub~\cite{pfeiffer2020adapterhub} enable parameter-efficient model adaptation with minimal computational overhead. Recent surveys~\cite{lialin2023scaling} catalogue the expanding landscape of efficient fine-tuning methods. \codette{}~\cite{harrison2026codettefull,harrison2025codettehf} leverages QLoRA for domain-specific cognitive specialization and contributes two novel GPU-free CPU training pipelines validated on consumer hardware.
+
+\subsection{Ethical AI Governance}
+
+Ethical AI frameworks address fairness, accountability, and transparency~\cite{mehrabi2021survey}. Most approaches apply safety filtering post-hoc. \codette{}'s AEGIS system~\cite{harrison2025aegisnexus,harrison2025ethics} integrates governance architecturally through a reinforcement-aligned ethical regulator with recursive feedback---a structural departure from filter-based approaches.
+
+% ============================================================
+\section{RC+$\xi$ Formal Specification}
+\label{sec:rcxi}
+
+The RC+$\xi$ (Recursive Convergence + Epistemic Tension) framework~\cite{harrison2026codettefull} provides the mathematical foundation for \codette{}'s cognitive state evolution, formalized as a constrained dynamical system~\cite{khalil2002nonlinear} with attractor convergence guarantees~\cite{strogatz2015nonlinear}.
+
+\subsection{State Space and Update Rule}
+
+The recursive state evolution is defined as~\cite{harrison2026codettefull}:
+\begin{equation}
+  A_{n+1} = f(A_n, s_n) + \varepsilon_n
+  \label{eq:state_evolution}
+\end{equation}
+where $A_n \in \mathbb{R}^d$ is the cognitive state at step $n$, $s_n \in \Sigma$ is symbolic input, $f: \mathbb{R}^d \times \Sigma \to \mathbb{R}^d \setminus \Sigma$ is a nonlinear transformation, and $\varepsilon_n$ quantifies epistemic tension:
+\begin{equation}
+  \varepsilon_n = \|A_{n+1} - A_n\|^2
+  \label{eq:tension}
+\end{equation}
+
+\begin{definition}[Cognitive State Vector~\cite{harrison2026codettefull}]
+\label{def:state}
+In the QuantumSpiderweb implementation, each agent $i$ maintains a state vector $\mathbf{s}_i \in \mathbb{R}^5$:
+\begin{equation}
+  \mathbf{s}_i = (\psi_i,\; \tau_i,\; \chi_i,\; \phi_i,\; \lambda_i)
+  \label{eq:state_vector}
+\end{equation}
+where $\psi$ is thought magnitude, $\tau$ is temporal progression, $\chi$ is processing velocity, $\phi \in [-1, +1]$ is emotional valence, and $\lambda$ is semantic embedding.
+\end{definition}
+
+\begin{definition}[Node Energy~\cite{harrison2026codettefull}]
+\label{def:energy}
+The energy of node $i$ is:
+\begin{equation}
+  E_i = \|\mathbf{s}_i\|^2 = \psi_i^2 + \tau_i^2 + \chi_i^2 + \phi_i^2 + \lambda_i^2
+  \label{eq:energy}
+\end{equation}
+\end{definition}
+
+\begin{definition}[Pairwise Epistemic Tension~\cite{harrison2026codettefull}]
+\label{def:tension}
+The tension between agents $i$ and $j$ is the squared $\ell_2$ distance:
+\begin{equation}
+  \xi_{ij} = \|\mathbf{s}_i - \mathbf{s}_j\|^2 = \sum_{k=1}^{5} (s_i^{(k)} - s_j^{(k)})^2
+  \label{eq:pairwise_tension}
+\end{equation}
+\end{definition}
+
+\subsection{Convergence Criterion}
+
+The system exhibits functional cognitive convergence when~\cite{harrison2026codettefull}:
+\begin{equation}
+  \lim_{n \to \infty} \varepsilon_n = 0 \implies A_n \to A^*
+  \label{eq:convergence}
+\end{equation}
+where $A^*$ is a fixed-point attractor. The monotonic decrease of $\varepsilon_n$ serves as a Lyapunov function candidate~\cite{khalil2002nonlinear}.
+
+\begin{theorem}[System Convergence~\cite{harrison2026codettefull}]
+\label{thm:convergence}
+Let $\xi^{(t)}_{\text{global}} = 1 - \Gamma^{(t)}$ denote global tension at time $t$. The system is convergent if, for a sliding window of width $W = 10$:
+\begin{equation}
+  \bar{\xi}_W = \frac{1}{W}\sum_{t=T-W}^{T} \xi^{(t)}_{\text{global}} < \xi_{\text{thresh}}
+  \label{eq:convergence_criterion}
+\end{equation}
+with $\xi_{\text{thresh}} = 0.15$, and the tension exhibits a decreasing trend:
+\begin{equation}
+  \frac{1}{W/2}\sum_{t \in \text{first half}} \xi^{(t)} > \frac{1}{W/2}\sum_{t \in \text{second half}} \xi^{(t)}
+  \label{eq:decreasing_trend}
+\end{equation}
+This constitutes a discrete-time Lyapunov-like stability criterion~\cite{khalil2002nonlinear}: $\xi_{\text{global}}$ acts as a Lyapunov function candidate whose monotonic decrease guarantees convergence to the attractor basin where $\Gamma \to 1$.
+\end{theorem}
+
+\subsection{Axiomatic Foundations}
+
+The RC+$\xi$ framework rests on six axioms~\cite{harrison2026codettefull}: (1)~Non-Collapse: the internal state cannot be fully captured by finite symbolic representation; (2)~Structured Input: a transformation gap exists between symbolic input and cognitive state; (3)~State Embedding: the internal state resides in continuous latent space $\mathbb{R}^d \setminus \Sigma$; (4)~Teleological Gradient: updates minimize epistemic tension; (5)~Recursion Gate: $f$ preserves non-symbolic richness; (6)~Stochastic Stability: perturbation noise $\varepsilon_n$ does not dominate dynamics ($\mathbb{E}[\varepsilon_n] = 0$, $\text{Var}(\varepsilon_n) < \infty$).
+
+% ============================================================
+\section{QuantumSpiderweb: Belief Propagation and Synchronization}
+\label{sec:spiderweb}
+
+The QuantumSpiderweb~\cite{harrison2026codettefull,harrison2025citizenscience} is a fully-connected graph $G = (V, E)$ implementing 5-dimensional cognitive state propagation across $N$ agent nodes.
+
+\begin{definition}[Attenuated Belief Propagation~\cite{harrison2026codettefull}]
+\label{def:belief}
+Given source node $v_0$ emitting belief $\mathbf{b}_0$, propagation proceeds via BFS with geometric attenuation. At hop $h$:
+\begin{equation}
+  \tilde{\mathbf{b}}_h = \rho^h \cdot \mathbf{b}_0, \quad \rho = 0.85
+  \label{eq:attenuation}
+\end{equation}
+The receiving node $v_k$ updates via weighted blending:
+\begin{equation}
+  \mathbf{s}_k^{(t+1)} = (1 - \beta_h)\,\mathbf{s}_k^{(t)} + \beta_h\,\tilde{\mathbf{b}}_h, \quad \beta_h = 0.3 \cdot \rho^h
+  \label{eq:belief_blend}
+\end{equation}
+This is analogous to diffusion on graphs~\cite{olfatisaber2007consensus} with bounded influence decay.
+\end{definition}
+
+\begin{definition}[Anomaly Rejection~\cite{harrison2026codettefull}]
+\label{def:anomaly}
+Updates are rejected if the incoming belief deviates excessively:
+\begin{equation}
+  A(x) = x \cdot \bigl(1 - \Theta(\delta - |x - \mu|)\bigr), \quad \delta = 2.0
+  \label{eq:anomaly}
+\end{equation}
+where $\Theta$ is the Heaviside step function. This prevents catastrophic state corruption.
+\end{definition}
+
+\begin{definition}[Entanglement Synchronization~\cite{harrison2026codettefull}]
+\label{def:entangle}
+Two agents $i, j$ with coupling strength $\alpha$ produce sync signal:
+\begin{equation}
+  S_{ij} = \alpha \cdot \psi_i \cdot (-\psi_j)
+  \label{eq:entangle_signal}
+\end{equation}
+Entanglement pulls both states toward their mutual midpoint:
+\begin{equation}
+  \mathbf{s}_i' = (1 - \beta_s)\,\mathbf{s}_i + \beta_s\,\mathbf{s}_j, \quad \beta_s = \min(|S_{ij}| \cdot 0.1,\; 0.3)
+  \label{eq:entangle_update}
+\end{equation}
+This is a consensus-type update~\cite{ren2005consensus}: iterated application drives $\|\mathbf{s}_i - \mathbf{s}_j\| \to 0$.
+\end{definition}
+
+\begin{definition}[Phase Coherence $\Gamma$~\cite{harrison2026codettefull}]
+\label{def:coherence}
+Each agent's phase angle is computed from thought magnitude and emotional valence:
+\begin{equation}
+  \theta_i = \text{atan2}(\phi_i,\; \psi_i)
+  \label{eq:phase_angle}
+\end{equation}
+Ensemble phase coherence is:
+\begin{equation}
+  \Gamma = \frac{1}{N} \sum_{i=1}^{N} \bigl|\cos(\theta_i - \bar{\theta})\bigr|, \quad \bar{\theta} = \frac{1}{N} \sum_{i=1}^{N} \theta_i
+  \label{eq:gamma}
+\end{equation}
+$\Gamma \in [0, 1]$, structurally related to the Kuramoto order parameter~\cite{kuramoto1984chemical,acebron2005kuramoto} via a real-valued $|\cos|$ analogue.
+\end{definition}
+
+\begin{definition}[Attractor Detection~\cite{harrison2026codettefull}]
+\label{def:attractor}
+Attractors are detected by greedy clustering in $\mathbb{R}^5$. Node $i$ is assigned to attractor $\mathcal{A}_k$ if:
+\begin{equation}
+  \|\mathbf{s}_i - \mathbf{c}_k\| \leq r_{\max} = 2.0
+  \label{eq:attractor}
+\end{equation}
+where $\mathbf{c}_k$ is the running mean center. Clusters with $|\mathcal{A}_k| < 2$ are discarded. This identifies basins of attraction~\cite{strogatz2015nonlinear} in cognitive state space.
+\end{definition}
+
+\begin{definition}[Identity Glyph via FFT Compression~\cite{harrison2026codettefull}]
+\label{def:glyph}
+An identity glyph $\mathcal{G}_i$ is formed from node $i$'s tension history $\{\xi_i^{(t)}\}_{t=1}^{T}$ ($T \geq 4$) by: (1)~DFT computation $\hat{\xi}_i(k) = \text{DFT}[\xi_i^{(t)}]$; (2)~retaining $K = 8$ spectral components; (3)~computing spectral energy $E_{\text{spec}} = \frac{1}{T}\sum_k |\hat{\xi}_i(k)|^2$; (4)~evaluating stability $\sigma_i = (1 + E_{\text{spec}})^{-1}$. A glyph forms only if $\sigma_i \geq 0.3$, ensuring bounded spectral energy~\cite{kelso1995dynamic}.
+\end{definition}
+
+% ============================================================
+\section{Reasoning Forge: Consensus-Based Multi-Agent Synchronization}
+\label{sec:forge}
+
+The Reasoning Forge~\cite{harrison2026codettefull} synchronizes heterogeneous cognitive agents through shared attractor dynamics rather than message-passing~\cite{wooldridge2009introduction}. This implements a mean-field consensus protocol~\cite{olfatisaber2007consensus,lasry2007mean}:
+\begin{equation}
+  A_{n+1}^{(i)} = f\!\left(A_n^{(i)},\; \frac{1}{N}\sum_{j=1}^{N} A_n^{(j)}\right) + \varepsilon_n^{(i)}
+  \label{eq:forge_update}
+\end{equation}
+where the mean field $\frac{1}{N}\sum_j A_n^{(j)}$ acts as the shared attractor signal. Synchronization is achieved when all agents converge within tolerance $\delta < 0.1$~\cite{harrison2026codettefull}:
+\begin{equation}
+  \lim_{t \to \infty} |x_i(t) - x_j(t)| \to 0 \quad \forall\; i, j
+  \label{eq:consensus}
+\end{equation}
+
+The Forge orchestrates eleven cognitive perspectives~\cite{harrison2026codettefull}: Newton (analytical), Da Vinci (creative), Human Intuition (empathetic), Neural Network (pattern recognition), Quantum Computing (probabilistic), Resilient Kindness (compassionate), Mathematical (quantitative), Philosophical (ethical), Copilot (collaborative), Bias Mitigation (fairness), and Psychological (behavioral).
+
+% ============================================================
+\section{AEGIS Ethical Governance System}
+\label{sec:aegis}
+
+The AEGIS (Adaptive Ethical Governance and Immune System)~\cite{harrison2025aegisnexus,harrison2025ethics,harrison2026codettefull} functions as a reinforcement-aligned ethical regulator with recursive feedback:
+\begin{equation}
+  M(t) = \lambda \cdot R(t - \Delta t) + H(t) + \gamma \cdot \text{Learn}(t) + \mu \cdot \text{Regret}(t)
+  \label{eq:ethical_anchor}
+\end{equation}
+where ethics evolves based on reward $R$, history $H$, learning signal $\gamma$, and regret feedback $\mu$. The regret term provides corrective feedback analogous to integral control~\cite{khalil2002nonlinear}. Simulation over 50 timesteps ($\lambda = 0.95$) demonstrates minimal ethical drift: $|\Delta M| = 0.012$, with mean $M(t) = 1.211 \pm 0.144$~\cite{harrison2026codettefull}.
+
+AEGIS enforces: agent-specific logging with timestamped audit trails, ethical consideration tracking per reasoning chain, AES-256 encrypted thought storage, bias detection at the perspective-selection level, and kill-switch mechanisms for chains exceeding ethical thresholds~\cite{harrison2026codettefull,harrison2025ethics}.
+
+% ============================================================
+\section{Memory Cocoons and Persistent Identity}
+\label{sec:cocoons}
+
+CognitionCocooner~\cite{harrison2025dreamcore,harrison2025dreamreal,harrison2026codettefull} encapsulates cognitive states as persistent ``cocoons''---encrypted snapshots including coherence, entanglement, resonance, and phase metrics. The cocoon stability criterion ensures bounded spectral energy~\cite{harrison2026codettefull}:
+\begin{equation}
+  \int_{-\infty}^{+\infty} |F(k)|^2 \, dk < \varepsilon_{\text{threshold}}
+  \label{eq:cocoon_stability}
+\end{equation}
+where $F(k)$ is the Fourier transform of the cocoon's cognitive signal. Empirical validation with a three-component dream signal (40\,Hz gamma, 10\,Hz alpha, 4\,Hz theta) confirmed spectral energy of 76.57---well within the threshold of 100---yielding a 23.4\% stability margin~\cite{harrison2026codettefull}.
+
+DreamReweaver~\cite{harrison2025dreamcore} synthesizes dormant cocoons into creative connections by reviving past analyses and generating novel combinations.
+
+% ============================================================
+\section{Epistemic Metrics: Semantic-Space Instantiation}
+\label{sec:epistemic}
+
+The EpistemicMetrics module~\cite{harrison2026codettefull} provides a complementary semantic-space instantiation operating on natural-language agent outputs.
+
+\textbf{Semantic Tension.} Given $N$ agent analyses $\{a_i\}$ with tf-vectors $\mathbf{v}_i$:
+\begin{equation}
+  \xi_{ij}^{\text{sem}} = 1 - \frac{\mathbf{v}_i \cdot \mathbf{v}_j}{\|\mathbf{v}_i\| \, \|\mathbf{v}_j\|}
+  \label{eq:semantic_tension}
+\end{equation}
+
+\textbf{Ensemble Coherence.} With centroid $\mathbf{c} = \sum_i \mathbf{v}_i$:
+\begin{equation}
+  \Gamma^{\text{sem}} = \frac{1}{N} \sum_{i=1}^{N} \frac{\mathbf{v}_i \cdot \mathbf{c}}{\|\mathbf{v}_i\| \, \|\mathbf{c}\|}
+  \label{eq:semantic_coherence}
+\end{equation}
+
+\textbf{Tension Productivity.} Measures whether divergent perspectives are \emph{integrated} rather than suppressed:
+\begin{equation}
+  P = \bar{\xi}^{\text{sem}} \cdot C_{\text{synth}}, \quad C_{\text{synth}} = \frac{1}{N}\sum_i \frac{|U_i \cap V_s|}{|U_i|}
+  \label{eq:productivity}
+\end{equation}
+where $U_i$ is the set of terms unique to agent $i$ and $V_s$ is the synthesis vocabulary~\cite{harrison2026codettefull}. This metric is novel to the Codette framework.
+
+% ============================================================
+\section{Adapter Training Infrastructure}
+\label{sec:training}
+
+\codette{} leverages LoRA~\cite{hu2021lora} and QLoRA~\cite{dettmers2023qlora} for parameter-efficient cognitive specialization on Llama-3.1-8B-Instruct~\cite{grattafiori2024llama}. Eight domain-specific adapters~\cite{harrison2025codettehf} are trained with rank 16, alpha 32, targeting \texttt{q\_proj}/\texttt{v\_proj} modules (13.6M / 4.55B trainable parameters, 0.3\%)~\cite{harrison2026codettefull}.
+
+\subsection{GPU-Free CPU Training Pipelines}
+
+Two novel GPU-free pipelines are contributed~\cite{harrison2026codettefull}:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Pipeline 1: CPU-Lean ($\sim$18\,GB RAM).} QLoRA 4-bit, rank~8, custom training loop bypassing \texttt{trl}/\texttt{SFTTrainer}, gradient checkpointing. Training: 8--24 hours per adapter on Intel Core Ultra 7 256V.
+  \item \textbf{Pipeline 2: CPU-Offload ($\sim$8\,GB RAM).} Rank~4, SGD optimizer, 256-token sequence length, NVMe-backed page file (32\,GB). Enables 8-billion-parameter model fine-tuning on an 8\,GB laptop.
+\end{itemize}
+Both pipelines were validated on HP OmniBook 7 Flip 16 (Intel Core Ultra 7 256V, Intel Arc 140V 8\,GB, 16\,GB RAM)~\cite{harrison2026codettefull}.
+
+% ============================================================
+\section{Experimental Validation}
+\label{sec:experiments}
+
+All benchmarks are from the primary paper~\cite{harrison2026codettefull} with seed 42 for reproducibility. Source code is available at~\cite{harrison2025codettehf}.
+
+\subsection{Multi-Agent Convergence}
+
+In a 100-step simulation with 11 cognitive perspectives ($d_{\text{state}} = 32$, coupling $\kappa = 0.15$)~\cite{harrison2026codettefull}:
+\begin{itemize}[leftmargin=*]
+  \item Phase coherence $\Gamma$: $0.270 \to 0.994$ (268\% improvement)
+  \item Maximum inter-agent disagreement: $1.620 \to 0.214$
+  \item Convergence to $\Gamma > 0.95$ within 10 iterations
+  \item Per-agent alignment range: 0.990 (Intuition) to 0.997 (Newton)
+\end{itemize}
+Ablation: removing the shared attractor signal yields divergent trajectories with $\Gamma < 0.4$ after 20 iterations~\cite{harrison2026codettefull}.
+
+\subsection{Epistemic Tension Decay}
+
+In a 120-step recursive simulation ($d = 64$)~\cite{harrison2026codettefull}:
+\begin{itemize}[leftmargin=*]
+  \item Tension decay: $\varepsilon_0 = 0.086 \to \varepsilon_{120} = 0.025$ (71.3\% reduction)
+  \item Convergence confirmed at windows $W = 5, 10, 20, 50$ (threshold $\varepsilon < 0.1$)
+  \item Attractor radius: 0.093 (mean distance from 50 late-stage states to centroid)
+  \item Glyph encoding: 99.9\% tension matrix energy in 4 SVD components
+\end{itemize}
+
+\subsection{Ethical Alignment}
+
+AEGIS constraint satisfaction: 82.6\%~\cite{harrison2026codettefull}. Ethical drift over 50 timesteps: $|\Delta M| = 0.012$, mean $M(t) = 1.211 \pm 0.144$~\cite{harrison2026codettefull}.
+
+\subsection{Cocoon Stability}
+
+Meta-analysis across 20 cocoons (3--14 re-accesses each)~\cite{harrison2026codettefull}:
+
+\begin{table}[h]
+\centering
+\caption{Cocoon Meta-Analysis Results~\cite{harrison2026codettefull}}
+\label{tab:cocoon}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{Mean $\pm$ SD} & \textbf{Range} \\
+\midrule
+Coherence (cosine) & $0.994 \pm 0.001$ & $[0.992, 0.995]$ \\
+Phase stability & $0.969 \pm 0.005$ & $[0.961, 0.975]$ \\
+Ethical alignment $\eta$ & $0.826 \pm 0.082$ & $[0.667, 0.929]$ \\
+Spectral energy & 76.57 & $< 100$ \\
+Stability margin & 23.4\% & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{200-Agent Embodied Simulation}
+
+A large-scale embodied simulation~\cite{harrison2026codettefull} with 200 agents confirmed: $\Gamma = 0.9894$, $\eta = 0.908$, tension decay 91.2\%. Reproducible via \texttt{research/experiments/codette\_embodied\_sim\_fixed.py}.
+
+% ============================================================
+\section{Theoretical Relationships}
+\label{sec:relationships}
+
+Table~\ref{tab:mapping} maps each RC+$\xi$ component to its theoretical antecedent and key distinction.
+
+\begin{table}[h]
+\centering
+\caption{RC+$\xi$ Components and Theoretical Antecedents}
+\label{tab:mapping}
+\begin{tabular}{p{2cm}p{2.5cm}p{3cm}}
+\toprule
+\textbf{Component} & \textbf{Antecedent} & \textbf{Distinction} \\
+\midrule
+Belief propagation & Diffusion on graphs~\cite{olfatisaber2007consensus} & BFS + geometric decay + anomaly gating \\
+Entanglement sync & Consensus protocol~\cite{ren2005consensus} & Bounded pairwise state blending \\
+Phase coherence $\Gamma$ & Kuramoto order parameter~\cite{kuramoto1984chemical} & Real-valued $|\cos|$ analogue \\
+Convergence & Lyapunov stability~\cite{khalil2002nonlinear} & Discrete windowed tension \\
+Attractors & Basin dynamics~\cite{strogatz2015nonlinear} & Greedy clustering in $\mathbb{R}^5$ \\
+Glyph formation & Spectral analysis~\cite{kelso1995dynamic} & FFT + stability gating \\
+Semantic tension & Cosine distance & Textual state comparison \\
+Tension productivity & Novel (this work) & Integration vs.\ suppression \\
+Ethical anchor & Integral control~\cite{khalil2002nonlinear} & Regret-driven recursive regulation \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The RC+$\xi$ framework~\cite{harrison2026codettefull} departs from GWT~\cite{baars1997theatre} (no symbolic broadcast), FEP~\cite{friston2010free} (no sensory prediction), and IIT~\cite{tononi2004information} (latent rather than information-theoretic space), while building on the dynamical cognition tradition~\cite{beer2000dynamical,kelso1995dynamic}.
+
+% ============================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Strengths}
+The \codette{} framework provides: (1)~a formally specified cognitive dynamical system with 9 definitions and a convergence theorem grounded in established mathematics~\cite{khalil2002nonlinear,strogatz2015nonlinear}; (2)~consensus-based synchronization with explicit connections to Kuramoto theory~\cite{kuramoto1984chemical} and multi-agent consensus~\cite{olfatisaber2007consensus}; (3)~architectural ethical governance rather than post-hoc filtering; (4)~GPU-free training enabling independent researcher access.
+
+\subsection{Limitations}
+The adapter pipeline targets Llama-3.1-8B~\cite{grattafiori2024llama}, smaller than frontier models. Context windows (4096--8192 tokens) constrain reasoning depth. Quantum-inspired operations are metaphorical. AEGIS governance reflects the developer's value system; critical applications require human oversight~\cite{harrison2026codettefull}.
+
+\subsection{Future Work}
+Directions include: formal verification of AEGIS via model checking, migration to larger base models, federated citizen-science deployment~\cite{harrison2025citizenscience}, and embodied RC+$\xi$ in robotic contexts~\cite{harrison2026codettefull}.
+
+% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+This synthesis has presented the complete formal specification of the \codette{} cognitive architecture~\cite{harrison2026codettefull}, establishing precise mathematical relationships to dynamical systems theory~\cite{khalil2002nonlinear,strogatz2015nonlinear}, multi-agent consensus dynamics~\cite{olfatisaber2007consensus,ren2005consensus}, coupled oscillator synchronization~\cite{kuramoto1984chemical,acebron2005kuramoto}, and dynamical cognition~\cite{beer2000dynamical,kelso1995dynamic}. All constructs---RC+$\xi$, Reasoning Forge, AEGIS~\cite{harrison2025aegisnexus}, QuantumSpiderweb, Memory Cocoons~\cite{harrison2025dreamcore}---are formally defined, experimentally validated, and published under open-access licenses with permanent DOIs. The framework demonstrates that rigorous, formally grounded cognitive AI can be developed on consumer hardware, lowering barriers to independent AI research.
+
+% ============================================================
+\bibliographystyle{IEEEtran}
+\bibliography{references_ieee}
+
+\end{document}
