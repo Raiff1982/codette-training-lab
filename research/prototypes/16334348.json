@@ -1,0 +1,564 @@
+{
+  "access": {
+    "embargo": {
+      "active": false,
+      "reason": null
+    },
+    "files": "public",
+    "record": "public",
+    "status": "open"
+  },
+  "created": "2025-07-22T20:36:19.293045+00:00",
+  "custom_fields": {},
+  "deletion_status": {
+    "is_deleted": false,
+    "status": "P"
+  },
+  "files": {
+    "count": 9,
+    "default_preview": "whitenexus 2.pdf",
+    "enabled": true,
+    "entries": {
+      "43f1bb3e-f9c0-4e52-b254-f30538a661fe.pdf": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:134f0181b00ae61352f39bb8da733f6b",
+        "ext": "pdf",
+        "id": "873b265e-ff57-433b-9f49-07be699b31fe",
+        "key": "43f1bb3e-f9c0-4e52-b254-f30538a661fe.pdf",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/43f1bb3e-f9c0-4e52-b254-f30538a661fe.pdf/content",
+          "iiif_api": "https://zenodo.org/api/iiif/record:16334348:43f1bb3e-f9c0-4e52-b254-f30538a661fe.pdf/full/full/0/default.png",
+          "iiif_base": "https://zenodo.org/api/iiif/record:16334348:43f1bb3e-f9c0-4e52-b254-f30538a661fe.pdf",
+          "iiif_canvas": "https://zenodo.org/api/iiif/record:16334348/canvas/43f1bb3e-f9c0-4e52-b254-f30538a661fe.pdf",
+          "iiif_info": "https://zenodo.org/api/iiif/record:16334348:43f1bb3e-f9c0-4e52-b254-f30538a661fe.pdf/info.json",
+          "self": "https://zenodo.org/api/records/16334348/files/43f1bb3e-f9c0-4e52-b254-f30538a661fe.pdf"
+        },
+        "metadata": {
+          "height": 792,
+          "width": 612
+        },
+        "mimetype": "application/pdf",
+        "size": 83668,
+        "storage_class": "L"
+      },
+      "Nexis_Signal_Engine_Whitepaper 2.docx": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:e509bbe9c21a88efb8d25b5dfb8bc714",
+        "ext": "docx",
+        "id": "89f15d24-4ac8-426f-b22b-ea9d74cd0380",
+        "key": "Nexis_Signal_Engine_Whitepaper 2.docx",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/Nexis_Signal_Engine_Whitepaper%202.docx/content",
+          "self": "https://zenodo.org/api/records/16334348/files/Nexis_Signal_Engine_Whitepaper%202.docx"
+        },
+        "metadata": {},
+        "mimetype": "application/octet-stream",
+        "size": 38354,
+        "storage_class": "L"
+      },
+      "monday 4.pdf": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:5d969b1ea2fbd65a6e4cc0ace92eb94d",
+        "ext": "pdf",
+        "id": "15514208-c40c-4a0c-a56e-28e8c6a19464",
+        "key": "monday 4.pdf",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/monday%204.pdf/content",
+          "iiif_api": "https://zenodo.org/api/iiif/record:16334348:monday%204.pdf/full/full/0/default.png",
+          "iiif_base": "https://zenodo.org/api/iiif/record:16334348:monday%204.pdf",
+          "iiif_canvas": "https://zenodo.org/api/iiif/record:16334348/canvas/monday%204.pdf",
+          "iiif_info": "https://zenodo.org/api/iiif/record:16334348:monday%204.pdf/info.json",
+          "self": "https://zenodo.org/api/records/16334348/files/monday%204.pdf"
+        },
+        "metadata": {
+          "height": 792,
+          "width": 612
+        },
+        "mimetype": "application/pdf",
+        "size": 60018,
+        "storage_class": "L"
+      },
+      "monday3.pdf": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:b4a606f51ecda9f9fc8bc6d269e7247e",
+        "ext": "pdf",
+        "id": "47bff8bb-d533-4000-93e1-b7146a081552",
+        "key": "monday3.pdf",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/monday3.pdf/content",
+          "iiif_api": "https://zenodo.org/api/iiif/record:16334348:monday3.pdf/full/full/0/default.png",
+          "iiif_base": "https://zenodo.org/api/iiif/record:16334348:monday3.pdf",
+          "iiif_canvas": "https://zenodo.org/api/iiif/record:16334348/canvas/monday3.pdf",
+          "iiif_info": "https://zenodo.org/api/iiif/record:16334348:monday3.pdf/info.json",
+          "self": "https://zenodo.org/api/records/16334348/files/monday3.pdf"
+        },
+        "metadata": {
+          "height": 792,
+          "width": 612
+        },
+        "mimetype": "application/pdf",
+        "size": 56373,
+        "storage_class": "L"
+      },
+      "nexus engine6.pdf": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:100fec4271635ed9f181f34ecac6063f",
+        "ext": "pdf",
+        "id": "128eb575-eca3-4d84-8da3-a45504950c0e",
+        "key": "nexus engine6.pdf",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/nexus%20engine6.pdf/content",
+          "iiif_api": "https://zenodo.org/api/iiif/record:16334348:nexus%20engine6.pdf/full/full/0/default.png",
+          "iiif_base": "https://zenodo.org/api/iiif/record:16334348:nexus%20engine6.pdf",
+          "iiif_canvas": "https://zenodo.org/api/iiif/record:16334348/canvas/nexus%20engine6.pdf",
+          "iiif_info": "https://zenodo.org/api/iiif/record:16334348:nexus%20engine6.pdf/info.json",
+          "self": "https://zenodo.org/api/records/16334348/files/nexus%20engine6.pdf"
+        },
+        "metadata": {
+          "height": 792,
+          "width": 612
+        },
+        "mimetype": "application/pdf",
+        "size": 88488,
+        "storage_class": "L"
+      },
+      "nexus12345.pdf": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:3ce7e7293359b8129fba06729d85949f",
+        "ext": "pdf",
+        "id": "8d49c8c1-95d4-40df-a6ae-d10f8f09091e",
+        "key": "nexus12345.pdf",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/nexus12345.pdf/content",
+          "iiif_api": "https://zenodo.org/api/iiif/record:16334348:nexus12345.pdf/full/full/0/default.png",
+          "iiif_base": "https://zenodo.org/api/iiif/record:16334348:nexus12345.pdf",
+          "iiif_canvas": "https://zenodo.org/api/iiif/record:16334348/canvas/nexus12345.pdf",
+          "iiif_info": "https://zenodo.org/api/iiif/record:16334348:nexus12345.pdf/info.json",
+          "self": "https://zenodo.org/api/records/16334348/files/nexus12345.pdf"
+        },
+        "metadata": {
+          "height": 792,
+          "width": 612
+        },
+        "mimetype": "application/pdf",
+        "size": 124588,
+        "storage_class": "L"
+      },
+      "nexus789.pdf": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:df0a320cbcc9453f0ee134424c766cbd",
+        "ext": "pdf",
+        "id": "a6064a5e-b437-4baf-8bf2-87d21dd12637",
+        "key": "nexus789.pdf",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/nexus789.pdf/content",
+          "iiif_api": "https://zenodo.org/api/iiif/record:16334348:nexus789.pdf/full/full/0/default.png",
+          "iiif_base": "https://zenodo.org/api/iiif/record:16334348:nexus789.pdf",
+          "iiif_canvas": "https://zenodo.org/api/iiif/record:16334348/canvas/nexus789.pdf",
+          "iiif_info": "https://zenodo.org/api/iiif/record:16334348:nexus789.pdf/info.json",
+          "self": "https://zenodo.org/api/records/16334348/files/nexus789.pdf"
+        },
+        "metadata": {
+          "height": 792,
+          "width": 612
+        },
+        "mimetype": "application/pdf",
+        "size": 100708,
+        "storage_class": "L"
+      },
+      "whitenexus 2.pdf": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:420bfdf6a3ee791ed69323fed5909f39",
+        "ext": "pdf",
+        "id": "24bd372d-2875-4a84-a24a-dcfffa22acb6",
+        "key": "whitenexus 2.pdf",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/whitenexus%202.pdf/content",
+          "iiif_api": "https://zenodo.org/api/iiif/record:16334348:whitenexus%202.pdf/full/full/0/default.png",
+          "iiif_base": "https://zenodo.org/api/iiif/record:16334348:whitenexus%202.pdf",
+          "iiif_canvas": "https://zenodo.org/api/iiif/record:16334348/canvas/whitenexus%202.pdf",
+          "iiif_info": "https://zenodo.org/api/iiif/record:16334348:whitenexus%202.pdf/info.json",
+          "self": "https://zenodo.org/api/records/16334348/files/whitenexus%202.pdf"
+        },
+        "metadata": {
+          "height": 792,
+          "width": 612
+        },
+        "mimetype": "application/pdf",
+        "size": 144394,
+        "storage_class": "L"
+      },
+      "whitenexus.pdf": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:9fcf043d1da2f711007c59beed8ca5c8",
+        "ext": "pdf",
+        "id": "f1fe1e0a-b38e-4d9f-b3f0-bb5e64a252aa",
+        "key": "whitenexus.pdf",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/whitenexus.pdf/content",
+          "iiif_api": "https://zenodo.org/api/iiif/record:16334348:whitenexus.pdf/full/full/0/default.png",
+          "iiif_base": "https://zenodo.org/api/iiif/record:16334348:whitenexus.pdf",
+          "iiif_canvas": "https://zenodo.org/api/iiif/record:16334348/canvas/whitenexus.pdf",
+          "iiif_info": "https://zenodo.org/api/iiif/record:16334348:whitenexus.pdf/info.json",
+          "self": "https://zenodo.org/api/records/16334348/files/whitenexus.pdf"
+        },
+        "metadata": {
+          "height": 792,
+          "width": 612
+        },
+        "mimetype": "application/pdf",
+        "size": 144394,
+        "storage_class": "L"
+      }
+    },
+    "order": [],
+    "total_bytes": 840985
+  },
+  "id": "16334348",
+  "is_draft": false,
+  "is_published": true,
+  "links": {
+    "access": "https://zenodo.org/api/records/16334348/access",
+    "access_grants": "https://zenodo.org/api/records/16334348/access/grants",
+    "access_links": "https://zenodo.org/api/records/16334348/access/links",
+    "access_request": "https://zenodo.org/api/records/16334348/access/request",
+    "access_users": "https://zenodo.org/api/records/16334348/access/users",
+    "archive": "https://zenodo.org/api/records/16334348/files-archive",
+    "archive_media": "https://zenodo.org/api/records/16334348/media-files-archive",
+    "communities": "https://zenodo.org/api/records/16334348/communities",
+    "communities-suggestions": "https://zenodo.org/api/records/16334348/communities-suggestions",
+    "doi": "https://doi.org/10.57967/hf/6059",
+    "draft": "https://zenodo.org/api/records/16334348/draft",
+    "files": "https://zenodo.org/api/records/16334348/files",
+    "latest": "https://zenodo.org/api/records/16334348/versions/latest",
+    "latest_html": "https://zenodo.org/records/16334348/latest",
+    "media_files": "https://zenodo.org/api/records/16334348/media-files",
+    "parent": "https://zenodo.org/api/records/16284268",
+    "parent_doi": "https://doi.org/10.5281/zenodo.16284268",
+    "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.16284268",
+    "parent_html": "https://zenodo.org/records/16284268",
+    "preview_html": "https://zenodo.org/records/16334348?preview=1",
+    "requests": "https://zenodo.org/api/records/16334348/requests",
+    "reserve_doi": "https://zenodo.org/api/records/16334348/draft/pids/doi",
+    "self": "https://zenodo.org/api/records/16334348",
+    "self_doi": "https://doi.org/10.57967/hf/6059",
+    "self_doi_html": "https://zenodo.org/doi/10.57967/hf/6059",
+    "self_html": "https://zenodo.org/records/16334348",
+    "self_iiif_manifest": "https://zenodo.org/api/iiif/record:16334348/manifest",
+    "self_iiif_sequence": "https://zenodo.org/api/iiif/record:16334348/sequence/default",
+    "thumbnails": {
+      "10": "https://zenodo.org/api/iiif/record:16334348:whitenexus%202.pdf/full/%5E10,/0/default.jpg",
+      "100": "https://zenodo.org/api/iiif/record:16334348:whitenexus%202.pdf/full/%5E100,/0/default.jpg",
+      "1200": "https://zenodo.org/api/iiif/record:16334348:whitenexus%202.pdf/full/%5E1200,/0/default.jpg",
+      "250": "https://zenodo.org/api/iiif/record:16334348:whitenexus%202.pdf/full/%5E250,/0/default.jpg",
+      "50": "https://zenodo.org/api/iiif/record:16334348:whitenexus%202.pdf/full/%5E50,/0/default.jpg",
+      "750": "https://zenodo.org/api/iiif/record:16334348:whitenexus%202.pdf/full/%5E750,/0/default.jpg"
+    },
+    "versions": "https://zenodo.org/api/records/16334348/versions"
+  },
+  "media_files": {
+    "count": 8,
+    "enabled": true,
+    "entries": {
+      "43f1bb3e-f9c0-4e52-b254-f30538a661fe.pdf.ptif": {
+        "access": {
+          "hidden": true
+        },
+        "ext": "ptif",
+        "id": "3495277e-ee57-4159-895b-7794f97b10a5",
+        "key": "43f1bb3e-f9c0-4e52-b254-f30538a661fe.pdf.ptif",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/43f1bb3e-f9c0-4e52-b254-f30538a661fe.pdf.ptif/content",
+          "self": "https://zenodo.org/api/records/16334348/files/43f1bb3e-f9c0-4e52-b254-f30538a661fe.pdf.ptif"
+        },
+        "metadata": null,
+        "mimetype": "application/octet-stream",
+        "processor": {
+          "source_file_id": "873b265e-ff57-433b-9f49-07be699b31fe",
+          "status": "finished",
+          "type": "image-tiles"
+        },
+        "size": 0,
+        "storage_class": "L"
+      },
+      "monday 4.pdf.ptif": {
+        "access": {
+          "hidden": true
+        },
+        "ext": "ptif",
+        "id": "46fb615f-269c-43a6-80cc-7883a8f6ba3e",
+        "key": "monday 4.pdf.ptif",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/monday%204.pdf.ptif/content",
+          "self": "https://zenodo.org/api/records/16334348/files/monday%204.pdf.ptif"
+        },
+        "metadata": null,
+        "mimetype": "application/octet-stream",
+        "processor": {
+          "source_file_id": "15514208-c40c-4a0c-a56e-28e8c6a19464",
+          "status": "finished",
+          "type": "image-tiles"
+        },
+        "size": 0,
+        "storage_class": "L"
+      },
+      "monday3.pdf.ptif": {
+        "access": {
+          "hidden": true
+        },
+        "ext": "ptif",
+        "id": "973ccbde-75b6-47c9-808e-872f70b81a49",
+        "key": "monday3.pdf.ptif",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/monday3.pdf.ptif/content",
+          "self": "https://zenodo.org/api/records/16334348/files/monday3.pdf.ptif"
+        },
+        "metadata": null,
+        "mimetype": "application/octet-stream",
+        "processor": {
+          "source_file_id": "47bff8bb-d533-4000-93e1-b7146a081552",
+          "status": "finished",
+          "type": "image-tiles"
+        },
+        "size": 0,
+        "storage_class": "L"
+      },
+      "nexus engine6.pdf.ptif": {
+        "access": {
+          "hidden": true
+        },
+        "ext": "ptif",
+        "id": "1c7bcdfb-cf29-4ea5-8a71-0342348377d4",
+        "key": "nexus engine6.pdf.ptif",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/nexus%20engine6.pdf.ptif/content",
+          "self": "https://zenodo.org/api/records/16334348/files/nexus%20engine6.pdf.ptif"
+        },
+        "metadata": null,
+        "mimetype": "application/octet-stream",
+        "processor": {
+          "source_file_id": "128eb575-eca3-4d84-8da3-a45504950c0e",
+          "status": "finished",
+          "type": "image-tiles"
+        },
+        "size": 0,
+        "storage_class": "L"
+      },
+      "nexus12345.pdf.ptif": {
+        "access": {
+          "hidden": true
+        },
+        "ext": "ptif",
+        "id": "59bc47a5-bae4-4400-ae43-aa311d5d6a20",
+        "key": "nexus12345.pdf.ptif",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/nexus12345.pdf.ptif/content",
+          "self": "https://zenodo.org/api/records/16334348/files/nexus12345.pdf.ptif"
+        },
+        "metadata": null,
+        "mimetype": "application/octet-stream",
+        "processor": {
+          "source_file_id": "8d49c8c1-95d4-40df-a6ae-d10f8f09091e",
+          "status": "finished",
+          "type": "image-tiles"
+        },
+        "size": 0,
+        "storage_class": "L"
+      },
+      "nexus789.pdf.ptif": {
+        "access": {
+          "hidden": true
+        },
+        "ext": "ptif",
+        "id": "75b4d984-397c-412a-8b08-f6704fc72a16",
+        "key": "nexus789.pdf.ptif",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/nexus789.pdf.ptif/content",
+          "self": "https://zenodo.org/api/records/16334348/files/nexus789.pdf.ptif"
+        },
+        "metadata": null,
+        "mimetype": "application/octet-stream",
+        "processor": {
+          "source_file_id": "a6064a5e-b437-4baf-8bf2-87d21dd12637",
+          "status": "finished",
+          "type": "image-tiles"
+        },
+        "size": 0,
+        "storage_class": "L"
+      },
+      "whitenexus 2.pdf.ptif": {
+        "access": {
+          "hidden": true
+        },
+        "ext": "ptif",
+        "id": "c7764448-64f1-45b0-abf9-83a88935e580",
+        "key": "whitenexus 2.pdf.ptif",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/whitenexus%202.pdf.ptif/content",
+          "self": "https://zenodo.org/api/records/16334348/files/whitenexus%202.pdf.ptif"
+        },
+        "metadata": null,
+        "mimetype": "application/octet-stream",
+        "processor": {
+          "source_file_id": "24bd372d-2875-4a84-a24a-dcfffa22acb6",
+          "status": "finished",
+          "type": "image-tiles"
+        },
+        "size": 0,
+        "storage_class": "L"
+      },
+      "whitenexus.pdf.ptif": {
+        "access": {
+          "hidden": true
+        },
+        "ext": "ptif",
+        "id": "38325aa9-77a5-4119-9576-824e9d9d06f6",
+        "key": "whitenexus.pdf.ptif",
+        "links": {
+          "content": "https://zenodo.org/api/records/16334348/files/whitenexus.pdf.ptif/content",
+          "self": "https://zenodo.org/api/records/16334348/files/whitenexus.pdf.ptif"
+        },
+        "metadata": null,
+        "mimetype": "application/octet-stream",
+        "processor": {
+          "source_file_id": "f1fe1e0a-b38e-4d9f-b3f0-bb5e64a252aa",
+          "status": "finished",
+          "type": "image-tiles"
+        },
+        "size": 0,
+        "storage_class": "L"
+      }
+    },
+    "order": [],
+    "total_bytes": 0
+  },
+  "metadata": {
+    "creators": [
+      {
+        "person_or_org": {
+          "family_name": "jonathan",
+          "given_name": "harrison",
+          "identifiers": [
+            {
+              "identifier": "0009-0003-7005-8187",
+              "scheme": "orcid"
+            }
+          ],
+          "name": "jonathan, harrison",
+          "type": "personal"
+        },
+        "role": {
+          "id": "rightsholder",
+          "title": {
+            "de": "RechteinhaberIn",
+            "en": "Rights holder"
+          }
+        }
+      }
+    ],
+    "description": "<p>Description:</p>\n<p>The NexisSignalEngine is an original, production-grade signal analysis engine designed to advance the state of explainable AI (XAI), security auditing, and ethical reasoning. This framework uniquely combines deterministic cryptographic hashing, seeded vector rotations, harmonic FFT analysis, and hybrid symbolic-statistical evaluation through distinct agent-based perspectives.</p>\n<p>&nbsp;</p>\n<p>Core Features:</p>\n<p>&nbsp;</p>\n<ul>\n<li>Deterministic Analysis: Each signal is hashed and used to seed all numeric operations, enabling full auditability and forensic reproducibility.</li>\n<li>Multi-Agent Perspectives: Input is processed through three parallel cognitive perspectives (&ldquo;Colleen,&rdquo; &ldquo;Luke,&rdquo; &ldquo;Kellyanne&rdquo;), each running its own mathematical, ethical, or harmonic analysis for rich, multi-lens evaluation.</li>\n<li>Hybrid Reasoning: Integrates symbolic (ethics, risk, virtue tagging) and statistical (entropy, FFT harmonics, tensor entanglement) methods for robust signal integrity checks.</li>\n<li>Secure, Tamper-Evident Memory: All input/output records are stored with file-locking and periodic file rotation. Archive logs are timestamped and pruned for compliance and chain-of-custody requirements.</li>\n<li>Configurable and Hardened: All core configurations (risk/virtue/ethics terms) are loaded and validated with full key enforcement and fallback protections.</li>\n<li>Safe and Attack-Resistant: Memory growth is bounded, inputs are length-capped, FFT results are normalized, and deterministic RNG prevents adversarial replay attacks.</li>\n</ul>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>Intended Use:</p>\n<p>NexisSignalEngine is intended for researchers, developers, and auditors who require a trustworthy, transparent, and reproducible framework for:</p>\n<p>&nbsp;</p>\n<ul>\n<li>Detecting, auditing, and adapting to pre-corruption signals</li>\n<li>Validating ethical and risk compliance in autonomous AI systems</li>\n<li>Recording, tracing, and justifying real-world signal decisions</li>\n</ul>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>Provenance and Authorship:</p>\n<p>This architecture, including its signal-seeded deterministic vector logic, agent-based multi-perspective evaluation, and memory rotation protocol, is the original work of Jonathan Harrison (Raiff1982). This release serves as a timestamped, tamper-evident record of innovation and prior art.</p>\n<p>&nbsp;</p>\n<p>Keywords:</p>\n<p>Explainable AI, Signal Reasoning, Cognitive Agents, Deterministic Audit, Entropy Detection, Harmonic Analysis, AI Ethics, Provenance, Memory Rotation, Symbolic Reasoning</p>",
+    "publication_date": "2025-07-22",
+    "publisher": "Zenodo",
+    "resource_type": {
+      "id": "software-computationalnotebook",
+      "title": {
+        "de": "Computational Notebook",
+        "en": "Computational notebook"
+      }
+    },
+    "rights": [
+      {
+        "description": {
+          "en": "The Creative Commons Attribution license allows re-distribution and re-use of a licensed work on the condition that the creator is appropriately credited."
+        },
+        "icon": "cc-by-icon",
+        "id": "cc-by-4.0",
+        "props": {
+          "scheme": "spdx",
+          "url": "https://creativecommons.org/licenses/by/4.0/legalcode"
+        },
+        "title": {
+          "en": "Creative Commons Attribution 4.0 International"
+        }
+      }
+    ],
+    "title": "Nexus engine"
+  },
+  "parent": {
+    "access": {
+      "grants": [],
+      "links": [],
+      "owned_by": {
+        "user": "1301534"
+      },
+      "settings": {
+        "accept_conditions_text": null,
+        "allow_guest_requests": false,
+        "allow_user_requests": false,
+        "secret_link_expiration": 0
+      }
+    },
+    "communities": {},
+    "id": "16284268",
+    "pids": {
+      "doi": {
+        "client": "datacite",
+        "identifier": "10.5281/zenodo.16284268",
+        "provider": "datacite"
+      }
+    }
+  },
+  "pids": {
+    "doi": {
+      "identifier": "10.57967/hf/6059",
+      "provider": "external"
+    },
+    "oai": {
+      "identifier": "oai:zenodo.org:16334348",
+      "provider": "oai"
+    }
+  },
+  "revision_id": 3,
+  "stats": {
+    "all_versions": {
+      "data_volume": 4400307.0,
+      "downloads": 41,
+      "unique_downloads": 25,
+      "unique_views": 21,
+      "views": 25
+    },
+    "this_version": {
+      "data_volume": 3552204.0,
+      "downloads": 30,
+      "unique_downloads": 18,
+      "unique_views": 15,
+      "views": 17
+    }
+  },
+  "status": "published",
+  "swh": {},
+  "updated": "2025-07-22T20:36:20.742926+00:00",
+  "versions": {
+    "index": 5,
+    "is_latest": true,
+    "is_latest_draft": true
+  }
+}

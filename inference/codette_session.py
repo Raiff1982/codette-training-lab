@@ -54,6 +54,32 @@ try:
 except ImportError:
     HAS_OPTIMIZER = False
 
+try:
+    from reasoning_forge.living_memory import LivingMemoryKernel
+    HAS_MEMORY = True
+except ImportError:
+    HAS_MEMORY = False
+
+try:
+    from reasoning_forge.guardian import CodetteGuardian
+    HAS_GUARDIAN = True
+except ImportError:
+    HAS_GUARDIAN = False
+
+try:
+    from reasoning_forge.resonant_continuity import ResonantContinuityEngine
+    HAS_RESONANCE = True
+except ImportError:
+    HAS_RESONANCE = False
+
+try:
+    from reasoning_forge.perspective_registry import (
+        PERSPECTIVES, get_adapter_for_perspective, list_all as list_perspectives
+    )
+    HAS_PERSPECTIVES = True
+except ImportError:
+    HAS_PERSPECTIVES = False
+
 # Agent names matching the 8 adapters
 AGENT_NAMES = [
     "newton", "davinci", "empathy", "philosophy",
@@ -94,6 +120,9 @@ class CodetteSession:
         self.cocoon_sync = None
         self.dream_reweaver = None
         self.optimizer = None
+        self.memory_kernel = None
+        self.guardian = None
+        self.resonance_engine = None
 
         # Metrics history
         self.coherence_history: List[float] = []
@@ -131,6 +160,15 @@ class CodetteSession:
 
         if HAS_OPTIMIZER:
             self.optimizer = QuantumOptimizer()
+
+        if HAS_MEMORY:
+            self.memory_kernel = LivingMemoryKernel(max_memories=100)
+
+        if HAS_GUARDIAN:
+            self.guardian = CodetteGuardian()
+
+        if HAS_RESONANCE:
+            self.resonance_engine = ResonantContinuityEngine()
 
     def add_message(self, role: str, content: str, metadata: Optional[Dict] = None):
         """Add a message to the session history."""
@@ -224,6 +262,48 @@ class CodetteSession:
         except Exception as e:
             print(f"  [cocoon] Spiderweb update error: {e}")
 
+        # Update resonance engine
+        if self.resonance_engine:
+            try:
+                coh = self.coherence_history[-1] if self.coherence_history else 0.5
+                ten = self.tension_history[-1] if self.tension_history else 0.3
+                self.resonance_engine.compute_psi(coherence=coh, tension=ten)
+            except Exception:
+                pass
+
+        # Update guardian trust
+        if self.guardian:
+            try:
+                coh = self.coherence_history[-1] if self.coherence_history else 0.5
+                ten = self.tension_history[-1] if self.tension_history else 0.3
+                self.guardian.evaluate_output(adapter_name, "", coh, ten)
+            except Exception:
+                pass
+
+        # Store memory cocoon for significant exchanges
+        if self.memory_kernel and self.messages:
+            try:
+                # Find the most recent user query and assistant response
+                query_text = ""
+                response_text = ""
+                for msg in reversed(self.messages[-4:]):
+                    if msg["role"] == "user" and not query_text:
+                        query_text = msg["content"]
+                    elif msg["role"] == "assistant" and not response_text:
+                        response_text = msg["content"]
+                if query_text and response_text:
+                    coh = self.coherence_history[-1] if self.coherence_history else 0.5
+                    ten = self.tension_history[-1] if self.tension_history else 0.3
+                    self.memory_kernel.store_from_turn(
+                        query=query_text,
+                        response=response_text,
+                        adapter=adapter_name,
+                        coherence=coh,
+                        tension=ten,
+                    )
+            except Exception:
+                pass
+
     def compute_epistemic_report(self, analyses: Dict[str, str],
                                   synthesis: str = "") -> Optional[Dict]:
         """Run full epistemic metrics on a multi-perspective response."""
@@ -298,6 +378,28 @@ class CodetteSession:
         # Dream history
         state["dream_history"] = self.dream_history[-10:]
 
+        # Living memory
+        if self.memory_kernel:
+            state["memory"] = self.memory_kernel.get_state()
+        else:
+            state["memory"] = None
+
+        # Guardian state
+        if self.guardian:
+            state["guardian"] = self.guardian.get_state()
+        else:
+            state["guardian"] = None
+
+        # Resonant continuity
+        if self.resonance_engine:
+            state["resonance"] = self.resonance_engine.get_state()
+        else:
+            state["resonance"] = None
+
+        # Perspective registry
+        if HAS_PERSPECTIVES:
+            state["perspectives_available"] = len(PERSPECTIVES)
+
         return state
 
     def to_dict(self) -> Dict:
@@ -325,6 +427,21 @@ class CodetteSession:
                 data["optimizer_state"] = self.optimizer.to_dict()
             except Exception:
                 pass
+        if self.memory_kernel:
+            try:
+                data["memory_state"] = self.memory_kernel.to_dict()
+            except Exception:
+                pass
+        if self.guardian:
+            try:
+                data["guardian_state"] = self.guardian.to_dict()
+            except Exception:
+                pass
+        if self.resonance_engine:
+            try:
+                data["resonance_state"] = self.resonance_engine.to_dict()
+            except Exception:
+                pass
         return data
 
     def from_dict(self, data: Dict):
@@ -349,6 +466,21 @@ class CodetteSession:
         if HAS_OPTIMIZER and self.optimizer and "optimizer_state" in data:
             try:
                 self.optimizer = QuantumOptimizer.from_dict(data["optimizer_state"])
+            except Exception:
+                pass
+        if HAS_MEMORY and "memory_state" in data:
+            try:
+                self.memory_kernel = LivingMemoryKernel.from_dict(data["memory_state"])
+            except Exception:
+                pass
+        if HAS_GUARDIAN and "guardian_state" in data:
+            try:
+                self.guardian = CodetteGuardian.from_dict(data["guardian_state"])
+            except Exception:
+                pass
+        if HAS_RESONANCE and "resonance_state" in data:
+            try:
+                self.resonance_engine = ResonantContinuityEngine.from_dict(data["resonance_state"])
             except Exception:
                 pass
 

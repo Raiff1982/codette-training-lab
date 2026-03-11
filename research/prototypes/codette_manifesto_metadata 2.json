@@ -1,0 +1,35 @@
+{
+  "title": "Codette Manifesto: Sovereign Intelligence for a Transparent Future",
+  "upload_type": "publication",
+  "publication_type": "article",
+  "creators": [
+    {
+      "name": "Harrison, Jonathan",
+      "orcid": "0009-0003-7005-8187",
+      "affiliation": "Raiffs Bits LLC"
+    }
+  ],
+  "description": "This work defines Codette: an ethical, multi-perspective AI system built for quantum-inspired cognition, recursive self-reflection, and radical transparency. Includes both philosophical manifesto and technical blueprint.",
+  "license": "other-open",
+  "keywords": [
+    "AI ethics",
+    "recursive cognition",
+    "quantum optimization",
+    "sovereign AI",
+    "multi-agent reasoning"
+  ],
+  "communities": [
+    {
+      "identifier": "artificial-intelligence"
+    }
+  ],
+  "publication_date": "2025-06-14",
+  "version": "1.0",
+  "related_identifiers": [
+    {
+      "identifier": "https://huggingface.co/Raiff1982/Codette",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
