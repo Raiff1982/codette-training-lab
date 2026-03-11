@@ -283,6 +283,12 @@ class CodetteHandler(SimpleHTTPRequestHandler):
             self._json_response({"error": "Empty query"}, 400)
             return
 
+        # Guardian input check
+        if _session and _session.guardian:
+            check = _session.guardian.check_input(query)
+            if not check["safe"]:
+                query = check["cleaned_text"]
+
         # Check if orchestrator is loading
         if _orchestrator_status.get("state") == "loading":
             self._json_response({
