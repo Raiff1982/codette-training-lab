@@ -311,8 +311,8 @@ class CodetteHandler(SimpleHTTPRequestHandler):
                 self._json_response(thinking, 500)
                 return
 
-            # Wait for complete event
-            result = response_q.get(timeout=300)  # 5 min max for inference
+            # Wait for complete event (multi-perspective can take 15+ min on CPU)
+            result = response_q.get(timeout=1200)  # 20 min max for inference
             self._json_response(result)
 
         except queue.Empty:

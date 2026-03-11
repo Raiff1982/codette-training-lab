@@ -15,7 +15,7 @@ Base model: Llama 3.1 8B Instruct Q4_K_M (~4.6 GB)
 Adapters: ~27 MB each (GGUF LoRA)
 """
 
-import os, sys, time, json, argparse
+import os, sys, time, json, argparse, ctypes
 from pathlib import Path
 
 # Auto-configure environment for Intel XPU + site-packages
@@ -28,6 +28,7 @@ try:
 except Exception:
     pass
 
+import llama_cpp
 from llama_cpp import Llama
 
 # Import the router and tools
@@ -83,7 +84,10 @@ GEN_KWARGS = dict(
 
 
 class CodetteOrchestrator:
-    """Intelligent adapter orchestrator using llama.cpp GGUF inference."""
+    """Intelligent adapter orchestrator using llama.cpp GGUF inference.
+
+    Uses LoRA hot-swap: base model loads once, adapter switches are instant.
+    """
 
     def __init__(self, n_ctx=4096, n_gpu_layers=0, verbose=False):
         self.n_ctx = n_ctx
@@ -91,6 +95,9 @@ class CodetteOrchestrator:
         self.verbose = verbose
         self._llm = None
         self._current_adapter = None  # None = base model, str = adapter name
+        self._adapter_handles = {}    # name -> ctypes handle for hot-swap
+        self._model_ptr = None        # raw llama_model pointer
+        self._ctx_ptr = None          # raw llama_context pointer
 
         # Discover available adapters
         self.available_adapters = []
@@ -102,36 +109,73 @@ class CodetteOrchestrator:
 
         print(f"Available adapters: {', '.join(self.available_adapters) or 'none (base only)'}")
 
-    def _load_model(self, adapter_name=None):
-        """Load or reload model with a specific adapter (or no adapter)."""
-        if adapter_name == self._current_adapter and self._llm is not None:
-            return  # Already loaded
+        # Load base model + pre-load adapter handles for instant hot-swap
+        self._init_hotswap()
 
-        # Free previous model
-        if self._llm is not None:
-            del self._llm
-            self._llm = None
+    def _init_hotswap(self):
+        """Load the base model once and pre-load all adapter handles.
 
-        lora_path = None
-        if adapter_name and adapter_name in ADAPTER_GGUF_MAP:
-            lora_path = str(ADAPTER_GGUF_MAP[adapter_name])
-
-        if self.verbose:
-            label = adapter_name or "base"
-            print(f"  [loading {label}...]", end=" ", flush=True)
-
+        After this, adapter switches take <1ms instead of ~30-60s.
+        """
+        print(f"  Loading base model (one-time)...", flush=True)
         start = time.time()
+        # use_mmap=False is required for LoRA hot-swap compatibility
         self._llm = Llama(
             model_path=BASE_GGUF,
-            lora_path=lora_path,
             n_ctx=self.n_ctx,
             n_gpu_layers=self.n_gpu_layers,
             verbose=False,
+            use_mmap=False,
         )
+        print(f"  Base model loaded in {time.time()-start:.1f}s")
+
+        # Grab raw pointers for hot-swap API
+        self._model_ptr = self._llm._model.model
+        self._ctx_ptr = self._llm._ctx.ctx
+
+        # Pre-load all adapter handles
+        for name in self.available_adapters:
+            path = str(ADAPTER_GGUF_MAP[name])
+            t = time.time()
+            handle = llama_cpp.llama_adapter_lora_init(
+                self._model_ptr, path.encode("utf-8")
+            )
+            if handle:
+                self._adapter_handles[name] = handle
+                if self.verbose:
+                    print(f"    {name} handle loaded ({time.time()-t:.2f}s)")
+            else:
+                print(f"    WARNING: failed to load {name} adapter handle")
+
+        print(f"  {len(self._adapter_handles)}/{len(self.available_adapters)} "
+              f"adapter handles ready for hot-swap")
+
+    def _load_model(self, adapter_name=None):
+        """Switch to a specific adapter using instant hot-swap.
+
+        Base model stays loaded — only the LoRA weights are swapped (~0ms).
+        """
+        if adapter_name == self._current_adapter:
+            return  # Already active
+
+        # Clear current adapter
+        if self._ctx_ptr:
+            llama_cpp.llama_clear_adapter_lora(self._ctx_ptr)
+
+        # Apply new adapter if requested
+        if adapter_name and adapter_name in self._adapter_handles:
+            handle = self._adapter_handles[adapter_name]
+            rc = llama_cpp.llama_set_adapter_lora(
+                self._ctx_ptr, handle, ctypes.c_float(1.0)
+            )
+            if rc != 0:
+                print(f"  WARNING: adapter {adapter_name} set failed (rc={rc})")
+
         self._current_adapter = adapter_name
 
         if self.verbose:
-            print(f"({time.time()-start:.1f}s)")
+            label = adapter_name or "base"
+            print(f"  [swapped to {label}]", flush=True)
 
     def generate(self, query: str, adapter_name=None, system_prompt=None,
                  enable_tools=True):
@@ -439,9 +483,16 @@ Based on the context above, answer the user's question. Reference specific files
         """Combine multiple perspective responses into a unified answer.
 
         Enhanced with DreamReweaver creative bridges when available.
+        Truncates perspectives to fit within context window.
         """
+        # Truncate each perspective to fit within context budget
+        # Reserve ~1200 tokens for system prompt + synthesis output
+        max_per_perspective = max(200, (self.n_ctx - 1200) // max(len(perspectives), 1))
+        # Rough char estimate: 1 token ~ 4 chars
+        max_chars = max_per_perspective * 4
+
         combined = "\n\n".join(
-            f"**{name.upper()} PERSPECTIVE:**\n{text}"
+            f"**{name.upper()} PERSPECTIVE:**\n{text[:max_chars]}"
             for name, text in perspectives.items()
         )
 
