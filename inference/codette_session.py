@@ -80,6 +80,18 @@ try:
 except ImportError:
     HAS_PERSPECTIVES = False
 
+try:
+    from reasoning_forge.aegis import AEGIS
+    HAS_AEGIS = True
+except ImportError:
+    HAS_AEGIS = False
+
+try:
+    from reasoning_forge.nexus import NexusSignalEngine
+    HAS_NEXUS = True
+except ImportError:
+    HAS_NEXUS = False
+
 # Agent names matching the 8 adapters
 AGENT_NAMES = [
     "newton", "davinci", "empathy", "philosophy",
@@ -123,6 +135,8 @@ class CodetteSession:
         self.memory_kernel = None
         self.guardian = None
         self.resonance_engine = None
+        self.aegis = None
+        self.nexus = None
 
         # Metrics history
         self.coherence_history: List[float] = []
@@ -169,6 +183,12 @@ class CodetteSession:
 
         if HAS_RESONANCE:
             self.resonance_engine = ResonantContinuityEngine()
+
+        if HAS_AEGIS:
+            self.aegis = AEGIS()
+
+        if HAS_NEXUS:
+            self.nexus = NexusSignalEngine()
 
     def add_message(self, role: str, content: str, metadata: Optional[Dict] = None):
         """Add a message to the session history."""
@@ -277,6 +297,27 @@ class CodetteSession:
                 coh = self.coherence_history[-1] if self.coherence_history else 0.5
                 ten = self.tension_history[-1] if self.tension_history else 0.3
                 self.guardian.evaluate_output(adapter_name, "", coh, ten)
+            except Exception:
+                pass
+
+        # AEGIS ethical evaluation of the response
+        if self.aegis and self.messages:
+            try:
+                # Find the most recent assistant response
+                for msg in reversed(self.messages[-4:]):
+                    if msg["role"] == "assistant":
+                        self.aegis.evaluate(msg["content"], adapter=adapter_name)
+                        break
+            except Exception:
+                pass
+
+        # Nexus signal analysis of the user input
+        if self.nexus and self.messages:
+            try:
+                for msg in reversed(self.messages[-4:]):
+                    if msg["role"] == "user":
+                        self.nexus.analyze(msg["content"], adapter=adapter_name)
+                        break
             except Exception:
                 pass
 
@@ -396,6 +437,18 @@ class CodetteSession:
         else:
             state["resonance"] = None
 
+        # AEGIS ethical alignment
+        if self.aegis:
+            state["aegis"] = self.aegis.get_state()
+        else:
+            state["aegis"] = None
+
+        # Nexus signal intelligence
+        if self.nexus:
+            state["nexus"] = self.nexus.get_state()
+        else:
+            state["nexus"] = None
+
         # Perspective registry
         if HAS_PERSPECTIVES:
             state["perspectives_available"] = len(PERSPECTIVES)
@@ -442,6 +495,16 @@ class CodetteSession:
                 data["resonance_state"] = self.resonance_engine.to_dict()
             except Exception:
                 pass
+        if self.aegis:
+            try:
+                data["aegis_state"] = self.aegis.to_dict()
+            except Exception:
+                pass
+        if self.nexus:
+            try:
+                data["nexus_state"] = self.nexus.to_dict()
+            except Exception:
+                pass
         return data
 
     def from_dict(self, data: Dict):
@@ -481,6 +544,16 @@ class CodetteSession:
         if HAS_RESONANCE and "resonance_state" in data:
             try:
                 self.resonance_engine = ResonantContinuityEngine.from_dict(data["resonance_state"])
+            except Exception:
+                pass
+        if HAS_AEGIS and "aegis_state" in data:
+            try:
+                self.aegis = AEGIS.from_dict(data["aegis_state"])
+            except Exception:
+                pass
+        if HAS_NEXUS and "nexus_state" in data:
+            try:
+                self.nexus = NexusSignalEngine.from_dict(data["nexus_state"])
             except Exception:
                 pass
 
