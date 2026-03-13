@@ -27,6 +27,9 @@
             </div>
             <div class="header-right">
                 <button class="header-btn" id="btn-new-chat" title="New conversation">+ New</button>
+                <button class="header-btn" id="btn-export" title="Export session">Export</button>
+                <button class="header-btn" id="btn-import" title="Import session">Import</button>
+                <input type="file" id="import-file" accept=".json" style="display:none">
                 <button class="header-btn" id="btn-toggle-panel" title="Toggle side panel">Cocoon</button>
             </div>
         </div>
@@ -163,6 +166,101 @@
             <div class="metric-row">
                 <span class="metric-label">&#128190; Sessions</span>
                 <span class="metric-value" id="cocoon-sessions">0</span>
+            </div>
+        </div>
+
+        <!-- AEGIS Ethical Alignment -->
+        <div class="side-section" id="section-aegis" style="display:none">
+            <div class="side-section-title">AEGIS Ethics</div>
+            <div class="metric-row">
+                <span class="metric-label">&#951; Alignment</span>
+                <span class="metric-value" id="aegis-eta">--</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-bar-fill" id="bar-aegis-eta"
+                     style="width:0%;background:var(--philosophy)"></div>
+            </div>
+            <div class="metric-row" style="margin-top:8px">
+                <span class="metric-label">Trend</span>
+                <span class="metric-value" id="aegis-trend">--</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Evaluations</span>
+                <span class="metric-value" id="aegis-evals">0</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Vetoes</span>
+                <span class="metric-value" id="aegis-vetoes">0</span>
+            </div>
+        </div>
+
+        <!-- Nexus Signal Intelligence -->
+        <div class="side-section" id="section-nexus" style="display:none">
+            <div class="side-section-title">Nexus Signals</div>
+            <div class="metric-row">
+                <span class="metric-label">Processed</span>
+                <span class="metric-value" id="nexus-processed">0</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Interventions</span>
+                <span class="metric-value" id="nexus-interventions">0</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Rate</span>
+                <span class="metric-value" id="nexus-rate">0%</span>
+            </div>
+            <div class="nexus-risk-dots" id="nexus-risks"></div>
+        </div>
+
+        <!-- Resonant Continuity -->
+        <div class="side-section" id="section-resonance" style="display:none">
+            <div class="side-section-title">Resonance &#936;<sub>r</sub></div>
+            <div class="metric-row">
+                <span class="metric-label">&#936;<sub>r</sub> Wavefunction</span>
+                <span class="metric-value" id="resonance-psi">--</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-bar-fill" id="bar-resonance-psi"
+                     style="width:0%;background:var(--empathy)"></div>
+            </div>
+            <div class="metric-row" style="margin-top:8px">
+                <span class="metric-label">Quality</span>
+                <span class="metric-value" id="resonance-quality">--</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Convergence</span>
+                <span class="metric-value" id="resonance-convergence">--</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Stability</span>
+                <span class="metric-value" id="resonance-stability">--</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label" id="resonance-peak-label">Peak</span>
+                <span class="metric-value" id="resonance-peak">--</span>
+            </div>
+        </div>
+
+        <!-- Living Memory -->
+        <div class="side-section" id="section-memory" style="display:none">
+            <div class="side-section-title">Living Memory</div>
+            <div class="metric-row">
+                <span class="metric-label">Cocoons</span>
+                <span class="metric-value" id="memory-count">0</span>
+            </div>
+            <div class="memory-emotions" id="memory-emotions"></div>
+        </div>
+
+        <!-- Guardian -->
+        <div class="side-section" id="section-guardian" style="display:none">
+            <div class="side-section-title">Guardian</div>
+            <div class="metric-row">
+                <span class="metric-label">Ethics Score</span>
+                <span class="metric-value" id="guardian-ethics">--</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Trust Interactions</span>
+                <span class="metric-value" id="guardian-trust">0</span>
             </div>
         </div>
 

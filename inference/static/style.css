@@ -791,6 +791,57 @@ body {
     font-style: italic;
 }
 
+/* ── Subsystem Panels ── */
+.nexus-risk-dots {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.risk-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.risk-dot.low { background: var(--philosophy); opacity: 0.6; }
+.risk-dot.medium { background: var(--davinci); opacity: 0.8; }
+.risk-dot.high { background: var(--quantum); opacity: 1; box-shadow: 0 0 6px var(--quantum); }
+
+.memory-emotions {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.emotion-tag {
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    background: rgba(148, 163, 184, 0.1);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: var(--text-secondary);
+}
+
+.emotion-tag.active {
+    background: rgba(168, 85, 247, 0.15);
+    border-color: rgba(168, 85, 247, 0.4);
+    color: var(--empathy);
+}
+
+.trend-improving { color: var(--philosophy) !important; }
+.trend-declining { color: var(--quantum) !important; }
+.trend-stable { color: var(--text-secondary) !important; }
+
+.peak-active {
+    color: var(--davinci) !important;
+    text-shadow: 0 0 8px var(--davinci);
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
     .side-panel {

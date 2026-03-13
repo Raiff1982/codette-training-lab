@@ -20,6 +20,8 @@ const LABELS = {
 // State
 let isLoading = false;
 let spiderwebViz = null;
+let serverConnected = true;
+let reconnectTimer = null;
 
 // ── Initialization ──
 document.addEventListener('DOMContentLoaded', () => {
@@ -60,6 +62,14 @@ function initUI() {
 
     sendBtn.addEventListener('click', sendMessage);
     newBtn.addEventListener('click', newChat);
+
+    const exportBtn = document.getElementById('btn-export');
+    const importBtn = document.getElementById('btn-import');
+    const importFile = document.getElementById('import-file');
+
+    exportBtn.addEventListener('click', exportSession);
+    importBtn.addEventListener('click', () => importFile.click());
+    importFile.addEventListener('change', importSession);
 
     panelBtn.addEventListener('click', () => {
         const panel = document.getElementById('side-panel');
@@ -167,6 +177,7 @@ function pollStatus() {
     fetch('/api/status')
         .then(r => r.json())
         .then(status => {
+            setConnected();
             updateStatus(status);
             if (status.state === 'loading') {
                 setTimeout(pollStatus, 2000);
@@ -182,8 +193,26 @@ function pollStatus() {
             }
         })
         .catch(() => {
+            setDisconnected();
             setTimeout(pollStatus, 5000);
         });
+}
+
+function setDisconnected() {
+    if (serverConnected) {
+        serverConnected = false;
+        updateStatus({ state: 'error', message: 'Server disconnected' });
+    }
+}
+
+function setConnected() {
+    if (!serverConnected) {
+        serverConnected = true;
+        if (reconnectTimer) {
+            clearInterval(reconnectTimer);
+            reconnectTimer = null;
+        }
+    }
 }
 
 function updateStatus(status) {
@@ -297,7 +326,10 @@ function sendMessage() {
     isLoading = true;
     document.getElementById('send-btn').disabled = true;
 
-    // Send request
+    // Send request with timeout (20 min for multi-perspective CPU inference)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1200000);
+
     fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -306,9 +338,11 @@ function sendMessage() {
             adapter: adapter === 'auto' ? null : adapter,
             max_adapters: maxAdapters,
         }),
+        signal: controller.signal,
     })
     .then(r => r.json())
     .then(data => {
+        clearTimeout(timeoutId);
         thinkingEl.remove();
 
         if (data.error) {
@@ -351,8 +385,17 @@ function sendMessage() {
         }
     })
     .catch(err => {
+        clearTimeout(timeoutId);
         thinkingEl.remove();
-        addMessage('error', `Request failed: ${err.message}`);
+        if (err.name === 'AbortError') {
+            addMessage('error', 'Request timed out. The model may be processing a complex query — try again or reduce perspectives.');
+        } else if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
+            setDisconnected();
+            addMessage('error', 'Server disconnected. Attempting to reconnect...');
+            startReconnectPolling();
+        } else {
+            addMessage('error', `Request failed: ${err.message}`);
+        }
     })
     .finally(() => {
         isLoading = false;
@@ -458,6 +501,11 @@ function updateCocoonUI(state) {
     document.getElementById('cocoon-encryption').textContent =
         cocoon.has_sync ? 'Active' : 'Available';
 
+    // AEGIS eta feeds the main eta metric when available
+    if (state.aegis && state.aegis.eta !== undefined) {
+        document.getElementById('metric-eta').textContent = state.aegis.eta.toFixed(4);
+    }
+
     // Coverage
     updateCoverage(state.perspective_usage || {});
 
@@ -465,6 +513,9 @@ function updateCocoonUI(state) {
     if (spiderwebViz && state.spiderweb) {
         spiderwebViz.update(state.spiderweb);
     }
+
+    // New subsystem panels (AEGIS, Nexus, Memory, Resonance, Guardian)
+    updateSubsystemUI(state);
 }
 
 function updateEpistemicUI(epistemic) {
@@ -532,6 +583,11 @@ function newChat() {
             document.getElementById('bar-tension').style.width = '0%';
             document.getElementById('cocoon-attractors').textContent = '0';
             document.getElementById('cocoon-glyphs').textContent = '0';
+            // Reset subsystem panels
+            ['section-aegis','section-nexus','section-resonance','section-memory','section-guardian'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
             // Reset spiderweb
             if (spiderwebViz) {
                 spiderwebViz._initDefaultState();
@@ -585,6 +641,188 @@ function loadSession(sessionId) {
     .catch(err => {
         console.log('Failed to load session:', err);
     });
+}
+
+// ── Session Export/Import ──
+function exportSession() {
+    fetch('/api/session/export', { method: 'POST' })
+        .then(r => {
+            if (!r.ok) throw new Error('Export failed');
+            const disposition = r.headers.get('Content-Disposition') || '';
+            const match = disposition.match(/filename="(.+)"/);
+            const filename = match ? match[1] : 'codette_session.json';
+            return r.blob().then(blob => ({ blob, filename }));
+        })
+        .then(({ blob, filename }) => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        })
+        .catch(err => {
+            console.log('Export failed:', err);
+        });
+}
+
+function importSession(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const data = JSON.parse(e.target.result);
+            fetch('/api/session/import', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            })
+            .then(r => r.json())
+            .then(result => {
+                if (result.error) {
+                    addMessage('error', `Import failed: ${result.error}`);
+                    return;
+                }
+                // Rebuild chat from imported session
+                const area = document.getElementById('chat-area');
+                area.innerHTML = '';
+                (result.messages || []).forEach(msg => {
+                    addMessage(msg.role, msg.content, msg.metadata || {});
+                });
+                if (result.state) {
+                    updateCocoonUI(result.state);
+                }
+                loadSessions();
+            })
+            .catch(err => {
+                addMessage('error', `Import failed: ${err.message}`);
+            });
+        } catch (parseErr) {
+            addMessage('error', 'Invalid JSON file');
+        }
+    };
+    reader.readAsText(file);
+    // Reset file input so same file can be imported again
+    event.target.value = '';
+}
+
+// ── Reconnection ──
+function startReconnectPolling() {
+    if (reconnectTimer) return; // Already polling
+    reconnectTimer = setInterval(() => {
+        fetch('/api/status')
+            .then(r => r.json())
+            .then(status => {
+                setConnected();
+                updateStatus(status);
+                addMessage('error', 'Server reconnected!');
+            })
+            .catch(() => {
+                // Still disconnected, keep polling
+            });
+    }, 5000);
+}
+
+// ── Subsystem UI Updates ──
+function updateSubsystemUI(state) {
+    updateAegisUI(state.aegis);
+    updateNexusUI(state.nexus);
+    updateResonanceUI(state.resonance);
+    updateMemoryUI(state.memory);
+    updateGuardianUI(state.guardian);
+}
+
+function updateAegisUI(aegis) {
+    const section = document.getElementById('section-aegis');
+    if (!aegis) { section.style.display = 'none'; return; }
+    section.style.display = '';
+
+    const eta = aegis.eta || 0;
+    document.getElementById('aegis-eta').textContent = eta.toFixed(4);
+    document.getElementById('bar-aegis-eta').style.width = (eta * 100) + '%';
+    document.getElementById('aegis-evals').textContent = aegis.total_evaluations || 0;
+    document.getElementById('aegis-vetoes').textContent = aegis.veto_count || 0;
+
+    const trendEl = document.getElementById('aegis-trend');
+    const trend = aegis.alignment_trend || '--';
+    trendEl.textContent = trend;
+    trendEl.className = 'metric-value';
+    if (trend === 'improving') trendEl.classList.add('trend-improving');
+    else if (trend === 'declining') trendEl.classList.add('trend-declining');
+    else if (trend === 'stable') trendEl.classList.add('trend-stable');
+}
+
+function updateNexusUI(nexus) {
+    const section = document.getElementById('section-nexus');
+    if (!nexus) { section.style.display = 'none'; return; }
+    section.style.display = '';
+
+    document.getElementById('nexus-processed').textContent = nexus.total_processed || 0;
+    document.getElementById('nexus-interventions').textContent = nexus.interventions || 0;
+    const rate = (nexus.intervention_rate || 0) * 100;
+    document.getElementById('nexus-rate').textContent = rate.toFixed(1) + '%';
+
+    // Risk dots for recent signals
+    const risksEl = document.getElementById('nexus-risks');
+    const risks = nexus.recent_risks || [];
+    risksEl.innerHTML = risks.map(r =>
+        `<span class="risk-dot ${r}" title="${r} risk"></span>`
+    ).join('');
+}
+
+function updateResonanceUI(resonance) {
+    const section = document.getElementById('section-resonance');
+    if (!resonance) { section.style.display = 'none'; return; }
+    section.style.display = '';
+
+    const psi = resonance.psi_r || 0;
+    document.getElementById('resonance-psi').textContent = psi.toFixed(4);
+    // Normalize psi_r to 0-100% bar (clamp between -2 and 2)
+    const psiNorm = Math.min(100, Math.max(0, (psi + 2) / 4 * 100));
+    document.getElementById('bar-resonance-psi').style.width = psiNorm + '%';
+
+    document.getElementById('resonance-quality').textContent =
+        (resonance.resonance_quality || 0).toFixed(4);
+    document.getElementById('resonance-convergence').textContent =
+        (resonance.convergence_rate || 0).toFixed(4);
+    document.getElementById('resonance-stability').textContent =
+        resonance.stability || '--';
+
+    const peakEl = document.getElementById('resonance-peak');
+    const atPeak = resonance.at_peak || false;
+    peakEl.textContent = atPeak ? 'ACTIVE' : 'dormant';
+    peakEl.className = 'metric-value' + (atPeak ? ' peak-active' : '');
+}
+
+function updateMemoryUI(memory) {
+    const section = document.getElementById('section-memory');
+    if (!memory) { section.style.display = 'none'; return; }
+    section.style.display = '';
+
+    document.getElementById('memory-count').textContent = memory.total_memories || 0;
+
+    // Emotional profile tags
+    const emotionsEl = document.getElementById('memory-emotions');
+    const profile = memory.emotional_profile || {};
+    const sorted = Object.entries(profile).sort((a, b) => b[1] - a[1]);
+    emotionsEl.innerHTML = sorted.slice(0, 8).map(([emotion, count]) =>
+        `<span class="emotion-tag${count > 0 ? ' active' : ''}" title="${count} memories">${emotion} ${count}</span>`
+    ).join('');
+}
+
+function updateGuardianUI(guardian) {
+    const section = document.getElementById('section-guardian');
+    if (!guardian) { section.style.display = 'none'; return; }
+    section.style.display = '';
+
+    const ethics = guardian.ethics || {};
+    document.getElementById('guardian-ethics').textContent =
+        (ethics.ethical_score !== undefined) ? ethics.ethical_score.toFixed(4) : '--';
+    const trust = guardian.trust || {};
+    document.getElementById('guardian-trust').textContent =
+        trust.total_interactions || 0;
 }
 
 // ── Utilities ──
