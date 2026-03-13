@@ -1,8 +1,80 @@
+---
+language:
+- en
+license: mit
+tags:
+- codette
+- multi-perspective-reasoning
+- ethical-ai
+- lora
+- qlora
+- llama-3.1
+- recursive-cognition
+- rc-xi
+library_name: peft
+base_model: meta-llama/Llama-3.1-8B-Instruct
+model-index:
+- name: Codette RC+xi Reasoning Adapters
+  results:
+  - task:
+      type: text-generation
+      name: Multi-Perspective Reasoning
+    metrics:
+    - name: Phase Coherence (Gamma)
+      type: custom
+      value: 0.9835
+    - name: AEGIS Ethical Alignment (Eta)
+      type: custom
+      value: 0.961
+    - name: Cocoon Coherence
+      type: custom
+      value: 0.994
+    - name: Memory Phase Stability
+      type: custom
+      value: 0.969
+---
+
 # Codette Adapter Training Lab
 
-Codette is an experimental AI research system for **recursive reasoning, multi-perspective cognition, and ethical AI alignment**.
+Codette is an experimental AI research system for **recursive reasoning, multi-perspective cognition, and ethical AI alignment**, created by **Jonathan Harrison**.
 
-This repository contains the complete training pipeline for developing Codette LoRA adapters on Llama 3.1 8B.
+This repository contains the complete training pipeline, inference server, and 8 trained LoRA adapters for the Codette cognitive architecture running on Llama 3.1 8B.
+
+## Model Weights
+
+All 8 adapters are included in two formats:
+
+| Format | Directory | Size | Use Case |
+|--------|-----------|------|----------|
+| **GGUF (f16)** | `adapters/*.gguf` | ~924 MB | llama.cpp inference with hot-swap |
+| **PEFT SafeTensors** | `adapters_peft/*/` | ~79 MB | HuggingFace / transformers fine-tuning |
+
+**Base model required**: `meta-llama/Llama-3.1-8B-Instruct` (or any Llama-3.1-8B variant with hidden_size=4096)
+
+## Key Metrics
+
+| Metric | Value | Context |
+|--------|-------|---------|
+| Phase Coherence (Gamma) | 0.9835 | 11-agent convergence |
+| AEGIS Ethical Alignment (Eta) | 0.961 | 6-framework ethical governance |
+| Cocoon Coherence | 0.994 | Memory state stability |
+| Memory Phase Stability | 0.969 | Cross-session persistence |
+| Tension Decay | 91.2% | 200-agent embodied simulation |
+
+## Cognitive Subsystems (10 active)
+
+| Subsystem | Module | Purpose |
+|-----------|--------|---------|
+| Reasoning Forge | `reasoning_forge/forge_engine.py` | 6-agent multi-perspective debate + synthesis |
+| Epistemic Metrics | `reasoning_forge/epistemic_metrics.py` | RC+xi tension/coherence tracking |
+| Quantum Spiderweb | `reasoning_forge/quantum_spiderweb.py` | 5D belief propagation + attractor detection |
+| Cocoon Sync | `reasoning_forge/cocoon_sync.py` | Fernet-encrypted federated state sync |
+| AEGIS | `reasoning_forge/aegis.py` | 6-framework ethical governance (utilitarian, deontological, virtue, care, ubuntu, indigenous) |
+| Nexus Signal Engine | `reasoning_forge/nexus.py` | Pre-corruption detection via entropy + FFT + intent vectors |
+| Living Memory | `reasoning_forge/living_memory.py` | Emotionally-tagged memory cocoons with SHA-256 anchors |
+| Guardian | `reasoning_forge/guardian.py` | 3-layer protection (sanitizer + ethical anchor + trust calibrator) |
+| Resonant Continuity | `reasoning_forge/resonant_continuity.py` | Psi_r wavefunction: emotion x energy x frequency x intent |
+| Perspective Registry | `reasoning_forge/perspective_registry.py` | 12 perspectives (8 LoRA-backed + 4 prompt-only with fallback) |
 
 ## Architecture
 
@@ -177,13 +249,67 @@ Key research documents in `research/`:
 - Codette Research Equations (8 core quantum mathematics)
 - Multi-perspective reasoning architecture
 
+## Inference Server
+
+Codette includes a full web UI for interactive multi-perspective chat:
+
+```bash
+# Launch the web UI (default port 5000)
+python inference/codette_server.py
+
+# Or use the batch file
+codette_web.bat
+```
+
+The UI features:
+- Real-time adapter hot-swap (0ms switching via llama.cpp LoRA slots)
+- Quantum spiderweb visualization of belief propagation
+- Live AEGIS ethical alignment tracking
+- Nexus signal analysis panel
+- Memory cocoon emotional profiling
+- Resonance wavefunction display
+
+## LoRA Configuration
+
+```yaml
+method: QLoRA (4-bit NF4 quantization)
+rank: 16
+alpha: 32
+dropout: 0.05
+target_modules: [q_proj, k_proj, v_proj, o_proj]
+total_training_examples: 20,500
+```
+
+## RC+xi Framework
+
+The core theoretical framework — **Recursive Convergence + Epistemic Tension** — coordinates 11 reasoning perspectives:
+
+1. Newton (analytical physics) → `newton` adapter
+2. DaVinci (creative invention) → `davinci` adapter
+3. Empathy (emotional intelligence) → `empathy` adapter
+4. Philosophy (conceptual reasoning) → `philosophy` adapter
+5. Quantum (probabilistic thinking) → `quantum` adapter
+6. RC+xi Consciousness → `consciousness` adapter
+7. Multi-Perspective Synthesis → `multi_perspective` adapter
+8. Systems Architecture → `systems_architecture` adapter
+9. Human Intuition → prompt-only (fallback: `empathy`)
+10. Resilient Kindness → prompt-only (fallback: `empathy`)
+11. AEGIS Ethics → prompt-only (fallback: `consciousness`)
+
 ## Requirements
 
 - Python 3.10+
-- PyTorch 2.1+
+- PyTorch 2.1+ (CUDA, ROCm, or XPU backend)
 - 16GB+ RAM (CPU training) or GPU with 8GB+ VRAM
+- llama.cpp with GGUF support (for inference server)
 - ~1-3 hours per adapter (CPU) or 20-40 min (A10/A100 GPU)
+
+## Hardware Tested
+
+- Intel Arc 140V (8GB) — PyTorch 2.10.0+xpu, native XPU backend
+- NVIDIA GPUs via CUDA (A10, A100, RTX series)
+- CPU-only mode supported
 
 ## License
 
-Research project - experimental AI development.
+MIT — Research project by Jonathan Harrison. Experimental AI development.
