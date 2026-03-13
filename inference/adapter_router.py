@@ -233,12 +233,21 @@ class AdapterRouter:
                 scores[adapter] = score
 
         if not scores:
-            # Default: use multi_perspective if available, else consciousness
-            default = "multi_perspective" if "multi_perspective" in self.available else self.available[0]
+            # No domain keywords matched — use base model (no adapter).
+            # Prefer empathy for conversational tone, else first available.
+            if "empathy" in self.available:
+                default = "empathy"
+                reason = "No domain keywords matched — using empathy for conversational response"
+            elif "multi_perspective" in self.available:
+                default = "multi_perspective"
+                reason = "No domain keywords matched — using multi-perspective"
+            else:
+                default = None  # Base model, no adapter
+                reason = "No domain keywords matched — using base model"
             return RouteResult(
                 primary=default,
                 confidence=0.3,
-                reasoning="No strong keyword match — defaulting to multi-perspective",
+                reasoning=reason,
                 strategy="keyword",
             )
 

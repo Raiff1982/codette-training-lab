@@ -133,6 +133,11 @@ def _worker_thread():
                                           if isinstance(result.get("adapters"), list) else "base")
                 perspectives = result.get("perspectives")
 
+                # For single-adapter responses, create a perspectives dict
+                # so the spiderweb always updates
+                if not perspectives:
+                    perspectives = {adapter_used: result["response"]}
+
                 _session.add_message("user", query)
                 _session.add_message("assistant", result["response"], metadata={
                     "adapter": adapter_used,
@@ -143,9 +148,9 @@ def _worker_thread():
 
                 _session.update_after_response(route, adapter_used, perspectives)
 
-                # Compute epistemic metrics if multi-perspective
+                # Compute epistemic metrics (always, not just multi-perspective)
                 epistemic = None
-                if perspectives and len(perspectives) > 1:
+                if perspectives and len(perspectives) >= 1:
                     epistemic = _session.compute_epistemic_report(
                         perspectives, result["response"]
                     )
@@ -181,6 +186,11 @@ def _worker_thread():
             # Add epistemic report if available
             if epistemic:
                 response_data["epistemic"] = epistemic
+
+            # Add tool usage info if any tools were called
+            tools_used = result.get("tools_used", [])
+            if tools_used:
+                response_data["tools_used"] = tools_used
 
             response_q.put(response_data)
 
@@ -243,6 +253,10 @@ class CodetteHandler(SimpleHTTPRequestHandler):
             self._handle_load_session()
         elif path == "/api/session/save":
             self._handle_save_session()
+        elif path == "/api/session/export":
+            self._handle_export_session()
+        elif path == "/api/session/import":
+            self._handle_import_session()
         else:
             self.send_error(404, "Not found")
 
@@ -273,6 +287,12 @@ class CodetteHandler(SimpleHTTPRequestHandler):
             self._json_response({"error": "Empty query"}, 400)
             return
 
+        # Guardian input check
+        if _session and _session.guardian:
+            check = _session.guardian.check_input(query)
+            if not check["safe"]:
+                query = check["cleaned_text"]
+
         # Check if orchestrator is loading
         if _orchestrator_status.get("state") == "loading":
             self._json_response({
@@ -301,8 +321,8 @@ class CodetteHandler(SimpleHTTPRequestHandler):
                 self._json_response(thinking, 500)
                 return
 
-            # Wait for complete event
-            result = response_q.get(timeout=300)  # 5 min max for inference
+            # Wait for complete event (multi-perspective can take 15+ min on CPU)
+            result = response_q.get(timeout=1200)  # 20 min max for inference
             self._json_response(result)
 
         except queue.Empty:
@@ -407,6 +427,61 @@ class CodetteHandler(SimpleHTTPRequestHandler):
             self._json_response({"saved": True, "session_id": _session.session_id})
         else:
             self._json_response({"error": "No active session"}, 400)
+
+    def _handle_export_session(self):
+        """Export current session as downloadable JSON."""
+        if not _session:
+            self._json_response({"error": "No active session"}, 400)
+            return
+
+        export_data = _session.to_dict()
+        export_data["_export_version"] = 1
+        export_data["_exported_at"] = time.time()
+
+        body = json.dumps(export_data, default=str, indent=2).encode("utf-8")
+        filename = f"codette_session_{_session.session_id[:8]}.json"
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
+        self.send_header("Content-Length", len(body))
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _handle_import_session(self):
+        """Import a session from uploaded JSON."""
+        global _session
+        try:
+            data = self._read_json_body()
+            if not data or "session_id" not in data:
+                self._json_response({"error": "Invalid session data"}, 400)
+                return
+
+            # Save current session before importing
+            if _session and _session_store and _session.messages:
+                try:
+                    _session_store.save(_session)
+                except Exception:
+                    pass
+
+            _session = CodetteSession()
+            _session.from_dict(data)
+
+            # Save imported session to store
+            if _session_store:
+                try:
+                    _session_store.save(_session)
+                except Exception:
+                    pass
+
+            self._json_response({
+                "session_id": _session.session_id,
+                "messages": _session.messages,
+                "state": _session.get_state(),
+                "imported": True,
+            })
+        except Exception as e:
+            self._json_response({"error": f"Import failed: {e}"}, 400)
 
 
 def main():

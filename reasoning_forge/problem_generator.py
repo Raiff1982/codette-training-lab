@@ -145,7 +145,7 @@ class ProblemGenerator:
         optional = [t for t in all_types if t not in required]
         random.shuffle(optional)
 
-        selected_types = required + optional[: count - len(required)]
+        selected_types = required + optional[: max(0, count - len(required))]
         random.shuffle(selected_types)
 
         problems = []

@@ -7,7 +7,6 @@ Returns structured critique with scores.
 """
 
 import re
-import random
 from reasoning_forge.agents.base_agent import ReasoningAgent
 
 

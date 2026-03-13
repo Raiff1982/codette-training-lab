@@ -115,7 +115,7 @@ def main():
     total_examples = 0
     all_ok = True
     for adapter in registry.get_adapter_names():
-        path = results.get(adapter, "NOT GENERATED")
+        path = results.get(adapter, "ERROR: NOT GENERATED")
         if path.startswith("ERROR"):
             status = f"FAILED: {path}"
             all_ok = False
@@ -129,7 +129,8 @@ def main():
 
     print(f"\n  {'TOTAL':25s}  {total_examples:5d} / {total_target:5d} examples")
     print(f"  {'Time':25s}  {total_elapsed:.1f} seconds")
-    print(f"  {'Rate':25s}  {total_examples / total_elapsed:.0f} examples/sec")
+    rate = total_examples / total_elapsed if total_elapsed > 0 else 0
+    print(f"  {'Rate':25s}  {rate:.0f} examples/sec")
     print("=" * 60)
 
     # Validate output files
