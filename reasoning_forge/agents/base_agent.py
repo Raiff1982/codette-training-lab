@@ -2,12 +2,16 @@
 Base class for all reasoning agents in the forge.
 
 Each agent must implement analyze() and get_analysis_templates().
-The base class provides keyword matching and template selection utilities.
+The base class provides keyword matching and template selection utilities,
+and optionally uses real LLM inference via adapters.
 """
 
 from abc import ABC, abstractmethod
 import random
 import re
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ReasoningAgent(ABC):
@@ -15,14 +19,23 @@ class ReasoningAgent(ABC):
 
     name: str = "BaseAgent"
     perspective: str = "general"
+    adapter_name: str = None  # Subclasses should override with their adapter name
 
-    def __init__(self):
+    def __init__(self, orchestrator=None):
+        """
+        Args:
+            orchestrator: Optional CodetteOrchestrator for real LLM inference.
+                         If None, falls back to template-based responses.
+        """
         self._templates = self.get_analysis_templates()
         self._keyword_map = self.get_keyword_map()
+        self.orchestrator = orchestrator
 
-    @abstractmethod
     def analyze(self, concept: str) -> str:
         """Analyze a concept from this agent's perspective.
+
+        Uses real LLM inference if orchestrator is available,
+        otherwise falls back to template-based responses.
 
         Args:
             concept: The concept text to analyze.
@@ -30,7 +43,53 @@ class ReasoningAgent(ABC):
         Returns:
             A substantive analysis string from this agent's perspective.
         """
-        raise NotImplementedError
+        # Try real LLM inference if orchestrator available
+        if self.orchestrator and self.adapter_name:
+            try:
+                return self._analyze_with_llm(concept)
+            except Exception as e:
+                logger.warning(f"{self.name} LLM inference failed: {e}, falling back to templates")
+
+        # Fallback to template-based response
+        return self._analyze_with_template(concept)
+
+    def _analyze_with_llm(self, concept: str) -> str:
+        """Call the LLM with this agent's adapter for real reasoning.
+
+        Args:
+            concept: The concept to analyze.
+
+        Returns:
+            LLM-generated analysis from this agent's perspective.
+        """
+        if not self.orchestrator or not self.adapter_name:
+            raise ValueError("Orchestrator and adapter_name required for LLM inference")
+
+        # Build a prompt using one of the templates as a system instruction
+        template = self.select_template(concept)
+        system_prompt = template.replace("{concept}", concept)
+
+        # Generate using the LLM with this agent's adapter
+        response, tokens, _ = self.orchestrator.generate(
+            query=concept,
+            adapter_name=self.adapter_name,
+            system_prompt=system_prompt,
+            enable_tools=False
+        )
+
+        return response.strip()
+
+    def _analyze_with_template(self, concept: str) -> str:
+        """Fallback: generate response using template substitution.
+
+        Args:
+            concept: The concept to analyze.
+
+        Returns:
+            Template-based analysis.
+        """
+        template = self.select_template(concept)
+        return template.replace("{concept}", concept)
 
     @abstractmethod
     def get_analysis_templates(self) -> list[str]:

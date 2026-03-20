@@ -11,6 +11,7 @@ from reasoning_forge.agents.base_agent import ReasoningAgent
 class EthicsAgent(ReasoningAgent):
     name = "Ethics"
     perspective = "alignment_and_consequences"
+    adapter_name = "philosophy"  # Ethics uses philosophy adapter (no separate ethics adapter yet)
 
     def get_analysis_templates(self) -> list[str]:
         return [

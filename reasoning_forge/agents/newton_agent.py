@@ -11,6 +11,7 @@ from reasoning_forge.agents.base_agent import ReasoningAgent
 class NewtonAgent(ReasoningAgent):
     name = "Newton"
     perspective = "physics_and_mathematical_causality"
+    adapter_name = "newton"  # Use the Newton LoRA adapter for real inference
 
     def get_analysis_templates(self) -> list[str]:
         return [
@@ -285,7 +286,3 @@ class NewtonAgent(ReasoningAgent):
             "climate": [1, 7, 19], "economic": [3, 7, 16],
             "health": [3, 7, 16], "network": [8, 15, 17],
         }
-
-    def analyze(self, concept: str) -> str:
-        template = self.select_template(concept)
-        return template.replace("{concept}", concept)

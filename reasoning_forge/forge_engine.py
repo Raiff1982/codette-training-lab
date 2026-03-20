@@ -56,15 +56,26 @@ _REVISION_THRESHOLD = 0.6
 class ForgeEngine:
     """Main orchestrator for multi-agent reasoning data generation."""
 
-    def __init__(self, living_memory=None, enable_memory_weighting=True):
-        # Initialize all reasoning agents
-        self.newton = NewtonAgent()
-        self.quantum = QuantumAgent()
-        self.ethics = EthicsAgent()
-        self.philosophy = PhilosophyAgent()
-        self.davinci = DaVinciAgent()
-        self.empathy = EmpathyAgent()
-        self.critic = CriticAgent()
+    def __init__(self, living_memory=None, enable_memory_weighting=True, orchestrator=None):
+        # Try to lazy-load orchestrator if not provided but LLM inference is desired
+        if orchestrator is None:
+            try:
+                sys.path.insert(0, str(os.path.join(os.path.dirname(__file__), '..', 'inference')))
+                from codette_orchestrator import CodetteOrchestrator
+                logger.info("Lazy-loading CodetteOrchestrator for agent LLM inference...")
+                orchestrator = CodetteOrchestrator(verbose=False)
+                logger.info(f"  OK: CodetteOrchestrator ready with {len(orchestrator.available_adapters)} adapters")
+            except Exception as e:
+                logger.info(f"CodetteOrchestrator not available: {e} — using template-based agents")
+
+        # Initialize all reasoning agents with orchestrator for real LLM inference
+        self.newton = NewtonAgent(orchestrator=orchestrator)
+        self.quantum = QuantumAgent(orchestrator=orchestrator)
+        self.ethics = EthicsAgent(orchestrator=orchestrator)
+        self.philosophy = PhilosophyAgent(orchestrator=orchestrator)
+        self.davinci = DaVinciAgent(orchestrator=orchestrator)
+        self.empathy = EmpathyAgent(orchestrator=orchestrator)
+        self.critic = CriticAgent(orchestrator=orchestrator)
 
         self.analysis_agents = [
             self.newton,

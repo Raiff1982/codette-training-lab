@@ -12,6 +12,7 @@ from reasoning_forge.agents.base_agent import ReasoningAgent
 class DaVinciAgent(ReasoningAgent):
     name = "DaVinci"
     perspective = "creative_and_inventive"
+    adapter_name = "davinci"  # Use the DaVinci LoRA adapter for real inference
 
     def get_analysis_templates(self) -> list[str]:
         return [

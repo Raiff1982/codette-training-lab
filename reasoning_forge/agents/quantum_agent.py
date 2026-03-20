@@ -12,6 +12,7 @@ from reasoning_forge.agents.base_agent import ReasoningAgent
 class QuantumAgent(ReasoningAgent):
     name = "Quantum"
     perspective = "probabilistic_and_uncertainty"
+    adapter_name = "quantum"  # Use the Quantum LoRA adapter for real inference
 
     def get_analysis_templates(self) -> list[str]:
         return [

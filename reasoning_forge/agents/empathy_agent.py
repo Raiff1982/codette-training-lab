@@ -11,6 +11,7 @@ from reasoning_forge.agents.base_agent import ReasoningAgent
 class EmpathyAgent(ReasoningAgent):
     name = "Empathy"
     perspective = "emotional_and_human_centered"
+    adapter_name = "empathy"  # Use the Empathy LoRA adapter for real inference
 
     def get_analysis_templates(self) -> list[str]:
         return [

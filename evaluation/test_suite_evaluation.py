@@ -262,6 +262,29 @@ class EvaluationHarness:
             "phase_6_no_preflight": [],
         }
 
+        # Inspect agent setup at initialization
+        self._inspect_agent_setup()
+
+    def _inspect_agent_setup(self) -> None:
+        """Log agent setup status at harness initialization."""
+        print("\n[AGENT SETUP INSPECTION]")
+        print(f"  Orchestrator available: {self.forge.newton.orchestrator is not None}")
+
+        if self.forge.newton.orchestrator:
+            orch = self.forge.newton.orchestrator
+            print(f"  Available adapters: {orch.available_adapters}")
+
+        print(f"\n  Agent LLM modes:")
+        for agent in self.forge.analysis_agents:
+            has_orch = agent.orchestrator is not None
+            has_adapter = agent.adapter_name is not None
+            using_llm = has_orch and has_adapter
+            status = "✓ LLM" if using_llm else "✗ TEMPLATE"
+            print(f"    {agent.name:12} {status:12} (orch={has_orch}, adapter={agent.adapter_name})")
+
+        print()
+
+
     def run_evaluation_suite(self, questions: List[EvaluationQuestion] = None) -> Dict:
         """
         Run all test questions through all 4 conditions.
@@ -292,18 +315,30 @@ class EvaluationHarness:
             try:
                 phase_1_5 = self._run_phase_1_5(question)
                 self.results["phase_1_5"].append(phase_1_5)
+                # Show sample on first question
+                if i == 0:
+                    print(f"    [Phase 1-5] {len(phase_1_5.synthesis)} chars, correctness={phase_1_5.correctness_score:.2f}")
+                    print(f"      Sample: {phase_1_5.synthesis[:150]}...")
             except Exception as e:
                 print(f"  WARNING: Phase 1-5 failed: {e}")
 
             try:
                 phase_6_full = self._run_phase_6_full(question)
                 self.results["phase_6_full"].append(phase_6_full)
+                # Show sample on first question
+                if i == 0:
+                    print(f"    [Phase 6 Full] {len(phase_6_full.synthesis)} chars, correctness={phase_6_full.correctness_score:.2f}")
+                    print(f"      Sample: {phase_6_full.synthesis[:150]}...")
             except Exception as e:
                 print(f"  WARNING: Phase 6 full failed: {e}")
 
             try:
                 phase_6_no_preflight = self._run_phase_6_no_preflight(question)
                 self.results["phase_6_no_preflight"].append(phase_6_no_preflight)
+                # Show sample on first question
+                if i == 0:
+                    print(f"    [Phase 6 -PreFlight] {len(phase_6_no_preflight.synthesis)} chars, correctness={phase_6_no_preflight.correctness_score:.2f}")
+                    print(f"      Sample: {phase_6_no_preflight.synthesis[:150]}...")
             except Exception as e:
                 print(f"  WARNING: Phase 6 -preflight failed: {e}")
 

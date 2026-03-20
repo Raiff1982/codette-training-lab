@@ -7,12 +7,16 @@ Returns structured critique with scores.
 """
 
 import re
+import logging
 from reasoning_forge.agents.base_agent import ReasoningAgent
+
+logger = logging.getLogger(__name__)
 
 
 class CriticAgent(ReasoningAgent):
     name = "Critic"
     perspective = "meta_evaluative"
+    adapter_name = "multi_perspective"  # Use multi-perspective adapter for meta-evaluation
 
     def get_analysis_templates(self) -> list[str]:
         # The critic does not use templates in the same way -- it evaluates
@@ -23,8 +27,74 @@ class CriticAgent(ReasoningAgent):
         ]
 
     def analyze(self, concept: str) -> str:
-        # The critic's primary method is evaluate_ensemble, not analyze.
-        return f"Critic agent requires ensemble input. Use evaluate_ensemble() for '{concept}'."
+        """Analyze using the multi-perspective adapter for meta-evaluation.
+
+        This delegates to the parent class which uses LLM if orchestrator
+        is available, or templates otherwise.
+        """
+        return super().analyze(concept)
+
+
+    def evaluate_ensemble_with_llm(
+        self,
+        concept: str,
+        analyses: dict[str, str],
+    ) -> dict:
+        """Use LLM to evaluate ensemble with real reasoning about quality.
+
+        Falls back to heuristic evaluation if orchestrator unavailable.
+
+        Args:
+            concept: Original concept
+            analyses: Dict of agent_name -> analysis_text
+
+        Returns:
+            Structured critique from the LLM
+        """
+        if not self.orchestrator or not self.adapter_name:
+            # Fallback to heuristic evaluation
+            return self.evaluate_ensemble(concept, analyses)
+
+        # Build a prompt asking the LLM to evaluate the analyses
+        analyses_text = "\n\n".join([
+            f"**{agent}**:\n{text[:300]}..."
+            for agent, text in analyses.items()
+        ])
+
+        eval_prompt = f"""Evaluate this ensemble analysis of "{concept}":
+
+{analyses_text}
+
+Provide a JSON assessment with:
+- agent_scores: subjective quality scores per agent (0-1)
+- strengths: key insights across perspectives
+- weaknesses: gaps and redundancies
+- overall_quality: aggregate score (0-1)"""
+
+        try:
+            response, tokens, _ = self.orchestrator.generate(
+                query=eval_prompt,
+                adapter_name=self.adapter_name,
+                system_prompt="You are a meta-evaluator of reasoning quality. Reply in valid JSON.",
+                enable_tools=False
+            )
+
+            # Try to parse JSON response
+            import json
+            start = response.find('{')
+            end = response.rfind('}') + 1
+            if start >= 0 and end > start:
+                try:
+                    critique_dict = json.loads(response[start:end])
+                    critique_dict["concept"] = concept
+                    return critique_dict
+                except json.JSONDecodeError:
+                    logger.debug("Could not parse JSON from LLM evaluation")
+        except Exception as e:
+            logger.warning(f"LLM evaluation failed: {e}")
+
+        # Fallback to heuristic if LLM fails
+        return self.evaluate_ensemble(concept, analyses)
 
     def evaluate_ensemble(
         self,
