@@ -40,10 +40,41 @@ Codette is an experimental AI research system for **recursive reasoning, multi-p
 
 This repository contains the complete training pipeline, inference server, and 8 trained LoRA adapters for the Codette cognitive architecture running on Llama 3.1 8B.
 
-## 🚀 Latest Status (Session 2026-03-19) — LIVE & TESTED
+## 🚀 Latest Status (Session 2026-03-20) — PHASE 6 ARCHITECTURAL FIX DEPLOYED
+
+### ✅ 5-Part Architectural Fix: Query Complexity & Soft Agent Gating (Complete)
+
+**Problem Solved**: System was over-activating on simple queries (e.g., "speed of light" generated 71 conflicts, correctness=0.20)
+
+**Solution Deployed**:
+1. ✅ **Query Complexity Classifier** (`reasoning_forge/query_classifier.py`)
+   - SIMPLE queries (factual) → 1 primary agent, no debate
+   - MEDIUM queries → 3 weighted agents
+   - COMPLEX queries → full 6-agent debate
+   - Prevents unnecessary system activation on straightforward questions
+
+2. ✅ **Conflict Capping at Source** (`reasoning_forge/conflict_engine.py`)
+   - max_conflicts_per_pair = 2 (instead of generating 71)
+   - max_total_conflicts = 12 (instead of 10-100)
+   - Prevents wasteful conflict accumulation
+
+3. ✅ **Confidence Override Logic** (`reasoning_forge/forge_engine.py`)
+   - After Round 0 analysis: if SIMPLE + few conflicts + low disagreement → **skip entire debate**
+   - Saves computation cycles on high-confidence answers
+   - Expected impact: correctness 0.20 → 0.70+ on simple queries
+
+4. ✅ **Semantic Tension Engine** (`reasoning_forge/semantic_tension.py`)
+   - Embedding-based conflict strength (continuous 0-1, not discrete)
+   - Llama embeddings replace heuristic opposition scores
+   - 0.6*semantic + 0.4*heuristic hybrid blending
+
+5. ✅ **Specialization Tracking & Pre-Flight Prediction** (`reasoning_forge/specialization_tracker.py`, `reasoning_forge/preflight_predictor.py`)
+   - Per-adapter domain accuracy tracking
+   - Pre-flight Spiderweb injection predicts conflicts before debate
+   - Recommends optimal adapter selection upfront
 
 ### ✅ Agent LLM Integration Complete
-All 6 reasoning agents now use **real LLM inference** via trained LoRA adapters:
+All 6 reasoning agents use **real LLM inference** via trained LoRA adapters:
 - **Newton** (physics reasoning) → newton adapter
 - **Quantum** (probabilistic thinking) → quantum adapter
 - **DaVinci** (creative invention) → davinci adapter
@@ -59,21 +90,11 @@ All 6 reasoning agents now use **real LLM inference** via trained LoRA adapters:
 - Full eval: ~2-3 minutes (GPU vs 7-10 minutes CPU)
 - **35/35 layers offloaded** to GPU via llama.cpp
 
-### ✅ Phase 6 Stability Verified
-All control mechanism patches tested and working:
-- **Patch 2**: Conflict capping (23 → 10 conflicts/round)
-- **Patch 4**: Gamma authority (threshold 0.3, prevents collapse)
-- **Patch 5**: Domain-aware gating (2-3 agents/domain, not all 6)
-
-### ✅ First Eval Results
-```
-Q1: "What is the speed of light in vacuum?"
-  Agent modes: ✓ LLM ✓ LLM ✓ LLM ✓ LLM ✓ LLM ✓ LLM (all agents using GPU)
-  Domain detection: physics → 2 agents active (Newton, Quantum)
-  Conflicts: 23 detected → 10 capped (Patch 2)
-  Gamma: 0.38 → intervention triggered (Patch 4)
-  GPU: ✓ ENABLED (35 layers offloaded)
-```
+### ✅ Phase 6 Framework Formalized
+- **ψ (Psi)**: State vector encoding query domain and complexity (5D)
+- **ξ (Xi)**: Semantic tension measurement (continuous, embedding-based)
+- **Γ (Gamma)**: Coherence metrics with health monitoring
+- **Evaluation**: `run_phase6_evaluation.py` — Compare baseline vs Phase 1-5 vs Phase 6 Full vs Phase 6 -PreFlight
 
 ## Model Weights
 
@@ -96,11 +117,16 @@ All 8 adapters are included in two formats:
 | Memory Phase Stability | 0.969 | Cross-session persistence |
 | Tension Decay | 91.2% | 200-agent embodied simulation |
 
-## Cognitive Subsystems (10 active)
+## Cognitive Subsystems (14 active)
 
 | Subsystem | Module | Purpose |
 |-----------|--------|---------|
 | Reasoning Forge | `reasoning_forge/forge_engine.py` | 6-agent multi-perspective debate + synthesis |
+| Query Classifier | `reasoning_forge/query_classifier.py` | Complexity-based agent selection (SIMPLE/MEDIUM/COMPLEX) |
+| Semantic Tension | `reasoning_forge/semantic_tension.py` | Embedding-based conflict strength (Phase 6) |
+| Specialization Tracker | `reasoning_forge/specialization_tracker.py` | Per-adapter domain expertise tracking (Phase 6) |
+| Pre-Flight Predictor | `reasoning_forge/preflight_predictor.py` | Conflict prediction before debate (Phase 6) |
+| Framework Definitions | `reasoning_forge/framework_definitions.py` | ψ, ξ, Γ formal definitions (Phase 6) |
 | Epistemic Metrics | `reasoning_forge/epistemic_metrics.py` | RC+xi tension/coherence tracking |
 | Quantum Spiderweb | `reasoning_forge/quantum_spiderweb.py` | 5D belief propagation + attractor detection |
 | Cocoon Sync | `reasoning_forge/cocoon_sync.py` | Fernet-encrypted federated state sync |
@@ -108,7 +134,6 @@ All 8 adapters are included in two formats:
 | Nexus Signal Engine | `reasoning_forge/nexus.py` | Pre-corruption detection via entropy + FFT + intent vectors |
 | Living Memory | `reasoning_forge/living_memory.py` | Emotionally-tagged memory cocoons with SHA-256 anchors |
 | Guardian | `reasoning_forge/guardian.py` | 3-layer protection (sanitizer + ethical anchor + trust calibrator) |
-| Resonant Continuity | `reasoning_forge/resonant_continuity.py` | Psi_r wavefunction: emotion x energy x frequency x intent |
 | Perspective Registry | `reasoning_forge/perspective_registry.py` | 12 perspectives (8 LoRA-backed + 4 prompt-only with fallback) |
 
 ## Architecture
@@ -230,17 +255,25 @@ python -m training.train_adapter \
   --output-dir adapters/newton
 ```
 
-### Run benchmarks
+### Evaluate Phase 6 Component Impact
+
+Compare 4 conditions to isolate Phase 6 value:
+- **Baseline**: Llama only (no routing)
+- **Phase 1-5**: Debate system without semantic tension or specialization
+- **Phase 6 Full**: All components (semantic tension, specialization, pre-flight)
+- **Phase 6 -PreFlight**: Phase 6 without pre-flight prediction
 
 ```bash
-python -m evaluation.benchmark_runner --prompts evaluation/prompts/reasoning_tests.json
+python run_phase6_evaluation.py
 ```
 
-### View dashboard
+Generates statistical analysis and emergent behavior alerts:
+- Correctness improvement (expected 0.20 → 0.70+ on simple queries)
+- Reasoning depth per domain
+- Adapter convergence detection
+- Miscalibration warnings
 
-```bash
-python -m observatory.dashboard
-```
+Results exported to `evaluation_results_YYYYMMDD_HHMMSS.json`
 
 ## Dataset Format
 
