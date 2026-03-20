@@ -229,6 +229,30 @@ class LivingMemoryKernel:
     def to_dict(self) -> Dict:
         return {"memories": [m.to_dict() for m in self.memories]}
 
+    def store_conflict(self, conflict: Dict, resolution_outcome: Optional[Dict] = None):
+        """
+        Store conflict metadata as a memory cocoon.
+
+        Args:
+            conflict: Dict with agent_a, agent_b, claim_a, claim_b, conflict_type, conflict_strength, etc.
+            resolution_outcome: Optional dict with coherence_after, resolution_score, etc.
+        """
+        if resolution_outcome is None:
+            resolution_outcome = {}
+
+        # Create a conflict cocoon
+        cocoon = MemoryCocoon(
+            title=f"Conflict: {conflict.get('agent_a', '?')} vs {conflict.get('agent_b', '?')} ({conflict.get('conflict_type', 'unknown')})",
+            content=json.dumps(conflict),
+            emotional_tag="tension",
+            importance=int(conflict.get("conflict_strength", 0.5) * 10),  # 1-10 scale
+            adapter_used=f"{conflict.get('agent_a', '?')},{conflict.get('agent_b', '?')}",
+            query="",
+            coherence=resolution_outcome.get("coherence_after", 0.5),
+            tension=conflict.get("conflict_strength", 0.5),
+        )
+        self.store(cocoon)
+
     @classmethod
     def from_dict(cls, d: Dict) -> "LivingMemoryKernel":
         kernel = cls()

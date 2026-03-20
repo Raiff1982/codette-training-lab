@@ -89,10 +89,12 @@ class CodetteOrchestrator:
     Uses LoRA hot-swap: base model loads once, adapter switches are instant.
     """
 
-    def __init__(self, n_ctx=4096, n_gpu_layers=0, verbose=False):
+    def __init__(self, n_ctx=4096, n_gpu_layers=0, verbose=False,
+                 memory_weighting=None):
         self.n_ctx = n_ctx
         self.n_gpu_layers = n_gpu_layers
         self.verbose = verbose
+        self.memory_weighting = memory_weighting
         self._llm = None
         self._current_adapter = None  # None = base model, str = adapter name
         self._adapter_handles = {}    # name -> ctypes handle for hot-swap
@@ -105,12 +107,95 @@ class CodetteOrchestrator:
             if path.exists():
                 self.available_adapters.append(name)
 
-        self.router = AdapterRouter(available_adapters=self.available_adapters)
+        # Wire MemoryWeighting into router (Phase 5)
+        self.router = AdapterRouter(available_adapters=self.available_adapters,
+                                    memory_weighting=memory_weighting)
 
         print(f"Available adapters: {', '.join(self.available_adapters) or 'none (base only)'}")
 
         # Load base model + pre-load adapter handles for instant hot-swap
         self._init_hotswap()
+
+    def log_routing_decision(self, route: RouteResult, query: str) -> None:
+        """Log routing decision with memory context for observability.
+
+        Args:
+            route: RouteResult from router.route()
+            query: The user's query text
+        """
+        if self.verbose:
+            print(f"\n[ROUTING] Query: {query[:60]}...")
+            print(f"[ROUTING] Selected adapter: {route.primary}")
+            print(f"[ROUTING] Confidence: {route.confidence:.2f}")
+            print(f"[ROUTING] Strategy: {route.strategy}")
+
+            # Add memory context if available
+            if self.memory_weighting and route.primary:
+                try:
+                    explanation = self.router.explain_routing(route)
+                    if "memory_context" in explanation:
+                        mem = explanation["memory_context"]
+                        print(f"[ROUTING] Memory boost applied: YES")
+                        print(f"[ROUTING] Adapter weight: {mem.get('final_weight', 1.0):.3f}")
+                        print(f"[ROUTING] Avg coherence: {mem.get('base_coherence', 0.0):.3f}")
+                except Exception as e:
+                    print(f"[ROUTING] Memory context unavailable: {e}")
+
+    def route_and_generate(self, query: str, max_adapters: int = 2,
+                          strategy: str = "keyword", force_adapter: str = None,
+                          enable_tools: bool = True) -> tuple:
+        """Route query to adapter(s) and generate response(s).
+
+        Args:
+            query: User's query
+            max_adapters: Maximum adapters to use
+            strategy: "keyword", "llm", or "hybrid"
+            force_adapter: Override routing and use specific adapter
+            enable_tools: Whether to allow tool use
+
+        Returns:
+            (response, tokens_used, metadata_dict)
+        """
+        if force_adapter:
+            # Use specific adapter
+            response, tokens, tools = self.generate(
+                query, adapter_name=force_adapter, enable_tools=enable_tools
+            )
+            metadata = {
+                "adapter": force_adapter,
+                "strategy": "forced",
+                "memory_aware": False,
+            }
+        else:
+            # Route using memory weights if available
+            route = self.router.route(query, strategy=strategy, max_adapters=max_adapters)
+
+            # Log routing decision
+            self.log_routing_decision(route, query)
+
+            # Generate using primary adapter
+            response, tokens, tools = self.generate(
+                query, adapter_name=route.primary, enable_tools=enable_tools
+            )
+
+            # Build metadata with routing info
+            metadata = {
+                "adapter": route.primary,
+                "secondary_adapters": route.secondary,
+                "confidence": route.confidence,
+                "strategy": route.strategy,
+                "memory_aware": self.memory_weighting is not None,
+            }
+
+            # Add memory context if available
+            if self.memory_weighting:
+                try:
+                    metadata["memory_context"] = \
+                        self.router.explain_routing(route).get("memory_context", {})
+                except Exception:
+                    pass
+
+        return response, tokens, metadata
 
     def _init_hotswap(self):
         """Load the base model once and pre-load all adapter handles.

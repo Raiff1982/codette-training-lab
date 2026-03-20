@@ -170,15 +170,70 @@ class AdapterRouter:
 
     The router preserves RC+xi epistemic tension by selecting
     complementary perspectives rather than always using all adapters.
+
+    Optionally integrates with MemoryWeighting (Phase 5) to boost
+    selection confidence for high-performing adapters based on
+    historical coherence and conflict resolution success.
     """
 
-    def __init__(self, available_adapters: Optional[List[str]] = None):
+    def __init__(self, available_adapters: Optional[List[str]] = None,
+                 memory_weighting=None):
         """
         Args:
             available_adapters: Which adapters are actually loaded/available.
                               If None, assumes all 8 are available.
+            memory_weighting: Optional MemoryWeighting instance for adaptive routing.
+                            If provided, will boost confidence for high-performing adapters.
         """
         self.available = available_adapters or list(ADAPTER_KEYWORDS.keys())
+        self.memory_weighting = memory_weighting
+
+    def _apply_memory_boost(self, primary: str, confidence: float) -> float:
+        """Apply historical performance boost to keyword router confidence.
+
+        If memory_weighting available, uses get_boosted_confidence() to modulate
+        confidence based on adapter's historical performance (coherence, conflict
+        resolution success, and recency of past interactions).
+
+        Args:
+            primary: Adapter name
+            confidence: Base confidence from keyword matching [0, 1]
+
+        Returns:
+            Boosted confidence [0, 1], modulated by [-50%, +50%] based on performance
+        """
+        if not self.memory_weighting:
+            return confidence
+
+        try:
+            return self.memory_weighting.get_boosted_confidence(primary, confidence)
+        except Exception as e:
+            import logging
+            logging.warning(f"Memory boost failed for {primary}: {e}")
+            return confidence
+
+    def explain_routing(self, result: RouteResult) -> Dict:
+        """Provide detailed explanation of routing decision including memory context.
+
+        Returns:
+            Dict with explanation details and memory weighting info if available
+        """
+        explanation = {
+            "primary": result.primary,
+            "confidence": result.confidence,
+            "strategy": result.strategy,
+            "memory_aware": self.memory_weighting is not None,
+        }
+
+        # Add memory context if available
+        if self.memory_weighting and result.primary:
+            try:
+                explanation["memory_context"] = \
+                    self.memory_weighting.explain_weight(result.primary)
+            except Exception:
+                pass
+
+        return explanation
 
     def route(self, query: str, strategy: str = "keyword",
               max_adapters: int = 3, llm=None) -> RouteResult:
@@ -260,6 +315,9 @@ class AdapterRouter:
         total_score = sum(s for _, s in ranked)
         confidence = min(primary_score / max(total_score, 1), 1.0)
 
+        # Apply memory boost (Phase 5) if available
+        confidence = self._apply_memory_boost(primary, confidence)
+
         # Select complementary secondaries
         secondaries = []
         if max_adapters > 1:
@@ -267,7 +325,17 @@ class AdapterRouter:
             for adapter, score in ranked[1:]:
                 if len(secondaries) >= max_adapters - 1:
                     break
-                if score >= primary_score * 0.4:  # At least 40% of primary
+
+                # Compute dynamic threshold with memory-weighted preference
+                threshold = primary_score * 0.4
+                if (self.memory_weighting and
+                    adapter in self.memory_weighting.adapter_weights):
+                    # Boost threshold for high-performing adapters
+                    weight = self.memory_weighting.adapter_weights[adapter].weight
+                    # Scale threshold by relative weight (1.0 is neutral)
+                    threshold *= (weight / 1.0)
+
+                if score >= threshold:
                     secondaries.append(adapter)
 
             # If we still have room, add a complementary perspective

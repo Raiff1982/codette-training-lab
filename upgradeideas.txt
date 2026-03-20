@@ -1,0 +1,236 @@
+now we stop “combining answers” and start thinking like Codette actually should.
+
+What I’m going to give you is not just code —
+this is a reasoning upgrade layer that sits between agents and synthesis.
+
+🧠 What the Conflict Engine actually does
+
+Instead of this:
+
+Newton → answer
+DaVinci → answer
+Empathy → answer
+
+→ smash together → output
+
+We do this:
+
+1. Extract claims from each agent
+2. Compare claims across agents
+3. Detect:
+   - agreement
+   - contradiction
+   - uncertainty
+4. Score confidence per agent
+5. Resolve OR preserve tension
+6. Synthesize with structure
+⚡ Core Philosophy (Codette-aligned)
+
+This follows your system:
+
+Newton → certainty
+
+Quantum → uncertainty
+
+Philosophy → validity of reasoning
+
+Empathy → human impact
+
+👉 Conflict is not a bug
+👉 Conflict is signal
+
+🔥 Drop-in Conflict Engine (real code, no fluff)
+
+Add this as a new module:
+
+conflict_engine.py
+import re
+from collections import defaultdict
+
+
+class ConflictEngine:
+
+    def __init__(self):
+        pass
+
+    # --------------------------------------------------
+    # STEP 1: Extract claims
+    # --------------------------------------------------
+    def extract_claims(self, text):
+        """
+        Break response into atomic claims (simple heuristic).
+        """
+        sentences = re.split(r'[.!?]\s+', text.strip())
+        claims = [s.strip() for s in sentences if len(s.strip()) > 10]
+        return claims
+
+    # --------------------------------------------------
+    # STEP 2: Compare claims
+    # --------------------------------------------------
+    def compare_claims(self, all_claims):
+        """
+        Detect agreement / contradiction between agents.
+        """
+        agreements = []
+        contradictions = []
+        uncertainties = []
+
+        agents = list(all_claims.keys())
+
+        for i, a1 in enumerate(agents):
+            for a2 in agents[i+1:]:
+                for c1 in all_claims[a1]:
+                    for c2 in all_claims[a2]:
+
+                        sim = self._similarity(c1, c2)
+
+                        if sim > 0.75:
+                            agreements.append((a1, a2, c1))
+
+                        elif self._is_contradiction(c1, c2):
+                            contradictions.append((a1, a2, c1, c2))
+
+                        elif sim < 0.3:
+                            uncertainties.append((a1, a2, c1, c2))
+
+        return agreements, contradictions, uncertainties
+
+    # --------------------------------------------------
+    # STEP 3: Confidence scoring
+    # --------------------------------------------------
+    def score_agents(self, outputs):
+        """
+        Basic confidence scoring per agent.
+        (Expandable later with logits / token probs)
+        """
+        scores = {}
+
+        for agent, text in outputs.items():
+
+            length_score = min(len(text) / 500, 1.0)
+
+            certainty_words = len(re.findall(
+                r"\b(is|will|must|always|proves)\b", text.lower()
+            ))
+
+            uncertainty_words = len(re.findall(
+                r"\b(might|may|could|possibly|uncertain)\b", text.lower()
+            ))
+
+            score = 0.5 + 0.3 * length_score
+            score += 0.1 * certainty_words
+            score -= 0.1 * uncertainty_words
+
+            scores[agent] = max(0.1, min(score, 1.0))
+
+        return scores
+
+    # --------------------------------------------------
+    # STEP 4: Resolution logic
+    # --------------------------------------------------
+    def resolve(self, outputs):
+
+        # Extract claims
+        claims = {
+            agent: self.extract_claims(text)
+            for agent, text in outputs.items()
+        }
+
+        agreements, contradictions, uncertainties = self.compare_claims(claims)
+
+        scores = self.score_agents(outputs)
+
+        return {
+            "claims": claims,
+            "agreements": agreements,
+            "contradictions": contradictions,
+            "uncertainties": uncertainties,
+            "scores": scores,
+        }
+
+    # --------------------------------------------------
+    # Helpers
+    # --------------------------------------------------
+    def _similarity(self, a, b):
+        a_set = set(a.lower().split())
+        b_set = set(b.lower().split())
+
+        if not a_set or not b_set:
+            return 0
+
+        return len(a_set & b_set) / len(a_set | b_set)
+
+    def _is_contradiction(self, a, b):
+        negations = ["not", "no", "never", "cannot", "impossible"]
+
+        a_neg = any(n in a.lower() for n in negations)
+        b_neg = any(n in b.lower() for n in negations)
+
+        return a_neg != b_neg
+🔥 Integrate into your engine
+
+Modify your synthesis in:
+
+File:
+
+Replace _synthesize
+from conflict_engine import ConflictEngine
+
+def _synthesize(self, messages, responses):
+
+    engine = ConflictEngine()
+    analysis = engine.resolve(responses)
+
+    combined = []
+
+    # Agreements
+    if analysis["agreements"]:
+        combined.append("AGREEMENTS:")
+        for a1, a2, claim in analysis["agreements"][:5]:
+            combined.append(f"- {a1} & {a2}: {claim}")
+
+    # Contradictions
+    if analysis["contradictions"]:
+        combined.append("\nCONTRADICTIONS:")
+        for a1, a2, c1, c2 in analysis["contradictions"][:5]:
+            combined.append(f"- {a1}: {c1}")
+            combined.append(f"  vs {a2}: {c2}")
+
+    # Scores
+    combined.append("\nCONFIDENCE SCORES:")
+    for agent, score in analysis["scores"].items():
+        combined.append(f"- {agent}: {score:.2f}")
+
+    combined_text = "\n".join(combined)
+
+    synthesis_messages = messages + [
+        {
+            "role": "system",
+            "content": (
+                "You are Codette. Resolve multi-agent reasoning.\n"
+                "Preserve contradictions when meaningful.\n"
+                "Do not oversimplify. Produce a coherent final answer."
+            )
+        },
+        {
+            "role": "user",
+            "content": combined_text
+        }
+    ]
+
+    return self.generate(synthesis_messages, "multi_perspective")
+🧠 What this changes (massively)
+
+Before:
+
+answers blended
+
+contradictions lost
+
+Now:
+
+contradictions detected
+
+tension preserved
+
+synthesis becomes reasoning, not summarization

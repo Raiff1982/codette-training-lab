@@ -1,0 +1,210 @@
+What “memory weighting” actually means
+
+Right now:
+
+Newton, Quantum, Empathy → all treated equally
+
+After this:
+
+System learns:
+- Newton is strong in logic tasks
+- Empathy dominates human scenarios
+- Quantum helps when uncertainty is high
+
+👉 And adjusts weights automatically
+
+🔥 Core idea
+
+We compute:
+
+Trust(agent, context) = learned from past performance
+
+Using:
+
+coherence (Γ)
+
+tension (ξ)
+
+ethical alignment (η)
+
+outcome success
+
+💥 Step 1 — Memory-weighted trust engine
+memory_weighting.py
+class MemoryWeighting:
+
+    def __init__(self, memory):
+        self.memory = memory
+
+    def compute_weights(self, agents, context):
+
+        weights = {}
+
+        for agent in agents:
+
+            history = self.memory.retrieve_by_adapter(agent, limit=50)
+
+            if not history:
+                weights[agent] = 1.0
+                continue
+
+            # Aggregate signals
+            coherence = sum(h.get("coherence", 0.5) for h in history) / len(history)
+            tension = sum(h.get("tension", 0.5) for h in history) / len(history)
+
+            # Ideal tension ~ 0.3–0.5 (productive disagreement)
+            tension_score = 1.0 - abs(tension - 0.4)
+
+            # Final trust score
+            score = (
+                0.6 * coherence +
+                0.4 * tension_score
+            )
+
+            weights[agent] = max(0.1, min(score, 1.5))
+
+        # Normalize
+        total = sum(weights.values()) or 1.0
+        return {k: v / total for k, v in weights.items()}
+🧠 What this does
+
+Each agent gets stronger if:
+
+it produces coherent answers
+
+it contributes productive tension (not chaos)
+
+⚡ Step 2 — Context-aware boost (important)
+
+We don’t stop at history.
+
+We adjust weights based on current query intent
+
+Add this:
+def apply_context_boost(self, weights, intent):
+
+    boosted = weights.copy()
+
+    if intent.get("type") == "technical":
+        boosted["newton"] *= 1.2
+        boosted["systems"] *= 1.2
+
+    if intent.get("type") == "emotional":
+        boosted["empathy"] *= 1.3
+
+    if intent.get("uncertainty") == "high":
+        boosted["quantum"] *= 1.2
+
+    # normalize again
+    total = sum(boosted.values()) or 1.0
+    return {k: v / total for k, v in boosted.items()}
+🔥 Step 3 — Integrate into your conflict engine
+
+Modify your conflict resolution:
+
+memory_weights = self.memory_weighting.compute_weights(
+    analyses.keys(),
+    context=query
+)
+
+# combine with existing weights
+final_weights = {}
+
+for agent in analyses:
+    base = weights.get(agent, 0.5)
+    memory = memory_weights.get(agent, 1.0)
+
+    final_weights[agent] = base * memory
+
+# normalize
+total = sum(final_weights.values()) or 1.0
+final_weights = {k: v / total for k, v in final_weights.items()}
+🧠 Step 4 — Feed results back into memory
+
+This is where learning happens.
+
+After synthesis:
+
+self.memory.store_from_turn(
+    query=query,
+    response=final_output,
+    adapter=",".join([a for a, _ in dominant]),
+    coherence=coherence,
+    tension=tension
+)
+💥 What this unlocks
+
+Now Codette:
+
+✅ Learns from experience
+
+agents that perform well gain influence
+
+weak agents fade (but never die completely)
+
+✅ Adapts to context
+
+technical → Newton dominates
+
+emotional → Empathy rises
+
+uncertain → Quantum activated
+
+✅ Maintains balance
+
+Because:
+
+tension is rewarded (ξ)
+
+but chaos is penalized
+
+🧠 The deeper effect (this is the important part)
+
+Over time:
+
+Codette builds:
+
+internal belief about how to think
+
+Not just:
+
+what to say
+
+⚠️ Critical design rule
+
+Do NOT let any agent go to zero.
+
+Always:
+
+max(0.1, score)
+
+👉 You want:
+
+fading influence
+
+not elimination
+
+Because dissent is important.
+
+🚀 Where this puts you now
+
+You now have:
+
+Debate → Conflict → Memory weighting → Synthesis → Feedback → Repeat
+💡 Honest take
+
+This is the moment where Codette becomes:
+
+experience-driven instead of instruction-driven
+
+⚡ If you want to push one level deeper
+
+Next step would be:
+
+👉 adaptive weighting over time windows
+
+recent memory weighted higher than old
+
+sudden shifts detected
+
+trust recalibrates dynamically

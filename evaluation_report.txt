@@ -1,0 +1,51 @@
+
+================================================================================
+CODETTE PHASE 6 EVALUATION REPORT
+================================================================================
+
+SUMMARY STATISTICS
+--------------------------------------------------------------------------------
+
+baseline_llama:
+  correctness: 0.500 ± 0.000
+  reasoning_depth: 1.000 ± 0.000
+  calibration_error: 0.300 ± 0.000
+  gamma_score: 1.000 ± 0.000
+  adapter_convergence: 1.000 ± 0.000
+
+phase_1_5:
+  correctness: 0.600 ± 0.000
+  reasoning_depth: 2.000 ± 0.000
+  calibration_error: 0.200 ± 0.000
+  gamma_score: 0.750 ± 0.000
+  adapter_convergence: 0.700 ± 0.000
+
+phase_6_full:
+  correctness: 0.000 ± 0.000
+  reasoning_depth: 1.000 ± 0.000
+  calibration_error: 0.100 ± 0.000
+  gamma_score: 0.500 ± 0.000
+  adapter_convergence: 0.500 ± 0.000
+
+phase_6_no_preflight:
+  correctness: 0.650 ± 0.000
+  reasoning_depth: 2.500 ± 0.000
+  calibration_error: 0.150 ± 0.000
+  gamma_score: 0.700 ± 0.000
+  adapter_convergence: 0.650 ± 0.000
+
+
+================================================================================
+EMERGENT BEHAVIOR ALERTS
+--------------------------------------------------------------------------------
+
+False Consensus (High Γ, Low Accuracy): 0 cases
+
+Adapter Convergence (>0.85): 5 cases
+  - What is the speed of light in vacuum?: 1.00
+  - Explain why the sky appears blue during the day: 1.00
+  - What is the relationship between entropy and time's arrow?: 1.00
+
+Miscalibration: 0 cases
+
+================================================================================

@@ -1,0 +1,221 @@
+Now we’re getting into the real territory — this is where Codette stops being a routed system and becomes a self-consistent reasoning entity.
+
+You asked for two things:
+
+debate layer
+
+real confidence scoring
+
+I’m going to give you both, wired into your existing architecture — clean, practical, no fluff.
+
+🧠 1. Debate Layer (agents argue before synthesis)
+
+Right now you do:
+
+agents → outputs → synthesize
+
+We upgrade to:
+
+agents → outputs → debate → conflict engine → synthesis
+🔥 What the debate layer actually does
+
+Each agent:
+
+sees other agents’ answers
+
+critiques them from its own perspective
+
+defends its own position
+
+👉 This creates structured epistemic tension (xi)
+
+Drop-in module
+debate_engine.py
+class DebateEngine:
+
+    def __init__(self, generator):
+        """
+        generator = your model generate() function
+        """
+        self.generate = generator
+
+    def run_debate(self, base_messages, responses, rounds=1):
+        """
+        responses = {adapter: text}
+        """
+
+        debate_log = {}
+
+        for round_idx in range(rounds):
+            new_responses = {}
+
+            for agent, original in responses.items():
+
+                others = {
+                    k: v for k, v in responses.items() if k != agent
+                }
+
+                critique_prompt = self._build_prompt(agent, original, others)
+
+                messages = base_messages + [
+                    {"role": "system", "content": critique_prompt},
+                    {"role": "user", "content": "Provide critique and refinement."}
+                ]
+
+                critique, _, _ = self.generate(messages, agent)
+
+                new_responses[agent] = critique
+
+            responses = new_responses
+            debate_log[round_idx] = responses
+
+        return responses, debate_log
+
+    def _build_prompt(self, agent, self_text, others):
+
+        other_text = "\n\n".join(
+            f"{k.upper()}:\n{v}" for k, v in others.items()
+        )
+
+        return f"""
+You are {agent.upper()} perspective.
+
+Your original answer:
+{self_text}
+
+Other perspectives:
+{other_text}
+
+Instructions:
+1. Identify where others are wrong or incomplete
+2. Defend your reasoning
+3. Update your answer if needed
+4. Be critical, not agreeable
+"""
+🧠 2. Real Confidence Scoring (not fake heuristics)
+
+We replace your current word-based scoring with:
+
+👉 token probability scoring
+
+Why this matters
+
+Instead of:
+
+“sounds confident”
+
+You get:
+
+model certainty at generation time
+
+🔥 Implementation
+confidence_engine.py
+import numpy as np
+
+
+class ConfidenceEngine:
+
+    def __init__(self, llm):
+        self.llm = llm  # llama.cpp model
+
+    def score(self, prompt, response):
+
+        # Re-evaluate response token probabilities
+        result = self.llm.create_completion(
+            prompt=prompt + response,
+            max_tokens=0,
+            logprobs=1,
+            echo=True
+        )
+
+        tokens = result["choices"][0]["logprobs"]["token_logprobs"]
+
+        # Remove None values
+        tokens = [t for t in tokens if t is not None]
+
+        if not tokens:
+            return 0.5
+
+        avg_logprob = np.mean(tokens)
+
+        # Convert logprob → confidence (0–1)
+        confidence = np.exp(avg_logprob)
+
+        return float(np.clip(confidence, 0.0, 1.0))
+⚡ Integrate into your orchestrator
+
+File:
+
+Modify _multi_perspective_generate
+BEFORE synthesis, insert:
+from debate_engine import DebateEngine
+from confidence_engine import ConfidenceEngine
+
+debate = DebateEngine(self.generate)
+confidence_engine = ConfidenceEngine(self._llm)
+
+# Step 1: run debate
+responses, debate_log = debate.run_debate(
+    [{"role": "user", "content": query}],
+    perspectives,
+    rounds=1
+)
+
+# Step 2: score each agent
+scores = {}
+for agent, text in responses.items():
+    scores[agent] = confidence_engine.score(query, text)
+🧠 3. Upgrade synthesis to use BOTH
+
+Modify your synthesis input:
+
+combined = []
+
+combined.append("DEBATED RESPONSES:\n")
+for agent, text in responses.items():
+    combined.append(f"{agent.upper()} (conf={scores[agent]:.2f}):\n{text}\n")
+
+combined.append("\nINSTRUCTION:")
+combined.append(
+    "Resolve disagreements. Prefer higher-confidence reasoning, "
+    "but preserve meaningful uncertainty."
+)
+🔥 What this unlocks
+
+You now have:
+
+✅ Debate
+
+Agents:
+
+challenge each other
+
+refine themselves
+
+✅ Real confidence
+
+Based on:
+
+actual token probabilities
+
+not guesswork
+
+✅ Better synthesis
+
+Because input is:
+
+contested
+
+scored
+
+structured
+
+🧠 What Codette becomes after this
+
+Not:
+
+multi-perspective assistant
+
+But:
+
+self-consistent reasoning system with internal adversarial validation
