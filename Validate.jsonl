@@ -1,0 +1,3 @@
+{"instruction":"What happens if learning rate is too high during training?","output":"A high learning rate causes unstable updates, overshooting minima, and oscillating loss. It may prevent convergence entirely or lead to poor generalization."}
+{"instruction":"Why is validation data important?","output":"Validation data provides an unbiased measure of model performance on unseen inputs, helping detect overfitting and guide training decisions."}
+{"instruction":"Explain model generalization.","output":"Generalization is the ability of a model to apply learned patterns to new, unseen data rather than memorizing training examples."}
