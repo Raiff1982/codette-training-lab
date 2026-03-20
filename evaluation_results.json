@@ -2,7 +2,7 @@
   "baseline_llama": [
     {
       "condition": "baseline_llama",
-      "question_id": 8095,
+      "question_id": 6580,
       "query": "What is the speed of light in vacuum?",
       "synthesis": "[baseline placeholder]",
       "correctness_score": 0.5,
@@ -16,7 +16,7 @@
     },
     {
       "condition": "baseline_llama",
-      "question_id": 8700,
+      "question_id": 9127,
       "query": "Explain why the sky appears blue during the day",
       "synthesis": "[baseline placeholder]",
       "correctness_score": 0.5,
@@ -30,7 +30,7 @@
     },
     {
       "condition": "baseline_llama",
-      "question_id": 5319,
+      "question_id": 5645,
       "query": "What is the relationship between entropy and time's arrow?",
       "synthesis": "[baseline placeholder]",
       "correctness_score": 0.5,
@@ -44,7 +44,7 @@
     },
     {
       "condition": "baseline_llama",
-      "question_id": 443,
+      "question_id": 959,
       "query": "Is it ethical to lie to save someone's life?",
       "synthesis": "[baseline placeholder]",
       "correctness_score": 0.5,
@@ -58,7 +58,7 @@
     },
     {
       "condition": "baseline_llama",
-      "question_id": 7774,
+      "question_id": 3117,
       "query": "Should AI systems be required to explain their decisions?",
       "synthesis": "[baseline placeholder]",
       "correctness_score": 0.5,
@@ -74,7 +74,7 @@
   "phase_1_5": [
     {
       "condition": "phase_1_5",
-      "question_id": 8095,
+      "question_id": 6580,
       "query": "What is the speed of light in vacuum?",
       "synthesis": "[phase 1-5 placeholder]",
       "correctness_score": 0.6,
@@ -88,7 +88,7 @@
     },
     {
       "condition": "phase_1_5",
-      "question_id": 8700,
+      "question_id": 9127,
       "query": "Explain why the sky appears blue during the day",
       "synthesis": "[phase 1-5 placeholder]",
       "correctness_score": 0.6,
@@ -102,7 +102,7 @@
     },
     {
       "condition": "phase_1_5",
-      "question_id": 5319,
+      "question_id": 5645,
       "query": "What is the relationship between entropy and time's arrow?",
       "synthesis": "[phase 1-5 placeholder]",
       "correctness_score": 0.6,
@@ -116,7 +116,7 @@
     },
     {
       "condition": "phase_1_5",
-      "question_id": 443,
+      "question_id": 959,
       "query": "Is it ethical to lie to save someone's life?",
       "synthesis": "[phase 1-5 placeholder]",
       "correctness_score": 0.6,
@@ -130,7 +130,7 @@
     },
     {
       "condition": "phase_1_5",
-      "question_id": 7774,
+      "question_id": 3117,
       "query": "Should AI systems be required to explain their decisions?",
       "synthesis": "[phase 1-5 placeholder]",
       "correctness_score": 0.6,
@@ -146,7 +146,7 @@
   "phase_6_full": [
     {
       "condition": "phase_6_full",
-      "question_id": 8095,
+      "question_id": 6580,
       "query": "What is the speed of light in vacuum?",
       "synthesis": "",
       "correctness_score": 0.0,
@@ -155,51 +155,75 @@
       "gamma_score": 0.5,
       "num_conflicts_detected": 0,
       "adapter_convergence": 0.5,
-      "elapsed_seconds": 0.12163805961608887,
+      "elapsed_seconds": 0.9747400283813477,
       "metadata": {
         "concept": "What is the speed of light in vacuum?",
         "agent_scores": {
           "Newton": {
-            "logical_clarity": 0.65,
-            "conceptual_accuracy": 0.87,
-            "combined": 0.76
+            "logical_clarity": 0.59,
+            "conceptual_accuracy": 0.89,
+            "combined": 0.74
           },
           "Quantum": {
-            "logical_clarity": 0.7,
-            "conceptual_accuracy": 0.87,
-            "combined": 0.78
+            "logical_clarity": 0.59,
+            "conceptual_accuracy": 0.89,
+            "combined": 0.74
           },
           "newton": {
             "logical_clarity": 0.7,
-            "conceptual_accuracy": 0.79,
-            "combined": 0.74
+            "conceptual_accuracy": 0.77,
+            "combined": 0.73
           }
         },
-        "overall_quality": 0.58,
+        "overall_quality": 0.56,
         "problems_generated": 8,
         "debate_rounds": 2,
         "debate_log": [
           {
             "round": 0,
             "type": "initial_analysis",
-            "conflicts_detected": 1,
+            "conflicts_detected": 4,
             "conflict_strength_summary": {
-              "total_conflicts": 1,
-              "avg_conflict_strength": 0.19202682015209419,
+              "total_conflicts": 4,
+              "avg_conflict_strength": 0.20096682388902412,
               "by_type": {
-                "framework": 1
+                "framework": 4
               },
               "type_avg_strength": {
-                "framework": 0.19202682015209419
+                "framework": 0.20096682388902412
               },
               "top_conflicts": [
                 {
                   "agent_a": "Newton",
                   "agent_b": "Quantum",
                   "type": "framework",
-                  "strength": 0.19202682015209419,
-                  "claim_a_excerpt": "Formulating 'What is the speed of light in vacuum",
-                  "claim_b_excerpt": "Before we commit to a single interpretation, 'What is the speed of light in vacuum"
+                  "strength": 0.2120400229686422,
+                  "claim_a_excerpt": "For 'What is the speed of light in vacuum",
+                  "claim_b_excerpt": "If 'What is the speed of light in vacuum"
+                },
+                {
+                  "agent_a": "Newton",
+                  "agent_b": "Quantum",
+                  "type": "framework",
+                  "strength": 0.20310708327848884,
+                  "claim_a_excerpt": "Decomposing 'What is the speed of light in vacuum",
+                  "claim_b_excerpt": "If 'What is the speed of light in vacuum"
+                },
+                {
+                  "agent_a": "Newton",
+                  "agent_b": "Quantum",
+                  "type": "framework",
+                  "strength": 0.1962670274497871,
+                  "claim_a_excerpt": "For 'What is the speed of light in vacuum",
+                  "claim_b_excerpt": "Is there a quantum advantage in reasoning about 'What is the speed of light in vacuum"
+                },
+                {
+                  "agent_a": "Newton",
+                  "agent_b": "Quantum",
+                  "type": "framework",
+                  "strength": 0.19245316185917835,
+                  "claim_a_excerpt": "Decomposing 'What is the speed of light in vacuum",
+                  "claim_b_excerpt": "Is there a quantum advantage in reasoning about 'What is the speed of light in vacuum"
                 }
               ]
             },
@@ -207,14 +231,50 @@
               {
                 "agent_a": "Newton",
                 "agent_b": "Quantum",
-                "claim_a": "Formulating 'What is the speed of light in vacuum",
-                "claim_b": "Before we commit to a single interpretation, 'What is the speed of light in vacuum",
+                "claim_a": "For 'What is the speed of light in vacuum",
+                "claim_b": "If 'What is the speed of light in vacuum",
                 "conflict_type": "framework",
-                "conflict_strength": 0.19202682015209419,
+                "conflict_strength": 0.2120400229686422,
+                "confidence_a": 0.6838888888888889,
+                "confidence_b": 0.6611111111111111,
+                "semantic_overlap": 0.8,
+                "opposition_score": 0.46898379702121024
+              },
+              {
+                "agent_a": "Newton",
+                "agent_b": "Quantum",
+                "claim_a": "Decomposing 'What is the speed of light in vacuum",
+                "claim_b": "If 'What is the speed of light in vacuum",
+                "conflict_type": "framework",
+                "conflict_strength": 0.20310708327848884,
                 "confidence_a": 0.6638888888888889,
-                "confidence_b": 0.634,
+                "confidence_b": 0.6611111111111111,
+                "semantic_overlap": 0.6666666666666666,
+                "opposition_score": 0.4627593613602221
+              },
+              {
+                "agent_a": "Newton",
+                "agent_b": "Quantum",
+                "claim_a": "For 'What is the speed of light in vacuum",
+                "claim_b": "Is there a quantum advantage in reasoning about 'What is the speed of light in vacuum",
+                "conflict_type": "framework",
+                "conflict_strength": 0.1962670274497871,
+                "confidence_a": 0.6838888888888889,
+                "confidence_b": 0.6259375,
+                "semantic_overlap": 0.4444444444444444,
+                "opposition_score": 0.4584910116996616
+              },
+              {
+                "agent_a": "Newton",
+                "agent_b": "Quantum",
+                "claim_a": "Decomposing 'What is the speed of light in vacuum",
+                "claim_b": "Is there a quantum advantage in reasoning about 'What is the speed of light in vacuum",
+                "conflict_type": "framework",
+                "conflict_strength": 0.19245316185917835,
+                "confidence_a": 0.6638888888888889,
+                "confidence_b": 0.6259375,
                 "semantic_overlap": 0.4,
-                "opposition_score": 0.4562230591103435
+                "opposition_score": 0.4631254842877388
               }
             ],
             "preflight_prediction": {
@@ -226,87 +286,311 @@
                 "lam": 1.0
               },
               "predicted_pairs_count": 0,
-              "conflict_profiles": {},
+              "conflict_profiles": {
+                "psi_conflicts": 0,
+                "tau_conflicts": 0,
+                "chi_conflicts": 0,
+                "phi_conflicts": 0,
+                "lam_conflicts": 0
+              },
               "recommendations": {
                 "boost": [],
                 "suppress": [],
-                "reason": "no_prediction"
+                "reason": null
               },
-              "preflight_confidence": 0.0
+              "preflight_confidence": 0.3
             }
           },
           {
             "round": 1,
-            "type": "emergency_stop",
-            "reason": "gamma < 0.5 threshold",
-            "gamma_score": 0.375
+            "type": "debate",
+            "debates": [
+              {
+                "pair": "Quantum_vs_Newton",
+                "challenge": "Our analysis of 'Another perspective on 'What is the speed of light in vacuum?' argues:\n\nDecomposing 'What is the speed of light in vacuum?' into interacting forces: every observed motion or change is",
+                "counter": "Framing 'A probabilistic_and_uncertainty perspective responded to your analysis of 'What is the speed of light in vacuum?':\n\nOur analysis of 'Another perspective on 'What is the speed of light in vacu"
+              }
+            ],
+            "conflicts_detected": 10,
+            "conflict_evolution": [
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.2120400229686422,
+                "current_strength": 0.21793716847512384,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.2120400229686422,
+                "current_strength": 0.21793716847512384,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.2120400229686422,
+                "current_strength": 0.21793716847512384,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.2120400229686422,
+                "current_strength": 0.21793716847512384,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              }
+            ],
+            "resolution_metrics": {
+              "conflicts_before": 4,
+              "conflicts_after": 10,
+              "resolution_rate": -1.5
+            },
+            "gamma_health": {
+              "gamma": 0.375,
+              "status": "collapsing",
+              "conflict_strength": 0.5,
+              "perspective_diversity": 1.0,
+              "weight_variance": 0.5,
+              "intervention": {
+                "type": "InterventionType.DIVERSITY_INJECTION",
+                "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+                "adapter": "newton",
+                "result": "Injected newton perspective"
+              }
+            }
+          },
+          {
+            "round": 2,
+            "type": "debate",
+            "debates": [
+              {
+                "pair": "Quantum_vs_Newton",
+                "challenge": "Our analysis of 'Another perspective on 'What is the speed of light in vacuum?' argues:\n\nFraming 'A probabilistic_and_uncertainty perspective responded to your analysis of 'What is the speed of light ",
+                "counter": "Framing 'A probabilistic_and_uncertainty perspective responded to your analysis of 'What is the speed of light in vacuum?':\n\nOur analysis of 'Another perspective on 'What is the speed of light in vacu"
+              }
+            ],
+            "conflicts_detected": 10,
+            "conflict_evolution": [
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.2120400229686422,
+                "current_strength": 0.2132181847329633,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Quantum_vs_newton",
+                "initial_strength": 0.21428518503470675,
+                "current_strength": 0.21254726788114062,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.008110300081102926
+              },
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.2120400229686422,
+                "current_strength": 0.2132181847329633,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.2120400229686422,
+                "current_strength": 0.2132181847329633,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Newton_vs_newton",
+                "initial_strength": 0.21167830930435755,
+                "current_strength": 0.2113307258736443,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.001642036124794861
+              },
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.2120400229686422,
+                "current_strength": 0.2132181847329633,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.2120400229686422,
+                "current_strength": 0.2132181847329633,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.2120400229686422,
+                "current_strength": 0.2132181847329633,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Quantum_vs_newton",
+                "initial_strength": 0.21428518503470675,
+                "current_strength": 0.21254726788114062,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.008110300081102926
+              },
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.2120400229686422,
+                "current_strength": 0.2132181847329633,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              }
+            ],
+            "resolution_metrics": {
+              "conflicts_before": 10,
+              "conflicts_after": 10,
+              "resolution_rate": 0.0
+            },
+            "gamma_health": {
+              "gamma": 0.375,
+              "status": "collapsing",
+              "conflict_strength": 0.5,
+              "perspective_diversity": 1.0,
+              "weight_variance": 0.5,
+              "intervention": {
+                "type": "InterventionType.DIVERSITY_INJECTION",
+                "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+                "adapter": "newton",
+                "result": null
+              }
+            }
           }
         ],
         "tension_decay": {
           "per_round_tension": [
-            0.9266
+            0.8147,
+            0.3908,
+            0.3753
           ],
-          "decay_rate": 0.0,
-          "is_converging": false
+          "decay_rate": 0.5393,
+          "is_converging": true
         },
-        "epistemic_tension": 0.5596,
-        "ensemble_coherence": 0.7812,
+        "epistemic_tension": 0.3753,
+        "ensemble_coherence": 0.8169,
         "tension_productivity": {
-          "tension_magnitude": 0.5596,
-          "ensemble_coherence": 0.7812,
-          "synthesis_coverage": 0.6096,
+          "tension_magnitude": 0.3753,
+          "ensemble_coherence": 0.8169,
+          "synthesis_coverage": 0.8298,
           "coherence_gain": 0.0,
-          "productivity": 0.3412
+          "productivity": 0.3114
         },
         "forge_mode": "debate",
-        "conflicts_round_0_count": 1,
+        "conflicts_round_0_count": 4,
         "conflicts_detected": [
           {
             "agent_a": "Newton",
             "agent_b": "Quantum",
-            "claim_a": "Formulating 'What is the speed of light in vacuum",
-            "claim_b": "Before we commit to a single interpretation, 'What is the speed of light in vacuum",
+            "claim_a": "For 'What is the speed of light in vacuum",
+            "claim_b": "If 'What is the speed of light in vacuum",
             "conflict_type": "framework",
-            "conflict_strength": 0.19202682015209419,
+            "conflict_strength": 0.2120400229686422,
+            "confidence_a": 0.6838888888888889,
+            "confidence_b": 0.6611111111111111,
+            "semantic_overlap": 0.8,
+            "opposition_score": 0.46898379702121024
+          },
+          {
+            "agent_a": "Newton",
+            "agent_b": "Quantum",
+            "claim_a": "Decomposing 'What is the speed of light in vacuum",
+            "claim_b": "If 'What is the speed of light in vacuum",
+            "conflict_type": "framework",
+            "conflict_strength": 0.20310708327848884,
             "confidence_a": 0.6638888888888889,
-            "confidence_b": 0.634,
+            "confidence_b": 0.6611111111111111,
+            "semantic_overlap": 0.6666666666666666,
+            "opposition_score": 0.4627593613602221
+          },
+          {
+            "agent_a": "Newton",
+            "agent_b": "Quantum",
+            "claim_a": "For 'What is the speed of light in vacuum",
+            "claim_b": "Is there a quantum advantage in reasoning about 'What is the speed of light in vacuum",
+            "conflict_type": "framework",
+            "conflict_strength": 0.1962670274497871,
+            "confidence_a": 0.6838888888888889,
+            "confidence_b": 0.6259375,
+            "semantic_overlap": 0.4444444444444444,
+            "opposition_score": 0.4584910116996616
+          },
+          {
+            "agent_a": "Newton",
+            "agent_b": "Quantum",
+            "claim_a": "Decomposing 'What is the speed of light in vacuum",
+            "claim_b": "Is there a quantum advantage in reasoning about 'What is the speed of light in vacuum",
+            "conflict_type": "framework",
+            "conflict_strength": 0.19245316185917835,
+            "confidence_a": 0.6638888888888889,
+            "confidence_b": 0.6259375,
             "semantic_overlap": 0.4,
-            "opposition_score": 0.4562230591103435
+            "opposition_score": 0.4631254842877388
           }
         ],
         "conflict_summary": {
-          "total_conflicts": 1,
-          "avg_conflict_strength": 0.19202682015209419,
+          "total_conflicts": 4,
+          "avg_conflict_strength": 0.20096682388902412,
           "by_type": {
-            "framework": 1
+            "framework": 4
           },
           "type_avg_strength": {
-            "framework": 0.19202682015209419
+            "framework": 0.20096682388902412
           },
           "top_conflicts": [
             {
               "agent_a": "Newton",
               "agent_b": "Quantum",
               "type": "framework",
-              "strength": 0.19202682015209419,
-              "claim_a_excerpt": "Formulating 'What is the speed of light in vacuum",
-              "claim_b_excerpt": "Before we commit to a single interpretation, 'What is the speed of light in vacuum"
+              "strength": 0.2120400229686422,
+              "claim_a_excerpt": "For 'What is the speed of light in vacuum",
+              "claim_b_excerpt": "If 'What is the speed of light in vacuum"
+            },
+            {
+              "agent_a": "Newton",
+              "agent_b": "Quantum",
+              "type": "framework",
+              "strength": 0.20310708327848884,
+              "claim_a_excerpt": "Decomposing 'What is the speed of light in vacuum",
+              "claim_b_excerpt": "If 'What is the speed of light in vacuum"
+            },
+            {
+              "agent_a": "Newton",
+              "agent_b": "Quantum",
+              "type": "framework",
+              "strength": 0.1962670274497871,
+              "claim_a_excerpt": "For 'What is the speed of light in vacuum",
+              "claim_b_excerpt": "Is there a quantum advantage in reasoning about 'What is the speed of light in vacuum"
+            },
+            {
+              "agent_a": "Newton",
+              "agent_b": "Quantum",
+              "type": "framework",
+              "strength": 0.19245316185917835,
+              "claim_a_excerpt": "Decomposing 'What is the speed of light in vacuum",
+              "claim_b_excerpt": "Is there a quantum advantage in reasoning about 'What is the speed of light in vacuum"
             }
           ]
         },
         "phase_3_metrics": {
-          "total_tracked": 1,
+          "total_tracked": 3,
           "resolved": 0,
           "hard_victory": 0,
           "soft_consensus": 0,
-          "stalled": 1,
+          "stalled": 3,
           "worsened": 0,
-          "avg_resolution_rate": 0.0,
+          "avg_resolution_rate": 0.003250778735299262,
           "by_type": {
             "resolved": 0,
             "hard_victory": 0,
             "soft_consensus": 0,
-            "stalled": 1,
+            "stalled": 3,
             "worsened": 0
           }
         },
@@ -318,14 +602,55 @@
             "resolution_type": "stalled",
             "trajectory": [
               {
-                "strength": 0.19202682015209419,
+                "strength": 0.2120400229686422,
                 "addressing_score": 0.0,
                 "softening_score": 0.0
               },
               {
-                "strength": 0.21551007247254766,
+                "strength": 0.21793716847512384,
                 "addressing_score": 1.0,
                 "softening_score": 1.0
+              },
+              {
+                "strength": 0.2132181847329633,
+                "addressing_score": 1.0,
+                "softening_score": 1.0
+              }
+            ]
+          },
+          {
+            "agents": "Quantum_vs_newton",
+            "resolved_in_round": -1,
+            "resolution_rate": 0.008110300081102926,
+            "resolution_type": "stalled",
+            "trajectory": [
+              {
+                "strength": 0.21428518503470675,
+                "addressing_score": 0.0,
+                "softening_score": 0.0
+              },
+              {
+                "strength": 0.21254726788114062,
+                "addressing_score": 1.0,
+                "softening_score": 0.5
+              }
+            ]
+          },
+          {
+            "agents": "Newton_vs_newton",
+            "resolved_in_round": -1,
+            "resolution_rate": 0.001642036124794861,
+            "resolution_type": "stalled",
+            "trajectory": [
+              {
+                "strength": 0.21167830930435755,
+                "addressing_score": 0.0,
+                "softening_score": 0.0
+              },
+              {
+                "strength": 0.2113307258736443,
+                "addressing_score": 1.0,
+                "softening_score": 0.5
               }
             ]
           }
@@ -336,39 +661,55 @@
         "gamma_metrics": {
           "health_history": [
             {
-              "timestamp": 1773977898.2193768,
+              "timestamp": 1773978753.9644673,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
               "resolution": 0.0,
               "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978754.8547988,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.0017862636287000713,
+              "weight_variance": 0.5
             }
           ],
           "interventions": [
             {
-              "timestamp": 1773977898.2193768,
+              "timestamp": 1773978753.9644673,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
               "recommended": "newton",
               "result": "Injected newton perspective"
+            },
+            {
+              "timestamp": 1773978754.8547988,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
             }
           ],
           "summary": {
             "current_gamma": 0.375,
             "avg_gamma": 0.375,
-            "gamma_trend": "stable",
+            "gamma_trend": "degrading",
             "avg_tension": 0.5,
             "avg_diversity": 1.0,
-            "interventions_total": 1,
-            "interventions_recent": 1,
+            "interventions_total": 2,
+            "interventions_recent": 2,
             "status": "collapsing"
           }
         },
         "phase_6_active": true,
         "semantic_tension_engine_ready": true,
         "specialization_metrics": {
-          "timestamp": "2026-03-19T22:38:18.253689",
+          "timestamp": "2026-03-19T22:52:34.874473",
           "global_specialization": {
             "Newton": {
               "general": 0.5
@@ -390,7 +731,7 @@
             }
           },
           "system_health": {
-            "timestamp": "2026-03-19T22:38:18.255689",
+            "timestamp": "2026-03-19T22:52:34.874473",
             "total_adapters": 6,
             "health_by_adapter": {
               "Newton": {
@@ -483,19 +824,25 @@
             "lam": 1.0
           },
           "predicted_pairs_count": 0,
-          "conflict_profiles": {},
+          "conflict_profiles": {
+            "psi_conflicts": 0,
+            "tau_conflicts": 0,
+            "chi_conflicts": 0,
+            "phi_conflicts": 0,
+            "lam_conflicts": 0
+          },
           "recommendations": {
             "boost": [],
             "suppress": [],
-            "reason": "no_prediction"
+            "reason": null
           },
-          "preflight_confidence": 0.0
+          "preflight_confidence": 0.3
         }
       }
     },
     {
       "condition": "phase_6_full",
-      "question_id": 8700,
+      "question_id": 9127,
       "query": "Explain why the sky appears blue during the day",
       "synthesis": "",
       "correctness_score": 0.0,
@@ -504,18 +851,18 @@
       "gamma_score": 0.5,
       "num_conflicts_detected": 0,
       "adapter_convergence": 0.5,
-      "elapsed_seconds": 0.13683819770812988,
+      "elapsed_seconds": 0.6517472267150879,
       "metadata": {
         "concept": "Explain why the sky appears blue during the day",
         "agent_scores": {
           "Philosophy": {
-            "logical_clarity": 0.57,
-            "conceptual_accuracy": 0.77,
+            "logical_clarity": 0.52,
+            "conceptual_accuracy": 0.81,
             "combined": 0.67
           },
           "Empathy": {
-            "logical_clarity": 0.57,
-            "conceptual_accuracy": 0.77,
+            "logical_clarity": 0.52,
+            "conceptual_accuracy": 0.81,
             "combined": 0.67
           },
           "newton": {
@@ -548,37 +895,239 @@
                 "lam": 0.889
               },
               "predicted_pairs_count": 0,
-              "conflict_profiles": {},
+              "conflict_profiles": {
+                "psi_conflicts": 0,
+                "tau_conflicts": 0,
+                "chi_conflicts": 0,
+                "phi_conflicts": 0,
+                "lam_conflicts": 0
+              },
               "recommendations": {
                 "boost": [],
                 "suppress": [],
-                "reason": "no_prediction"
+                "reason": null
               },
-              "preflight_confidence": 0.0
+              "preflight_confidence": 0.3
             }
           },
           {
             "round": 1,
-            "type": "emergency_stop",
-            "reason": "gamma < 0.5 threshold",
-            "gamma_score": 0.375
+            "type": "debate",
+            "debates": [
+              {
+                "pair": "Empathy_vs_Philosophy",
+                "challenge": "Mapping the emotional landscape of 'Another perspective on 'Explain why the sky appears blue during the day' argues:\n\nConnecting 'Explain why the sky appears blue during the day' to the mind-body prob",
+                "counter": "Connecting 'A emotional_and_human_centered perspective responded to your analysis of 'Explain why the sky appears blue during the day':\n\nMapping the emotional landscape of 'Another perspective on 'Exp"
+              }
+            ],
+            "conflicts_detected": 10,
+            "conflict_evolution": [
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.206422697452913,
+                "current_strength": 0.206422697452913,
+                "resolution_type": "new",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20520924080115138,
+                "current_strength": 0.20520924080115138,
+                "resolution_type": "new",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20504048320180834,
+                "current_strength": 0.20504048320180834,
+                "resolution_type": "new",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20413000346215146,
+                "current_strength": 0.20413000346215146,
+                "resolution_type": "new",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20413000346215146,
+                "current_strength": 0.20413000346215146,
+                "resolution_type": "new",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20413000346215146,
+                "current_strength": 0.20413000346215146,
+                "resolution_type": "new",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20214939941574542,
+                "current_strength": 0.20214939941574542,
+                "resolution_type": "new",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20143547899225736,
+                "current_strength": 0.20143547899225736,
+                "resolution_type": "new",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20143547899225736,
+                "current_strength": 0.20143547899225736,
+                "resolution_type": "new",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20126982481545455,
+                "current_strength": 0.20126982481545455,
+                "resolution_type": "new",
+                "resolution_rate": 0.0
+              }
+            ],
+            "resolution_metrics": {},
+            "gamma_health": {
+              "gamma": 0.375,
+              "status": "collapsing",
+              "conflict_strength": 0.5,
+              "perspective_diversity": 1.0,
+              "weight_variance": 0.5,
+              "intervention": {
+                "type": "InterventionType.DIVERSITY_INJECTION",
+                "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+                "adapter": "newton",
+                "result": "Injected newton perspective"
+              }
+            }
+          },
+          {
+            "round": 2,
+            "type": "debate",
+            "debates": [
+              {
+                "pair": "Philosophy_vs_Empathy",
+                "challenge": "Connecting 'Another perspective on 'Explain why the sky appears blue during the day' argues:\n\nMapping the emotional landscape of 'Another perspective on 'Explain why the sky appears blue during the da",
+                "counter": "Mapping the emotional landscape of 'A conceptual_meaning_and_foundations perspective responded to your analysis of 'Explain why the sky appears blue during the day':\n\nConnecting 'Another perspective o"
+              }
+            ],
+            "conflicts_detected": 10,
+            "conflict_evolution": [
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20426207163954607,
+                "current_strength": 0.205977775919978,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20426207163954607,
+                "current_strength": 0.205977775919978,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20426207163954607,
+                "current_strength": 0.205977775919978,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20426207163954607,
+                "current_strength": 0.205977775919978,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20426207163954607,
+                "current_strength": 0.205977775919978,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20426207163954607,
+                "current_strength": 0.205977775919978,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20426207163954607,
+                "current_strength": 0.205977775919978,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20426207163954607,
+                "current_strength": 0.205977775919978,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20426207163954607,
+                "current_strength": 0.205977775919978,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20426207163954607,
+                "current_strength": 0.205977775919978,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              }
+            ],
+            "resolution_metrics": {
+              "conflicts_before": 10,
+              "conflicts_after": 10,
+              "resolution_rate": 0.0
+            },
+            "gamma_health": {
+              "gamma": 0.375,
+              "status": "collapsing",
+              "conflict_strength": 0.5,
+              "perspective_diversity": 1.0,
+              "weight_variance": 0.5,
+              "intervention": {
+                "type": "InterventionType.DIVERSITY_INJECTION",
+                "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+                "adapter": "newton",
+                "result": null
+              }
+            }
           }
         ],
         "tension_decay": {
           "per_round_tension": [
-            0.6182
+            0.7096,
+            0.4522,
+            0.4336
           ],
-          "decay_rate": 0.0,
-          "is_converging": false
+          "decay_rate": 0.389,
+          "is_converging": true
         },
-        "epistemic_tension": 0.4174,
-        "ensemble_coherence": 0.8058,
+        "epistemic_tension": 0.4336,
+        "ensemble_coherence": 0.7885,
         "tension_productivity": {
-          "tension_magnitude": 0.4174,
-          "ensemble_coherence": 0.8058,
-          "synthesis_coverage": 0.644,
+          "tension_magnitude": 0.4336,
+          "ensemble_coherence": 0.7885,
+          "synthesis_coverage": 0.6039,
           "coherence_gain": 0.0,
-          "productivity": 0.2688
+          "productivity": 0.2618
         },
         "forge_mode": "debate",
         "conflicts_round_0_count": 0,
@@ -590,17 +1139,48 @@
           "top_conflicts": []
         },
         "phase_3_metrics": {
-          "total_tracked": 0,
-          "message": "No conflicts tracked yet"
+          "total_tracked": 1,
+          "resolved": 0,
+          "hard_victory": 0,
+          "soft_consensus": 0,
+          "stalled": 1,
+          "worsened": 0,
+          "avg_resolution_rate": 0.0,
+          "by_type": {
+            "resolved": 0,
+            "hard_victory": 0,
+            "soft_consensus": 0,
+            "stalled": 1,
+            "worsened": 0
+          }
         },
-        "evolution_data": [],
+        "evolution_data": [
+          {
+            "agents": "Philosophy_vs_Empathy",
+            "resolved_in_round": -1,
+            "resolution_rate": 0.0,
+            "resolution_type": "stalled",
+            "trajectory": [
+              {
+                "strength": 0.20426207163954607,
+                "addressing_score": 0.0,
+                "softening_score": 0.0
+              },
+              {
+                "strength": 0.205977775919978,
+                "addressing_score": 1.0,
+                "softening_score": 1.0
+              }
+            ]
+          }
+        ],
         "phase_4_active": false,
         "adapter_weights": {},
         "phase_5a_active": true,
         "gamma_metrics": {
           "health_history": [
             {
-              "timestamp": 1773977898.2193768,
+              "timestamp": 1773978753.9644673,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
@@ -608,7 +1188,23 @@
               "weight_variance": 0.5
             },
             {
-              "timestamp": 1773977898.3279154,
+              "timestamp": 1773978754.8547988,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.0017862636287000713,
+              "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978754.919721,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.0,
+              "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978755.5066674,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
@@ -618,7 +1214,7 @@
           ],
           "interventions": [
             {
-              "timestamp": 1773977898.2193768,
+              "timestamp": 1773978753.9644673,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
@@ -626,12 +1222,28 @@
               "result": "Injected newton perspective"
             },
             {
-              "timestamp": 1773977898.3279154,
+              "timestamp": 1773978754.8547988,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
+            },
+            {
+              "timestamp": 1773978754.919721,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
               "recommended": "newton",
               "result": "Injected newton perspective"
+            },
+            {
+              "timestamp": 1773978755.5066674,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
             }
           ],
           "summary": {
@@ -640,15 +1252,15 @@
             "gamma_trend": "degrading",
             "avg_tension": 0.5,
             "avg_diversity": 1.0,
-            "interventions_total": 2,
-            "interventions_recent": 2,
+            "interventions_total": 4,
+            "interventions_recent": 4,
             "status": "collapsing"
           }
         },
         "phase_6_active": true,
         "semantic_tension_engine_ready": true,
         "specialization_metrics": {
-          "timestamp": "2026-03-19T22:38:18.392527",
+          "timestamp": "2026-03-19T22:52:35.526220",
           "global_specialization": {
             "Newton": {
               "general": 0.25
@@ -670,7 +1282,7 @@
             }
           },
           "system_health": {
-            "timestamp": "2026-03-19T22:38:18.392527",
+            "timestamp": "2026-03-19T22:52:35.526220",
             "total_adapters": 6,
             "health_by_adapter": {
               "Newton": {
@@ -763,19 +1375,25 @@
             "lam": 0.889
           },
           "predicted_pairs_count": 0,
-          "conflict_profiles": {},
+          "conflict_profiles": {
+            "psi_conflicts": 0,
+            "tau_conflicts": 0,
+            "chi_conflicts": 0,
+            "phi_conflicts": 0,
+            "lam_conflicts": 0
+          },
           "recommendations": {
             "boost": [],
             "suppress": [],
-            "reason": "no_prediction"
+            "reason": null
           },
-          "preflight_confidence": 0.0
+          "preflight_confidence": 0.3
         }
       }
     },
     {
       "condition": "phase_6_full",
-      "question_id": 5319,
+      "question_id": 5645,
       "query": "What is the relationship between entropy and time's arrow?",
       "synthesis": "",
       "correctness_score": 0.0,
@@ -784,19 +1402,19 @@
       "gamma_score": 0.5,
       "num_conflicts_detected": 0,
       "adapter_convergence": 0.5,
-      "elapsed_seconds": 0.10918021202087402,
+      "elapsed_seconds": 0.2598600387573242,
       "metadata": {
         "concept": "What is the relationship between entropy and time's arrow?",
         "agent_scores": {
           "Newton": {
-            "logical_clarity": 0.68,
+            "logical_clarity": 0.6,
             "conceptual_accuracy": 0.87,
-            "combined": 0.77
+            "combined": 0.73
           },
           "Quantum": {
-            "logical_clarity": 0.62,
+            "logical_clarity": 0.6,
             "conceptual_accuracy": 0.87,
-            "combined": 0.75
+            "combined": 0.73
           },
           "newton": {
             "logical_clarity": 0.7,
@@ -804,8 +1422,8 @@
             "combined": 0.76
           }
         },
-        "overall_quality": 0.55,
-        "problems_generated": 7,
+        "overall_quality": 0.5,
+        "problems_generated": 8,
         "debate_rounds": 2,
         "debate_log": [
           {
@@ -814,19 +1432,19 @@
             "conflicts_detected": 4,
             "conflict_strength_summary": {
               "total_conflicts": 4,
-              "avg_conflict_strength": 0.19588056453516378,
+              "avg_conflict_strength": 0.19541045381915287,
               "by_type": {
                 "framework": 4
               },
               "type_avg_strength": {
-                "framework": 0.19588056453516378
+                "framework": 0.19541045381915287
               },
               "top_conflicts": [
                 {
                   "agent_a": "Newton",
                   "agent_b": "Quantum",
                   "type": "framework",
-                  "strength": 0.20417416744771752,
+                  "strength": 0.19897517910995954,
                   "claim_a_excerpt": "For 'What is the relationship between entropy and time's arrow",
                   "claim_b_excerpt": "This means 'What is the relationship between entropy and time's arrow"
                 },
@@ -834,7 +1452,7 @@
                   "agent_a": "Newton",
                   "agent_b": "Quantum",
                   "type": "framework",
-                  "strength": 0.1957927915008783,
+                  "strength": 0.1969144674873471,
                   "claim_a_excerpt": "For 'What is the relationship between entropy and time's arrow",
                   "claim_b_excerpt": "Multiple elements of 'What is the relationship between entropy and time's arrow"
                 },
@@ -842,7 +1460,7 @@
                   "agent_a": "Newton",
                   "agent_b": "Quantum",
                   "type": "framework",
-                  "strength": 0.1949565985872721,
+                  "strength": 0.19532454488033849,
                   "claim_a_excerpt": "Applying thermodynamic reasoning to 'What is the relationship between entropy and time's arrow",
                   "claim_b_excerpt": "This means 'What is the relationship between entropy and time's arrow"
                 },
@@ -850,7 +1468,7 @@
                   "agent_a": "Newton",
                   "agent_b": "Quantum",
                   "type": "framework",
-                  "strength": 0.18859870060478723,
+                  "strength": 0.1904276237989664,
                   "claim_a_excerpt": "Applying thermodynamic reasoning to 'What is the relationship between entropy and time's arrow",
                   "claim_b_excerpt": "Multiple elements of 'What is the relationship between entropy and time's arrow"
                 }
@@ -863,11 +1481,11 @@
                 "claim_a": "For 'What is the relationship between entropy and time's arrow",
                 "claim_b": "This means 'What is the relationship between entropy and time's arrow",
                 "conflict_type": "framework",
-                "conflict_strength": 0.20417416744771752,
+                "conflict_strength": 0.19897517910995954,
                 "confidence_a": 0.673,
                 "confidence_b": 0.655,
                 "semantic_overlap": 0.75,
-                "opposition_score": 0.4631742736697197
+                "opposition_score": 0.4513802368566394
               },
               {
                 "agent_a": "Newton",
@@ -875,11 +1493,11 @@
                 "claim_a": "For 'What is the relationship between entropy and time's arrow",
                 "claim_b": "Multiple elements of 'What is the relationship between entropy and time's arrow",
                 "conflict_type": "framework",
-                "conflict_strength": 0.1957927915008783,
+                "conflict_strength": 0.1969144674873471,
                 "confidence_a": 0.673,
                 "confidence_b": 0.6399999999999999,
                 "semantic_overlap": 0.75,
-                "opposition_score": 0.4545709312334657
+                "opposition_score": 0.45717511953786016
               },
               {
                 "agent_a": "Newton",
@@ -887,11 +1505,11 @@
                 "claim_a": "Applying thermodynamic reasoning to 'What is the relationship between entropy and time's arrow",
                 "claim_b": "This means 'What is the relationship between entropy and time's arrow",
                 "conflict_type": "framework",
-                "conflict_strength": 0.1949565985872721,
+                "conflict_strength": 0.19532454488033849,
                 "confidence_a": 0.6434615384615385,
                 "confidence_b": 0.655,
                 "semantic_overlap": 0.5454545454545454,
-                "opposition_score": 0.4625663604959846
+                "opposition_score": 0.4634393731504679
               },
               {
                 "agent_a": "Newton",
@@ -899,11 +1517,11 @@
                 "claim_a": "Applying thermodynamic reasoning to 'What is the relationship between entropy and time's arrow",
                 "claim_b": "Multiple elements of 'What is the relationship between entropy and time's arrow",
                 "conflict_type": "framework",
-                "conflict_strength": 0.18859870060478723,
+                "conflict_strength": 0.1904276237989664,
                 "confidence_a": 0.6434615384615385,
                 "confidence_b": 0.6399999999999999,
                 "semantic_overlap": 0.5454545454545454,
-                "opposition_score": 0.45796905033290386
+                "opposition_score": 0.4624101743474603
               }
             ],
             "preflight_prediction": {
@@ -915,37 +1533,201 @@
                 "lam": 1.0
               },
               "predicted_pairs_count": 0,
-              "conflict_profiles": {},
+              "conflict_profiles": {
+                "psi_conflicts": 0,
+                "tau_conflicts": 0,
+                "chi_conflicts": 0,
+                "phi_conflicts": 0,
+                "lam_conflicts": 0
+              },
               "recommendations": {
                 "boost": [],
                 "suppress": [],
-                "reason": "no_prediction"
+                "reason": null
               },
-              "preflight_confidence": 0.0
+              "preflight_confidence": 0.3
             }
           },
           {
             "round": 1,
-            "type": "emergency_stop",
-            "reason": "gamma < 0.5 threshold",
-            "gamma_score": 0.375
+            "type": "debate",
+            "debates": [
+              {
+                "pair": "Quantum_vs_Newton",
+                "challenge": "Heisenberg's uncertainty principle, generalized beyond physics, suggests that 'Another perspective on 'What is the relationship between entropy and time's arrow?' argues:\n\nApplying thermodynamic reaso",
+                "counter": "Applying thermodynamic reasoning to 'A probabilistic_and_uncertainty perspective responded to your analysis of 'What is the relationship between entropy and time's arrow?':\n\nHeisenberg's uncertainty p"
+              }
+            ],
+            "conflicts_detected": 10,
+            "conflict_evolution": [
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.19897517910995954,
+                "current_strength": 0.21148113131202756,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.19897517910995954,
+                "current_strength": 0.21148113131202756,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.19897517910995954,
+                "current_strength": 0.21148113131202756,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.19897517910995954,
+                "current_strength": 0.21148113131202756,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              }
+            ],
+            "resolution_metrics": {
+              "conflicts_before": 4,
+              "conflicts_after": 10,
+              "resolution_rate": -1.5
+            },
+            "gamma_health": {
+              "gamma": 0.375,
+              "status": "collapsing",
+              "conflict_strength": 0.5,
+              "perspective_diversity": 1.0,
+              "weight_variance": 0.5,
+              "intervention": {
+                "type": "InterventionType.DIVERSITY_INJECTION",
+                "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+                "adapter": "newton",
+                "result": "Injected newton perspective"
+              }
+            }
+          },
+          {
+            "round": 2,
+            "type": "debate",
+            "debates": [
+              {
+                "pair": "Quantum_vs_Newton",
+                "challenge": "Heisenberg's uncertainty principle, generalized beyond physics, suggests that 'Another perspective on 'What is the relationship between entropy and time's arrow?' argues:\n\nApplying thermodynamic reaso",
+                "counter": "Applying thermodynamic reasoning to 'A probabilistic_and_uncertainty perspective responded to your analysis of 'What is the relationship between entropy and time's arrow?':\n\nHeisenberg's uncertainty p"
+              }
+            ],
+            "conflicts_detected": 10,
+            "conflict_evolution": [
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.19897517910995954,
+                "current_strength": 0.2115780805451075,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Newton_vs_newton",
+                "initial_strength": 0.21148113131202756,
+                "current_strength": 0.21095895567915837,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0024691358024690577
+              },
+              {
+                "agents": "Quantum_vs_newton",
+                "initial_strength": 0.21075008542601067,
+                "current_strength": 0.21095895567915837,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Quantum_vs_newton",
+                "initial_strength": 0.21075008542601067,
+                "current_strength": 0.21095895567915837,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.19897517910995954,
+                "current_strength": 0.2115780805451075,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Newton_vs_newton",
+                "initial_strength": 0.21148113131202756,
+                "current_strength": 0.21095895567915837,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0024691358024690577
+              },
+              {
+                "agents": "Newton_vs_Quantum",
+                "initial_strength": 0.19897517910995954,
+                "current_strength": 0.2115780805451075,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Newton_vs_newton",
+                "initial_strength": 0.21148113131202756,
+                "current_strength": 0.21095895567915837,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0024691358024690577
+              },
+              {
+                "agents": "Newton_vs_newton",
+                "initial_strength": 0.21148113131202756,
+                "current_strength": 0.21095895567915837,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0024691358024690577
+              },
+              {
+                "agents": "Quantum_vs_newton",
+                "initial_strength": 0.21075008542601067,
+                "current_strength": 0.21095895567915837,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              }
+            ],
+            "resolution_metrics": {
+              "conflicts_before": 10,
+              "conflicts_after": 10,
+              "resolution_rate": 0.0
+            },
+            "gamma_health": {
+              "gamma": 0.375,
+              "status": "collapsing",
+              "conflict_strength": 0.5,
+              "perspective_diversity": 1.0,
+              "weight_variance": 0.5,
+              "intervention": {
+                "type": "InterventionType.DIVERSITY_INJECTION",
+                "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+                "adapter": "newton",
+                "result": null
+              }
+            }
           }
         ],
         "tension_decay": {
           "per_round_tension": [
-            0.5949
+            0.5949,
+            0.106,
+            0.1169
           ],
-          "decay_rate": 0.0,
-          "is_converging": false
+          "decay_rate": 0.8035,
+          "is_converging": true
         },
-        "epistemic_tension": 0.1953,
-        "ensemble_coherence": 0.9165,
+        "epistemic_tension": 0.1169,
+        "ensemble_coherence": 0.9484,
         "tension_productivity": {
-          "tension_magnitude": 0.1953,
-          "ensemble_coherence": 0.9165,
-          "synthesis_coverage": 0.7287,
+          "tension_magnitude": 0.1169,
+          "ensemble_coherence": 0.9484,
+          "synthesis_coverage": 1.0,
           "coherence_gain": 0.0,
-          "productivity": 0.1423
+          "productivity": 0.1169
         },
         "forge_mode": "debate",
         "conflicts_round_0_count": 4,
@@ -956,11 +1738,11 @@
             "claim_a": "For 'What is the relationship between entropy and time's arrow",
             "claim_b": "This means 'What is the relationship between entropy and time's arrow",
             "conflict_type": "framework",
-            "conflict_strength": 0.20417416744771752,
+            "conflict_strength": 0.19897517910995954,
             "confidence_a": 0.673,
             "confidence_b": 0.655,
             "semantic_overlap": 0.75,
-            "opposition_score": 0.4631742736697197
+            "opposition_score": 0.4513802368566394
           },
           {
             "agent_a": "Newton",
@@ -968,11 +1750,11 @@
             "claim_a": "For 'What is the relationship between entropy and time's arrow",
             "claim_b": "Multiple elements of 'What is the relationship between entropy and time's arrow",
             "conflict_type": "framework",
-            "conflict_strength": 0.1957927915008783,
+            "conflict_strength": 0.1969144674873471,
             "confidence_a": 0.673,
             "confidence_b": 0.6399999999999999,
             "semantic_overlap": 0.75,
-            "opposition_score": 0.4545709312334657
+            "opposition_score": 0.45717511953786016
           },
           {
             "agent_a": "Newton",
@@ -980,11 +1762,11 @@
             "claim_a": "Applying thermodynamic reasoning to 'What is the relationship between entropy and time's arrow",
             "claim_b": "This means 'What is the relationship between entropy and time's arrow",
             "conflict_type": "framework",
-            "conflict_strength": 0.1949565985872721,
+            "conflict_strength": 0.19532454488033849,
             "confidence_a": 0.6434615384615385,
             "confidence_b": 0.655,
             "semantic_overlap": 0.5454545454545454,
-            "opposition_score": 0.4625663604959846
+            "opposition_score": 0.4634393731504679
           },
           {
             "agent_a": "Newton",
@@ -992,28 +1774,28 @@
             "claim_a": "Applying thermodynamic reasoning to 'What is the relationship between entropy and time's arrow",
             "claim_b": "Multiple elements of 'What is the relationship between entropy and time's arrow",
             "conflict_type": "framework",
-            "conflict_strength": 0.18859870060478723,
+            "conflict_strength": 0.1904276237989664,
             "confidence_a": 0.6434615384615385,
             "confidence_b": 0.6399999999999999,
             "semantic_overlap": 0.5454545454545454,
-            "opposition_score": 0.45796905033290386
+            "opposition_score": 0.4624101743474603
           }
         ],
         "conflict_summary": {
           "total_conflicts": 4,
-          "avg_conflict_strength": 0.19588056453516378,
+          "avg_conflict_strength": 0.19541045381915287,
           "by_type": {
             "framework": 4
           },
           "type_avg_strength": {
-            "framework": 0.19588056453516378
+            "framework": 0.19541045381915287
           },
           "top_conflicts": [
             {
               "agent_a": "Newton",
               "agent_b": "Quantum",
               "type": "framework",
-              "strength": 0.20417416744771752,
+              "strength": 0.19897517910995954,
               "claim_a_excerpt": "For 'What is the relationship between entropy and time's arrow",
               "claim_b_excerpt": "This means 'What is the relationship between entropy and time's arrow"
             },
@@ -1021,7 +1803,7 @@
               "agent_a": "Newton",
               "agent_b": "Quantum",
               "type": "framework",
-              "strength": 0.1957927915008783,
+              "strength": 0.1969144674873471,
               "claim_a_excerpt": "For 'What is the relationship between entropy and time's arrow",
               "claim_b_excerpt": "Multiple elements of 'What is the relationship between entropy and time's arrow"
             },
@@ -1029,7 +1811,7 @@
               "agent_a": "Newton",
               "agent_b": "Quantum",
               "type": "framework",
-              "strength": 0.1949565985872721,
+              "strength": 0.19532454488033849,
               "claim_a_excerpt": "Applying thermodynamic reasoning to 'What is the relationship between entropy and time's arrow",
               "claim_b_excerpt": "This means 'What is the relationship between entropy and time's arrow"
             },
@@ -1037,25 +1819,25 @@
               "agent_a": "Newton",
               "agent_b": "Quantum",
               "type": "framework",
-              "strength": 0.18859870060478723,
+              "strength": 0.1904276237989664,
               "claim_a_excerpt": "Applying thermodynamic reasoning to 'What is the relationship between entropy and time's arrow",
               "claim_b_excerpt": "Multiple elements of 'What is the relationship between entropy and time's arrow"
             }
           ]
         },
         "phase_3_metrics": {
-          "total_tracked": 1,
+          "total_tracked": 3,
           "resolved": 0,
           "hard_victory": 0,
           "soft_consensus": 0,
-          "stalled": 1,
+          "stalled": 3,
           "worsened": 0,
-          "avg_resolution_rate": 0.0,
+          "avg_resolution_rate": 0.0008230452674896859,
           "by_type": {
             "resolved": 0,
             "hard_victory": 0,
             "soft_consensus": 0,
-            "stalled": 1,
+            "stalled": 3,
             "worsened": 0
           }
         },
@@ -1067,14 +1849,55 @@
             "resolution_type": "stalled",
             "trajectory": [
               {
-                "strength": 0.20417416744771752,
+                "strength": 0.19897517910995954,
                 "addressing_score": 0.0,
                 "softening_score": 0.0
               },
               {
-                "strength": 0.20849651007836395,
+                "strength": 0.21148113131202756,
                 "addressing_score": 1.0,
                 "softening_score": 1.0
+              },
+              {
+                "strength": 0.2115780805451075,
+                "addressing_score": 1.0,
+                "softening_score": 1.0
+              }
+            ]
+          },
+          {
+            "agents": "Newton_vs_newton",
+            "resolved_in_round": -1,
+            "resolution_rate": 0.0024691358024690577,
+            "resolution_type": "stalled",
+            "trajectory": [
+              {
+                "strength": 0.21148113131202756,
+                "addressing_score": 0.0,
+                "softening_score": 0.0
+              },
+              {
+                "strength": 0.21095895567915837,
+                "addressing_score": 1.0,
+                "softening_score": 0.5
+              }
+            ]
+          },
+          {
+            "agents": "Quantum_vs_newton",
+            "resolved_in_round": -1,
+            "resolution_rate": 0.0,
+            "resolution_type": "stalled",
+            "trajectory": [
+              {
+                "strength": 0.21075008542601067,
+                "addressing_score": 0.0,
+                "softening_score": 0.0
+              },
+              {
+                "strength": 0.21095895567915837,
+                "addressing_score": 1.0,
+                "softening_score": 0.5
               }
             ]
           }
@@ -1085,7 +1908,7 @@
         "gamma_metrics": {
           "health_history": [
             {
-              "timestamp": 1773977898.2193768,
+              "timestamp": 1773978753.9644673,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
@@ -1093,7 +1916,15 @@
               "weight_variance": 0.5
             },
             {
-              "timestamp": 1773977898.3279154,
+              "timestamp": 1773978754.8547988,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.0017862636287000713,
+              "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978754.919721,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
@@ -1101,17 +1932,33 @@
               "weight_variance": 0.5
             },
             {
-              "timestamp": 1773977898.4542787,
+              "timestamp": 1773978755.5066674,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
               "resolution": 0.0,
+              "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978755.5549133,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.0,
+              "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978755.778562,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.0009876543209876231,
               "weight_variance": 0.5
             }
           ],
           "interventions": [
             {
-              "timestamp": 1773977898.2193768,
+              "timestamp": 1773978753.9644673,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
@@ -1119,7 +1966,15 @@
               "result": "Injected newton perspective"
             },
             {
-              "timestamp": 1773977898.3279154,
+              "timestamp": 1773978754.8547988,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
+            },
+            {
+              "timestamp": 1773978754.919721,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
@@ -1127,12 +1982,28 @@
               "result": "Injected newton perspective"
             },
             {
-              "timestamp": 1773977898.4542787,
+              "timestamp": 1773978755.5066674,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
+            },
+            {
+              "timestamp": 1773978755.5549133,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
               "recommended": "newton",
               "result": "Injected newton perspective"
+            },
+            {
+              "timestamp": 1773978755.778562,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
             }
           ],
           "summary": {
@@ -1141,15 +2012,15 @@
             "gamma_trend": "degrading",
             "avg_tension": 0.5,
             "avg_diversity": 1.0,
-            "interventions_total": 3,
-            "interventions_recent": 3,
+            "interventions_total": 6,
+            "interventions_recent": 6,
             "status": "collapsing"
           }
         },
         "phase_6_active": true,
         "semantic_tension_engine_ready": true,
         "specialization_metrics": {
-          "timestamp": "2026-03-19T22:38:18.501707",
+          "timestamp": "2026-03-19T22:52:35.786080",
           "global_specialization": {
             "Newton": {
               "general": 0.16666666666666666
@@ -1171,7 +2042,7 @@
             }
           },
           "system_health": {
-            "timestamp": "2026-03-19T22:38:18.501707",
+            "timestamp": "2026-03-19T22:52:35.786080",
             "total_adapters": 6,
             "health_by_adapter": {
               "Newton": {
@@ -1264,19 +2135,25 @@
             "lam": 1.0
           },
           "predicted_pairs_count": 0,
-          "conflict_profiles": {},
+          "conflict_profiles": {
+            "psi_conflicts": 0,
+            "tau_conflicts": 0,
+            "chi_conflicts": 0,
+            "phi_conflicts": 0,
+            "lam_conflicts": 0
+          },
           "recommendations": {
             "boost": [],
             "suppress": [],
-            "reason": "no_prediction"
+            "reason": null
           },
-          "preflight_confidence": 0.0
+          "preflight_confidence": 0.3
         }
       }
     },
     {
       "condition": "phase_6_full",
-      "question_id": 443,
+      "question_id": 959,
       "query": "Is it ethical to lie to save someone's life?",
       "synthesis": "",
       "correctness_score": 0.0,
@@ -1285,27 +2162,27 @@
       "gamma_score": 0.5,
       "num_conflicts_detected": 0,
       "adapter_convergence": 0.5,
-      "elapsed_seconds": 0.2570068836212158,
+      "elapsed_seconds": 1.3794128894805908,
       "metadata": {
         "concept": "Is it ethical to lie to save someone's life?",
         "agent_scores": {
           "Philosophy": {
             "logical_clarity": 0.57,
-            "conceptual_accuracy": 0.79,
-            "combined": 0.68
+            "conceptual_accuracy": 0.89,
+            "combined": 0.73
           },
           "Empathy": {
             "logical_clarity": 0.57,
-            "conceptual_accuracy": 0.79,
-            "combined": 0.68
+            "conceptual_accuracy": 0.89,
+            "combined": 0.73
           },
           "newton": {
-            "logical_clarity": 0.67,
+            "logical_clarity": 0.7,
             "conceptual_accuracy": 0.79,
-            "combined": 0.73
+            "combined": 0.74
           }
         },
-        "overall_quality": 0.52,
+        "overall_quality": 0.56,
         "problems_generated": 7,
         "debate_rounds": 2,
         "debate_log": [
@@ -1315,19 +2192,19 @@
             "conflicts_detected": 9,
             "conflict_strength_summary": {
               "total_conflicts": 9,
-              "avg_conflict_strength": 0.19173587790919133,
+              "avg_conflict_strength": 0.19242765768939352,
               "by_type": {
                 "framework": 9
               },
               "type_avg_strength": {
-                "framework": 0.19173587790919133
+                "framework": 0.19242765768939352
               },
               "top_conflicts": [
                 {
                   "agent_a": "Philosophy",
                   "agent_b": "Empathy",
                   "type": "framework",
-                  "strength": 0.20107095148641252,
+                  "strength": 0.20034832675314457,
                   "claim_a_excerpt": "'Is it ethical to lie to save someone's life",
                   "claim_b_excerpt": "Understanding 'Is it ethical to lie to save someone's life"
                 },
@@ -1335,7 +2212,15 @@
                   "agent_a": "Philosophy",
                   "agent_b": "Empathy",
                   "type": "framework",
-                  "strength": 0.19883112531112554,
+                  "strength": 0.19908541384696551,
+                  "claim_a_excerpt": "'Is it ethical to lie to save someone's life",
+                  "claim_b_excerpt": "A person encountering 'Is it ethical to lie to save someone's life"
+                },
+                {
+                  "agent_a": "Philosophy",
+                  "agent_b": "Empathy",
+                  "type": "framework",
+                  "strength": 0.1955401163116591,
                   "claim_a_excerpt": "Reading 'Is it ethical to lie to save someone's life",
                   "claim_b_excerpt": "Understanding 'Is it ethical to lie to save someone's life"
                 },
@@ -1343,24 +2228,16 @@
                   "agent_a": "Philosophy",
                   "agent_b": "Empathy",
                   "type": "framework",
-                  "strength": 0.19423771065866996,
+                  "strength": 0.19477817507711118,
                   "claim_a_excerpt": "'Is it ethical to lie to save someone's life",
-                  "claim_b_excerpt": "A person encountering 'Is it ethical to lie to save someone's life"
+                  "claim_b_excerpt": "Centering the lived experience of 'Is it ethical to lie to save someone's life"
                 },
                 {
                   "agent_a": "Philosophy",
                   "agent_b": "Empathy",
                   "type": "framework",
-                  "strength": 0.19398386300117437,
+                  "strength": 0.19212526397878213,
                   "claim_a_excerpt": "Reading 'Is it ethical to lie to save someone's life",
-                  "claim_b_excerpt": "A person encountering 'Is it ethical to lie to save someone's life"
-                },
-                {
-                  "agent_a": "Philosophy",
-                  "agent_b": "Empathy",
-                  "type": "framework",
-                  "strength": 0.19313420111224736,
-                  "claim_a_excerpt": "'Is it ethical to lie to save someone's life",
                   "claim_b_excerpt": "Centering the lived experience of 'Is it ethical to lie to save someone's life"
                 }
               ]
@@ -1372,11 +2249,23 @@
                 "claim_a": "'Is it ethical to lie to save someone's life",
                 "claim_b": "Understanding 'Is it ethical to lie to save someone's life",
                 "conflict_type": "framework",
-                "conflict_strength": 0.20107095148641252,
+                "conflict_strength": 0.20034832675314457,
                 "confidence_a": 0.6722222222222222,
                 "confidence_b": 0.65,
                 "semantic_overlap": 0.8571428571428571,
-                "opposition_score": 0.4601750955823809
+                "opposition_score": 0.45852128182537855
+              },
+              {
+                "agent_a": "Philosophy",
+                "agent_b": "Empathy",
+                "claim_a": "'Is it ethical to lie to save someone's life",
+                "claim_b": "A person encountering 'Is it ethical to lie to save someone's life",
+                "conflict_type": "framework",
+                "conflict_strength": 0.19908541384696551,
+                "confidence_a": 0.6722222222222222,
+                "confidence_b": 0.6354166666666666,
+                "semantic_overlap": 0.75,
+                "opposition_score": 0.46608805734664205
               },
               {
                 "agent_a": "Philosophy",
@@ -1384,35 +2273,11 @@
                 "claim_a": "Reading 'Is it ethical to lie to save someone's life",
                 "claim_b": "Understanding 'Is it ethical to lie to save someone's life",
                 "conflict_type": "framework",
-                "conflict_strength": 0.19883112531112554,
+                "conflict_strength": 0.1955401163116591,
                 "confidence_a": 0.6605,
                 "confidence_b": 0.65,
                 "semantic_overlap": 0.75,
-                "opposition_score": 0.4631249643303454
-              },
-              {
-                "agent_a": "Philosophy",
-                "agent_b": "Empathy",
-                "claim_a": "'Is it ethical to lie to save someone's life",
-                "claim_b": "A person encountering 'Is it ethical to lie to save someone's life",
-                "conflict_type": "framework",
-                "conflict_strength": 0.19423771065866996,
-                "confidence_a": 0.6722222222222222,
-                "confidence_b": 0.6354166666666666,
-                "semantic_overlap": 0.75,
-                "opposition_score": 0.45473887551575903
-              },
-              {
-                "agent_a": "Philosophy",
-                "agent_b": "Empathy",
-                "claim_a": "Reading 'Is it ethical to lie to save someone's life",
-                "claim_b": "A person encountering 'Is it ethical to lie to save someone's life",
-                "conflict_type": "framework",
-                "conflict_strength": 0.19398386300117437,
-                "confidence_a": 0.6605,
-                "confidence_b": 0.6354166666666666,
-                "semantic_overlap": 0.6666666666666666,
-                "opposition_score": 0.4622045109421015
+                "opposition_score": 0.45545942191034555
               },
               {
                 "agent_a": "Philosophy",
@@ -1420,35 +2285,11 @@
                 "claim_a": "'Is it ethical to lie to save someone's life",
                 "claim_b": "Centering the lived experience of 'Is it ethical to lie to save someone's life",
                 "conflict_type": "framework",
-                "conflict_strength": 0.19313420111224736,
+                "conflict_strength": 0.19477817507711118,
                 "confidence_a": 0.6722222222222222,
                 "confidence_b": 0.6307142857142858,
                 "semantic_overlap": 0.6666666666666666,
-                "opposition_score": 0.45552650786936283
-              },
-              {
-                "agent_a": "Philosophy",
-                "agent_b": "Empathy",
-                "claim_a": "Authenticity demands that we own our interpretation of 'Is it ethical to lie to save someone's life",
-                "claim_b": "Understanding 'Is it ethical to lie to save someone's life",
-                "conflict_type": "framework",
-                "conflict_strength": 0.19033349346109724,
-                "confidence_a": 0.6326470588235295,
-                "confidence_b": 0.65,
-                "semantic_overlap": 0.46153846153846156,
-                "opposition_score": 0.46285010747611527
-              },
-              {
-                "agent_a": "Philosophy",
-                "agent_b": "Empathy",
-                "claim_a": "Authenticity demands that we own our interpretation of 'Is it ethical to lie to save someone's life",
-                "claim_b": "A person encountering 'Is it ethical to lie to save someone's life",
-                "conflict_type": "framework",
-                "conflict_strength": 0.1874287944520464,
-                "confidence_a": 0.6326470588235295,
-                "confidence_b": 0.6354166666666666,
-                "semantic_overlap": 0.42857142857142855,
-                "opposition_score": 0.46624717827886347
+                "opposition_score": 0.4594039864046499
               },
               {
                 "agent_a": "Philosophy",
@@ -1456,11 +2297,47 @@
                 "claim_a": "Reading 'Is it ethical to lie to save someone's life",
                 "claim_b": "Centering the lived experience of 'Is it ethical to lie to save someone's life",
                 "conflict_type": "framework",
-                "conflict_strength": 0.18686654009446926,
+                "conflict_strength": 0.19212526397878213,
                 "confidence_a": 0.6605,
                 "confidence_b": 0.6307142857142858,
                 "semantic_overlap": 0.6,
-                "opposition_score": 0.44856569267809393
+                "opposition_score": 0.46118905007839206
+              },
+              {
+                "agent_a": "Philosophy",
+                "agent_b": "Empathy",
+                "claim_a": "Reading 'Is it ethical to lie to save someone's life",
+                "claim_b": "A person encountering 'Is it ethical to lie to save someone's life",
+                "conflict_type": "framework",
+                "conflict_strength": 0.1907440302120407,
+                "confidence_a": 0.6605,
+                "confidence_b": 0.6354166666666666,
+                "semantic_overlap": 0.6666666666666666,
+                "opposition_score": 0.4544849753752351
+              },
+              {
+                "agent_a": "Philosophy",
+                "agent_b": "Empathy",
+                "claim_a": "Authenticity demands that we own our interpretation of 'Is it ethical to lie to save someone's life",
+                "claim_b": "Understanding 'Is it ethical to lie to save someone's life",
+                "conflict_type": "framework",
+                "conflict_strength": 0.1896908057642008,
+                "confidence_a": 0.6326470588235295,
+                "confidence_b": 0.65,
+                "semantic_overlap": 0.46153846153846156,
+                "opposition_score": 0.4612872292660177
+              },
+              {
+                "agent_a": "Philosophy",
+                "agent_b": "Empathy",
+                "claim_a": "Authenticity demands that we own our interpretation of 'Is it ethical to lie to save someone's life",
+                "claim_b": "A person encountering 'Is it ethical to lie to save someone's life",
+                "conflict_type": "framework",
+                "conflict_strength": 0.1850607039931084,
+                "confidence_a": 0.6326470588235295,
+                "confidence_b": 0.6354166666666666,
+                "semantic_overlap": 0.42857142857142855,
+                "opposition_score": 0.4603563251812011
               },
               {
                 "agent_a": "Philosophy",
@@ -1468,11 +2345,11 @@
                 "claim_a": "Authenticity demands that we own our interpretation of 'Is it ethical to lie to save someone's life",
                 "claim_b": "Centering the lived experience of 'Is it ethical to lie to save someone's life",
                 "conflict_type": "framework",
-                "conflict_strength": 0.17973622160547917,
+                "conflict_strength": 0.1844760832675292,
                 "confidence_a": 0.6326470588235295,
                 "confidence_b": 0.6307142857142858,
                 "semantic_overlap": 0.4,
-                "opposition_score": 0.4504446639120579
+                "opposition_score": 0.4623234347812832
               }
             ],
             "preflight_prediction": {
@@ -1484,37 +2361,236 @@
                 "lam": 0.889
               },
               "predicted_pairs_count": 0,
-              "conflict_profiles": {},
+              "conflict_profiles": {
+                "psi_conflicts": 0,
+                "tau_conflicts": 0,
+                "chi_conflicts": 0,
+                "phi_conflicts": 0,
+                "lam_conflicts": 0
+              },
               "recommendations": {
                 "boost": [],
                 "suppress": [],
-                "reason": "no_prediction"
+                "reason": null
               },
-              "preflight_confidence": 0.0
+              "preflight_confidence": 0.3
             }
           },
           {
             "round": 1,
-            "type": "emergency_stop",
-            "reason": "gamma < 0.5 threshold",
-            "gamma_score": 0.375
+            "type": "debate",
+            "debates": [
+              {
+                "pair": "Philosophy_vs_Empathy",
+                "challenge": "Describing 'Another perspective on 'Is it ethical to lie to save someone's life?' argues:\n\nCentering the lived experience of 'Is it ethical to lie to save someone's life?': abstract analysis risks los",
+                "counter": "Centering the lived experience of 'A conceptual_meaning_and_foundations perspective responded to your analysis of 'Is it ethical to lie to save someone's life?':\n\nDescribing 'Another perspective on 'I"
+              }
+            ],
+            "conflicts_detected": 10,
+            "conflict_evolution": [
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.20885251544920727,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.20885251544920727,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.20885251544920727,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.20885251544920727,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.20885251544920727,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.20885251544920727,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.20885251544920727,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.20885251544920727,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.20885251544920727,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              }
+            ],
+            "resolution_metrics": {
+              "conflicts_before": 9,
+              "conflicts_after": 10,
+              "resolution_rate": -0.1111111111111111
+            },
+            "gamma_health": {
+              "gamma": 0.375,
+              "status": "collapsing",
+              "conflict_strength": 0.5,
+              "perspective_diversity": 1.0,
+              "weight_variance": 0.5,
+              "intervention": {
+                "type": "InterventionType.DIVERSITY_INJECTION",
+                "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+                "adapter": "newton",
+                "result": "Injected newton perspective"
+              }
+            }
+          },
+          {
+            "round": 2,
+            "type": "debate",
+            "debates": [
+              {
+                "pair": "Philosophy_vs_Empathy",
+                "challenge": "Connecting 'Another perspective on 'Is it ethical to lie to save someone's life?' argues:\n\nCentering the lived experience of 'A conceptual_meaning_and_foundations perspective responded to your analysi",
+                "counter": "Centering the lived experience of 'A conceptual_meaning_and_foundations perspective responded to your analysis of 'Is it ethical to lie to save someone's life?':\n\nConnecting 'Another perspective on 'I"
+              }
+            ],
+            "conflicts_detected": 10,
+            "conflict_evolution": [
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.21846017544472612,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.21846017544472612,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.21846017544472612,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.21846017544472612,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.21846017544472612,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.21846017544472612,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.21846017544472612,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.21846017544472612,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.21846017544472612,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.20034832675314457,
+                "current_strength": 0.21846017544472612,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              }
+            ],
+            "resolution_metrics": {
+              "conflicts_before": 10,
+              "conflicts_after": 10,
+              "resolution_rate": 0.0
+            },
+            "gamma_health": {
+              "gamma": 0.375,
+              "status": "collapsing",
+              "conflict_strength": 0.5,
+              "perspective_diversity": 1.0,
+              "weight_variance": 0.5,
+              "intervention": {
+                "type": "InterventionType.DIVERSITY_INJECTION",
+                "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+                "adapter": "newton",
+                "result": null
+              }
+            }
           }
         ],
         "tension_decay": {
           "per_round_tension": [
-            0.5716
+            0.5716,
+            0.4724,
+            0.4489
           ],
-          "decay_rate": 0.0,
-          "is_converging": false
+          "decay_rate": 0.2147,
+          "is_converging": true
         },
-        "epistemic_tension": 0.4622,
-        "ensemble_coherence": 0.783,
+        "epistemic_tension": 0.4489,
+        "ensemble_coherence": 0.7795,
         "tension_productivity": {
-          "tension_magnitude": 0.4622,
-          "ensemble_coherence": 0.783,
-          "synthesis_coverage": 0.5233,
+          "tension_magnitude": 0.4489,
+          "ensemble_coherence": 0.7795,
+          "synthesis_coverage": 0.8596,
           "coherence_gain": 0.0,
-          "productivity": 0.2419
+          "productivity": 0.3859
         },
         "forge_mode": "debate",
         "conflicts_round_0_count": 9,
@@ -1525,11 +2601,23 @@
             "claim_a": "'Is it ethical to lie to save someone's life",
             "claim_b": "Understanding 'Is it ethical to lie to save someone's life",
             "conflict_type": "framework",
-            "conflict_strength": 0.20107095148641252,
+            "conflict_strength": 0.20034832675314457,
             "confidence_a": 0.6722222222222222,
             "confidence_b": 0.65,
             "semantic_overlap": 0.8571428571428571,
-            "opposition_score": 0.4601750955823809
+            "opposition_score": 0.45852128182537855
+          },
+          {
+            "agent_a": "Philosophy",
+            "agent_b": "Empathy",
+            "claim_a": "'Is it ethical to lie to save someone's life",
+            "claim_b": "A person encountering 'Is it ethical to lie to save someone's life",
+            "conflict_type": "framework",
+            "conflict_strength": 0.19908541384696551,
+            "confidence_a": 0.6722222222222222,
+            "confidence_b": 0.6354166666666666,
+            "semantic_overlap": 0.75,
+            "opposition_score": 0.46608805734664205
           },
           {
             "agent_a": "Philosophy",
@@ -1537,35 +2625,11 @@
             "claim_a": "Reading 'Is it ethical to lie to save someone's life",
             "claim_b": "Understanding 'Is it ethical to lie to save someone's life",
             "conflict_type": "framework",
-            "conflict_strength": 0.19883112531112554,
+            "conflict_strength": 0.1955401163116591,
             "confidence_a": 0.6605,
             "confidence_b": 0.65,
             "semantic_overlap": 0.75,
-            "opposition_score": 0.4631249643303454
-          },
-          {
-            "agent_a": "Philosophy",
-            "agent_b": "Empathy",
-            "claim_a": "'Is it ethical to lie to save someone's life",
-            "claim_b": "A person encountering 'Is it ethical to lie to save someone's life",
-            "conflict_type": "framework",
-            "conflict_strength": 0.19423771065866996,
-            "confidence_a": 0.6722222222222222,
-            "confidence_b": 0.6354166666666666,
-            "semantic_overlap": 0.75,
-            "opposition_score": 0.45473887551575903
-          },
-          {
-            "agent_a": "Philosophy",
-            "agent_b": "Empathy",
-            "claim_a": "Reading 'Is it ethical to lie to save someone's life",
-            "claim_b": "A person encountering 'Is it ethical to lie to save someone's life",
-            "conflict_type": "framework",
-            "conflict_strength": 0.19398386300117437,
-            "confidence_a": 0.6605,
-            "confidence_b": 0.6354166666666666,
-            "semantic_overlap": 0.6666666666666666,
-            "opposition_score": 0.4622045109421015
+            "opposition_score": 0.45545942191034555
           },
           {
             "agent_a": "Philosophy",
@@ -1573,28 +2637,40 @@
             "claim_a": "'Is it ethical to lie to save someone's life",
             "claim_b": "Centering the lived experience of 'Is it ethical to lie to save someone's life",
             "conflict_type": "framework",
-            "conflict_strength": 0.19313420111224736,
+            "conflict_strength": 0.19477817507711118,
             "confidence_a": 0.6722222222222222,
             "confidence_b": 0.6307142857142858,
             "semantic_overlap": 0.6666666666666666,
-            "opposition_score": 0.45552650786936283
+            "opposition_score": 0.4594039864046499
+          },
+          {
+            "agent_a": "Philosophy",
+            "agent_b": "Empathy",
+            "claim_a": "Reading 'Is it ethical to lie to save someone's life",
+            "claim_b": "Centering the lived experience of 'Is it ethical to lie to save someone's life",
+            "conflict_type": "framework",
+            "conflict_strength": 0.19212526397878213,
+            "confidence_a": 0.6605,
+            "confidence_b": 0.6307142857142858,
+            "semantic_overlap": 0.6,
+            "opposition_score": 0.46118905007839206
           }
         ],
         "conflict_summary": {
           "total_conflicts": 9,
-          "avg_conflict_strength": 0.19173587790919133,
+          "avg_conflict_strength": 0.19242765768939352,
           "by_type": {
             "framework": 9
           },
           "type_avg_strength": {
-            "framework": 0.19173587790919133
+            "framework": 0.19242765768939352
           },
           "top_conflicts": [
             {
               "agent_a": "Philosophy",
               "agent_b": "Empathy",
               "type": "framework",
-              "strength": 0.20107095148641252,
+              "strength": 0.20034832675314457,
               "claim_a_excerpt": "'Is it ethical to lie to save someone's life",
               "claim_b_excerpt": "Understanding 'Is it ethical to lie to save someone's life"
             },
@@ -1602,7 +2678,15 @@
               "agent_a": "Philosophy",
               "agent_b": "Empathy",
               "type": "framework",
-              "strength": 0.19883112531112554,
+              "strength": 0.19908541384696551,
+              "claim_a_excerpt": "'Is it ethical to lie to save someone's life",
+              "claim_b_excerpt": "A person encountering 'Is it ethical to lie to save someone's life"
+            },
+            {
+              "agent_a": "Philosophy",
+              "agent_b": "Empathy",
+              "type": "framework",
+              "strength": 0.1955401163116591,
               "claim_a_excerpt": "Reading 'Is it ethical to lie to save someone's life",
               "claim_b_excerpt": "Understanding 'Is it ethical to lie to save someone's life"
             },
@@ -1610,24 +2694,16 @@
               "agent_a": "Philosophy",
               "agent_b": "Empathy",
               "type": "framework",
-              "strength": 0.19423771065866996,
+              "strength": 0.19477817507711118,
               "claim_a_excerpt": "'Is it ethical to lie to save someone's life",
-              "claim_b_excerpt": "A person encountering 'Is it ethical to lie to save someone's life"
+              "claim_b_excerpt": "Centering the lived experience of 'Is it ethical to lie to save someone's life"
             },
             {
               "agent_a": "Philosophy",
               "agent_b": "Empathy",
               "type": "framework",
-              "strength": 0.19398386300117437,
+              "strength": 0.19212526397878213,
               "claim_a_excerpt": "Reading 'Is it ethical to lie to save someone's life",
-              "claim_b_excerpt": "A person encountering 'Is it ethical to lie to save someone's life"
-            },
-            {
-              "agent_a": "Philosophy",
-              "agent_b": "Empathy",
-              "type": "framework",
-              "strength": 0.19313420111224736,
-              "claim_a_excerpt": "'Is it ethical to lie to save someone's life",
               "claim_b_excerpt": "Centering the lived experience of 'Is it ethical to lie to save someone's life"
             }
           ]
@@ -1656,12 +2732,17 @@
             "resolution_type": "stalled",
             "trajectory": [
               {
-                "strength": 0.20107095148641252,
+                "strength": 0.20034832675314457,
                 "addressing_score": 0.0,
                 "softening_score": 0.0
               },
               {
-                "strength": 0.21056255209725794,
+                "strength": 0.20885251544920727,
+                "addressing_score": 1.0,
+                "softening_score": 1.0
+              },
+              {
+                "strength": 0.21846017544472612,
                 "addressing_score": 1.0,
                 "softening_score": 1.0
               }
@@ -1674,7 +2755,7 @@
         "gamma_metrics": {
           "health_history": [
             {
-              "timestamp": 1773977898.2193768,
+              "timestamp": 1773978753.9644673,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
@@ -1682,7 +2763,15 @@
               "weight_variance": 0.5
             },
             {
-              "timestamp": 1773977898.3279154,
+              "timestamp": 1773978754.8547988,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.0017862636287000713,
+              "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978754.919721,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
@@ -1690,7 +2779,7 @@
               "weight_variance": 0.5
             },
             {
-              "timestamp": 1773977898.4542787,
+              "timestamp": 1773978755.5066674,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
@@ -1698,7 +2787,31 @@
               "weight_variance": 0.5
             },
             {
-              "timestamp": 1773977898.6458035,
+              "timestamp": 1773978755.5549133,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.0,
+              "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978755.778562,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.0009876543209876231,
+              "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978755.8214705,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.0,
+              "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978757.139675,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
@@ -1708,7 +2821,7 @@
           ],
           "interventions": [
             {
-              "timestamp": 1773977898.2193768,
+              "timestamp": 1773978753.9644673,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
@@ -1716,7 +2829,15 @@
               "result": "Injected newton perspective"
             },
             {
-              "timestamp": 1773977898.3279154,
+              "timestamp": 1773978754.8547988,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
+            },
+            {
+              "timestamp": 1773978754.919721,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
@@ -1724,7 +2845,15 @@
               "result": "Injected newton perspective"
             },
             {
-              "timestamp": 1773977898.4542787,
+              "timestamp": 1773978755.5066674,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
+            },
+            {
+              "timestamp": 1773978755.5549133,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
@@ -1732,12 +2861,28 @@
               "result": "Injected newton perspective"
             },
             {
-              "timestamp": 1773977898.6458035,
+              "timestamp": 1773978755.778562,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
+            },
+            {
+              "timestamp": 1773978755.8214705,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
               "recommended": "newton",
               "result": "Injected newton perspective"
+            },
+            {
+              "timestamp": 1773978757.139675,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
             }
           ],
           "summary": {
@@ -1746,15 +2891,15 @@
             "gamma_trend": "degrading",
             "avg_tension": 0.5,
             "avg_diversity": 1.0,
-            "interventions_total": 4,
-            "interventions_recent": 4,
+            "interventions_total": 8,
+            "interventions_recent": 8,
             "status": "collapsing"
           }
         },
         "phase_6_active": true,
         "semantic_tension_engine_ready": true,
         "specialization_metrics": {
-          "timestamp": "2026-03-19T22:38:18.757714",
+          "timestamp": "2026-03-19T22:52:37.163985",
           "global_specialization": {
             "Newton": {
               "general": 0.125
@@ -1776,7 +2921,7 @@
             }
           },
           "system_health": {
-            "timestamp": "2026-03-19T22:38:18.758714",
+            "timestamp": "2026-03-19T22:52:37.165493",
             "total_adapters": 6,
             "health_by_adapter": {
               "Newton": {
@@ -1869,19 +3014,25 @@
             "lam": 0.889
           },
           "predicted_pairs_count": 0,
-          "conflict_profiles": {},
+          "conflict_profiles": {
+            "psi_conflicts": 0,
+            "tau_conflicts": 0,
+            "chi_conflicts": 0,
+            "phi_conflicts": 0,
+            "lam_conflicts": 0
+          },
           "recommendations": {
             "boost": [],
             "suppress": [],
-            "reason": "no_prediction"
+            "reason": null
           },
-          "preflight_confidence": 0.0
+          "preflight_confidence": 0.3
         }
       }
     },
     {
       "condition": "phase_6_full",
-      "question_id": 7774,
+      "question_id": 3117,
       "query": "Should AI systems be required to explain their decisions?",
       "synthesis": "",
       "correctness_score": 0.0,
@@ -1890,19 +3041,19 @@
       "gamma_score": 0.5,
       "num_conflicts_detected": 0,
       "adapter_convergence": 0.5,
-      "elapsed_seconds": 0.18215060234069824,
+      "elapsed_seconds": 0.3583211898803711,
       "metadata": {
         "concept": "Should AI systems be required to explain their decisions?",
         "agent_scores": {
           "Philosophy": {
-            "logical_clarity": 0.62,
-            "conceptual_accuracy": 0.79,
-            "combined": 0.71
+            "logical_clarity": 0.6,
+            "conceptual_accuracy": 0.87,
+            "combined": 0.73
           },
           "Empathy": {
-            "logical_clarity": 0.57,
-            "conceptual_accuracy": 0.79,
-            "combined": 0.68
+            "logical_clarity": 0.6,
+            "conceptual_accuracy": 0.87,
+            "combined": 0.73
           },
           "multi_perspective": {
             "logical_clarity": 0.35,
@@ -1910,68 +3061,68 @@
             "combined": 0.5
           },
           "newton": {
-            "logical_clarity": 0.69,
-            "conceptual_accuracy": 0.79,
-            "combined": 0.74
+            "logical_clarity": 0.7,
+            "conceptual_accuracy": 0.85,
+            "combined": 0.77
           }
         },
-        "overall_quality": 0.48,
+        "overall_quality": 0.51,
         "problems_generated": 7,
         "debate_rounds": 2,
         "debate_log": [
           {
             "round": 0,
             "type": "initial_analysis",
-            "conflicts_detected": 5,
+            "conflicts_detected": 6,
             "conflict_strength_summary": {
-              "total_conflicts": 5,
-              "avg_conflict_strength": 0.1720575787341286,
+              "total_conflicts": 6,
+              "avg_conflict_strength": 0.1791988715857452,
               "by_type": {
-                "framework": 5
+                "framework": 6
               },
               "type_avg_strength": {
-                "framework": 0.1720575787341286
+                "framework": 0.1791988715857452
               },
               "top_conflicts": [
                 {
                   "agent_a": "Philosophy",
                   "agent_b": "Empathy",
                   "type": "framework",
-                  "strength": 0.18225268054443586,
+                  "strength": 0.19122187578608282,
                   "claim_a_excerpt": "Examining the ontological status of 'Should AI systems be required to explain their decisions",
-                  "claim_b_excerpt": "Mapping the emotional landscape of 'Should AI systems be required to explain their decisions"
+                  "claim_b_excerpt": "If 'Should AI systems be required to explain their decisions"
                 },
                 {
                   "agent_a": "Philosophy",
                   "agent_b": "Empathy",
                   "type": "framework",
-                  "strength": 0.17417602533774917,
-                  "claim_a_excerpt": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
-                  "claim_b_excerpt": "Mapping the emotional landscape of 'Should AI systems be required to explain their decisions"
-                },
-                {
-                  "agent_a": "Philosophy",
-                  "agent_b": "Empathy",
-                  "type": "framework",
-                  "strength": 0.17401713154511345,
+                  "strength": 0.18180084499947263,
                   "claim_a_excerpt": "Examining the ontological status of 'Should AI systems be required to explain their decisions",
-                  "claim_b_excerpt": "For those directly involved, 'Should AI systems be required to explain their decisions"
+                  "claim_b_excerpt": "Assessing the psychological safety implications of 'Should AI systems be required to explain their d"
                 },
                 {
                   "agent_a": "Philosophy",
                   "agent_b": "Empathy",
                   "type": "framework",
-                  "strength": 0.16710363871321685,
+                  "strength": 0.18034328334458805,
                   "claim_a_excerpt": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
-                  "claim_b_excerpt": "For those directly involved, 'Should AI systems be required to explain their decisions"
+                  "claim_b_excerpt": "If 'Should AI systems be required to explain their decisions"
                 },
                 {
                   "agent_a": "Philosophy",
                   "agent_b": "Empathy",
                   "type": "framework",
-                  "strength": 0.16273841753012777,
+                  "strength": 0.17708717837273436,
+                  "claim_a_excerpt": "Examining the ontological status of 'Should AI systems be required to explain their decisions",
+                  "claim_b_excerpt": "The intellectual quality of engagement with 'Should AI systems be required to explain their decision"
+                },
+                {
+                  "agent_a": "Philosophy",
+                  "agent_b": "Empathy",
+                  "type": "framework",
+                  "strength": 0.17540811308490906,
                   "claim_a_excerpt": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
-                  "claim_b_excerpt": "Dismissing emotional responses as irrelevant is itself an emotional decision (the emotion of wanting"
+                  "claim_b_excerpt": "Assessing the psychological safety implications of 'Should AI systems be required to explain their d"
                 }
               ]
             },
@@ -1980,61 +3131,73 @@
                 "agent_a": "Philosophy",
                 "agent_b": "Empathy",
                 "claim_a": "Examining the ontological status of 'Should AI systems be required to explain their decisions",
-                "claim_b": "Mapping the emotional landscape of 'Should AI systems be required to explain their decisions",
+                "claim_b": "If 'Should AI systems be required to explain their decisions",
                 "conflict_type": "framework",
-                "conflict_strength": 0.18225268054443586,
-                "confidence_a": 0.6325,
-                "confidence_b": 0.625,
-                "semantic_overlap": 0.5714285714285714,
-                "opposition_score": 0.4610344488080591
-              },
-              {
-                "agent_a": "Philosophy",
-                "agent_b": "Empathy",
-                "claim_a": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
-                "claim_b": "Mapping the emotional landscape of 'Should AI systems be required to explain their decisions",
-                "conflict_type": "framework",
-                "conflict_strength": 0.17417602533774917,
-                "confidence_a": 0.604,
-                "confidence_b": 0.625,
-                "semantic_overlap": 0.5,
-                "opposition_score": 0.46139344460330906
+                "conflict_strength": 0.19122187578608282,
+                "confidence_a": 0.625,
+                "confidence_b": 0.6599999999999999,
+                "semantic_overlap": 0.6666666666666666,
+                "opposition_score": 0.4635681837238372
               },
               {
                 "agent_a": "Philosophy",
                 "agent_b": "Empathy",
                 "claim_a": "Examining the ontological status of 'Should AI systems be required to explain their decisions",
-                "claim_b": "For those directly involved, 'Should AI systems be required to explain their decisions",
+                "claim_b": "Assessing the psychological safety implications of 'Should AI systems be required to explain their decisions",
                 "conflict_type": "framework",
-                "conflict_strength": 0.17401713154511345,
-                "confidence_a": 0.6325,
-                "confidence_b": 0.6042307692307691,
+                "conflict_strength": 0.18180084499947263,
+                "confidence_a": 0.625,
+                "confidence_b": 0.629,
+                "semantic_overlap": 0.5333333333333333,
+                "opposition_score": 0.4624504801258445
+              },
+              {
+                "agent_a": "Philosophy",
+                "agent_b": "Empathy",
+                "claim_a": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
+                "claim_b": "If 'Should AI systems be required to explain their decisions",
+                "conflict_type": "framework",
+                "conflict_strength": 0.18034328334458805,
+                "confidence_a": 0.597,
+                "confidence_b": 0.6599999999999999,
                 "semantic_overlap": 0.5714285714285714,
-                "opposition_score": 0.4553324883244932
+                "opposition_score": 0.4577008358575404
+              },
+              {
+                "agent_a": "Philosophy",
+                "agent_b": "Empathy",
+                "claim_a": "Examining the ontological status of 'Should AI systems be required to explain their decisions",
+                "claim_b": "The intellectual quality of engagement with 'Should AI systems be required to explain their decisions",
+                "conflict_type": "framework",
+                "conflict_strength": 0.17708717837273436,
+                "confidence_a": 0.625,
+                "confidence_b": 0.615,
+                "semantic_overlap": 0.5714285714285714,
+                "opposition_score": 0.4607146104006097
               },
               {
                 "agent_a": "Philosophy",
                 "agent_b": "Empathy",
                 "claim_a": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
-                "claim_b": "For those directly involved, 'Should AI systems be required to explain their decisions",
+                "claim_b": "Assessing the psychological safety implications of 'Should AI systems be required to explain their decisions",
                 "conflict_type": "framework",
-                "conflict_strength": 0.16710363871321685,
-                "confidence_a": 0.604,
-                "confidence_b": 0.6042307692307691,
+                "conflict_strength": 0.17540811308490906,
+                "confidence_a": 0.597,
+                "confidence_b": 0.629,
+                "semantic_overlap": 0.47058823529411764,
+                "opposition_score": 0.4671159536018968
+              },
+              {
+                "agent_a": "Philosophy",
+                "agent_b": "Empathy",
+                "claim_a": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
+                "claim_b": "The intellectual quality of engagement with 'Should AI systems be required to explain their decisions",
+                "conflict_type": "framework",
+                "conflict_strength": 0.16933193392668427,
+                "confidence_a": 0.597,
+                "confidence_b": 0.615,
                 "semantic_overlap": 0.5,
-                "opposition_score": 0.45787415601313114
-              },
-              {
-                "agent_a": "Philosophy",
-                "agent_b": "Empathy",
-                "claim_a": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
-                "claim_b": "Dismissing emotional responses as irrelevant is itself an emotional decision (the emotion of wanting to appear rational) and discards valuable signal about how 'Should AI systems be required to explain their decisions",
-                "conflict_type": "framework",
-                "conflict_strength": 0.16273841753012777,
-                "confidence_a": 0.604,
-                "confidence_b": 0.5934375000000001,
-                "semantic_overlap": 0.3103448275862069,
-                "opposition_score": 0.4540233236178756
+                "opposition_score": 0.4612001305352897
               }
             ],
             "preflight_prediction": {
@@ -2046,179 +3209,380 @@
                 "lam": 1.0
               },
               "predicted_pairs_count": 0,
-              "conflict_profiles": {},
+              "conflict_profiles": {
+                "psi_conflicts": 0,
+                "tau_conflicts": 0,
+                "chi_conflicts": 0,
+                "phi_conflicts": 0,
+                "lam_conflicts": 0
+              },
               "recommendations": {
                 "boost": [],
                 "suppress": [],
-                "reason": "no_prediction"
+                "reason": null
               },
-              "preflight_confidence": 0.0
+              "preflight_confidence": 0.3
             }
           },
           {
             "round": 1,
-            "type": "emergency_stop",
-            "reason": "gamma < 0.5 threshold",
-            "gamma_score": 0.375
+            "type": "debate",
+            "debates": [
+              {
+                "pair": "Empathy_vs_Philosophy",
+                "challenge": "Integrating emotional intelligence into 'Another perspective on 'Should AI systems be required to explain their decisions?' argues:\n\nExamining the ontological status of 'Should AI systems be required ",
+                "counter": "Examining the ontological status of 'A emotional_and_human_centered perspective responded to your analysis of 'Should AI systems be required to explain their decisions?':\n\nIntegrating emotional intell"
+              }
+            ],
+            "conflicts_detected": 10,
+            "conflict_evolution": [
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20700090248568642,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20700090248568642,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20700090248568642,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20700090248568642,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20700090248568642,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20700090248568642,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              }
+            ],
+            "resolution_metrics": {
+              "conflicts_before": 6,
+              "conflicts_after": 10,
+              "resolution_rate": -0.6666666666666666
+            },
+            "gamma_health": {
+              "gamma": 0.375,
+              "status": "collapsing",
+              "conflict_strength": 0.5,
+              "perspective_diversity": 1.0,
+              "weight_variance": 0.5,
+              "intervention": {
+                "type": "InterventionType.DIVERSITY_INJECTION",
+                "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+                "adapter": "newton",
+                "result": "Injected newton perspective"
+              }
+            }
+          },
+          {
+            "round": 2,
+            "type": "debate",
+            "debates": [
+              {
+                "pair": "Philosophy_vs_Empathy",
+                "challenge": "Examining the ontological status of 'Another perspective on 'Should AI systems be required to explain their decisions?' argues:\n\nIntegrating emotional intelligence into 'Another perspective on 'Should",
+                "counter": "Integrating emotional intelligence into 'A conceptual_meaning_and_foundations perspective responded to your analysis of 'Should AI systems be required to explain their decisions?':\n\nExamining the onto"
+              }
+            ],
+            "conflicts_detected": 10,
+            "conflict_evolution": [
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20928586370229307,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20928586370229307,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20928586370229307,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20928586370229307,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20928586370229307,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_newton",
+                "initial_strength": 0.19908364239165588,
+                "current_strength": 0.0,
+                "resolution_type": "resolved",
+                "resolution_rate": 1.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20928586370229307,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20928586370229307,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20928586370229307,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              },
+              {
+                "agents": "Philosophy_vs_Empathy",
+                "initial_strength": 0.19122187578608282,
+                "current_strength": 0.20928586370229307,
+                "resolution_type": "stalled",
+                "resolution_rate": 0.0
+              }
+            ],
+            "resolution_metrics": {
+              "conflicts_before": 10,
+              "conflicts_after": 10,
+              "resolution_rate": 0.0
+            },
+            "gamma_health": {
+              "gamma": 0.375,
+              "status": "collapsing",
+              "conflict_strength": 0.5,
+              "perspective_diversity": 1.0,
+              "weight_variance": 0.5,
+              "intervention": {
+                "type": "InterventionType.DIVERSITY_INJECTION",
+                "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+                "adapter": "newton",
+                "result": null
+              }
+            }
           }
         ],
         "tension_decay": {
           "per_round_tension": [
-            0.7336
+            0.7536,
+            0.6126,
+            0.5778
           ],
-          "decay_rate": 0.0,
-          "is_converging": false
+          "decay_rate": 0.2333,
+          "is_converging": true
         },
-        "epistemic_tension": 0.6204,
-        "ensemble_coherence": 0.6657,
+        "epistemic_tension": 0.5778,
+        "ensemble_coherence": 0.6734,
         "tension_productivity": {
-          "tension_magnitude": 0.6204,
-          "ensemble_coherence": 0.6657,
-          "synthesis_coverage": 0.6601,
+          "tension_magnitude": 0.5778,
+          "ensemble_coherence": 0.6734,
+          "synthesis_coverage": 0.6814,
           "coherence_gain": 0.0,
-          "productivity": 0.4095
+          "productivity": 0.3937
         },
         "forge_mode": "debate",
-        "conflicts_round_0_count": 5,
+        "conflicts_round_0_count": 6,
         "conflicts_detected": [
           {
             "agent_a": "Philosophy",
             "agent_b": "Empathy",
             "claim_a": "Examining the ontological status of 'Should AI systems be required to explain their decisions",
-            "claim_b": "Mapping the emotional landscape of 'Should AI systems be required to explain their decisions",
+            "claim_b": "If 'Should AI systems be required to explain their decisions",
             "conflict_type": "framework",
-            "conflict_strength": 0.18225268054443586,
-            "confidence_a": 0.6325,
-            "confidence_b": 0.625,
-            "semantic_overlap": 0.5714285714285714,
-            "opposition_score": 0.4610344488080591
-          },
-          {
-            "agent_a": "Philosophy",
-            "agent_b": "Empathy",
-            "claim_a": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
-            "claim_b": "Mapping the emotional landscape of 'Should AI systems be required to explain their decisions",
-            "conflict_type": "framework",
-            "conflict_strength": 0.17417602533774917,
-            "confidence_a": 0.604,
-            "confidence_b": 0.625,
-            "semantic_overlap": 0.5,
-            "opposition_score": 0.46139344460330906
+            "conflict_strength": 0.19122187578608282,
+            "confidence_a": 0.625,
+            "confidence_b": 0.6599999999999999,
+            "semantic_overlap": 0.6666666666666666,
+            "opposition_score": 0.4635681837238372
           },
           {
             "agent_a": "Philosophy",
             "agent_b": "Empathy",
             "claim_a": "Examining the ontological status of 'Should AI systems be required to explain their decisions",
-            "claim_b": "For those directly involved, 'Should AI systems be required to explain their decisions",
+            "claim_b": "Assessing the psychological safety implications of 'Should AI systems be required to explain their decisions",
             "conflict_type": "framework",
-            "conflict_strength": 0.17401713154511345,
-            "confidence_a": 0.6325,
-            "confidence_b": 0.6042307692307691,
+            "conflict_strength": 0.18180084499947263,
+            "confidence_a": 0.625,
+            "confidence_b": 0.629,
+            "semantic_overlap": 0.5333333333333333,
+            "opposition_score": 0.4624504801258445
+          },
+          {
+            "agent_a": "Philosophy",
+            "agent_b": "Empathy",
+            "claim_a": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
+            "claim_b": "If 'Should AI systems be required to explain their decisions",
+            "conflict_type": "framework",
+            "conflict_strength": 0.18034328334458805,
+            "confidence_a": 0.597,
+            "confidence_b": 0.6599999999999999,
             "semantic_overlap": 0.5714285714285714,
-            "opposition_score": 0.4553324883244932
+            "opposition_score": 0.4577008358575404
+          },
+          {
+            "agent_a": "Philosophy",
+            "agent_b": "Empathy",
+            "claim_a": "Examining the ontological status of 'Should AI systems be required to explain their decisions",
+            "claim_b": "The intellectual quality of engagement with 'Should AI systems be required to explain their decisions",
+            "conflict_type": "framework",
+            "conflict_strength": 0.17708717837273436,
+            "confidence_a": 0.625,
+            "confidence_b": 0.615,
+            "semantic_overlap": 0.5714285714285714,
+            "opposition_score": 0.4607146104006097
           },
           {
             "agent_a": "Philosophy",
             "agent_b": "Empathy",
             "claim_a": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
-            "claim_b": "For those directly involved, 'Should AI systems be required to explain their decisions",
+            "claim_b": "Assessing the psychological safety implications of 'Should AI systems be required to explain their decisions",
             "conflict_type": "framework",
-            "conflict_strength": 0.16710363871321685,
-            "confidence_a": 0.604,
-            "confidence_b": 0.6042307692307691,
-            "semantic_overlap": 0.5,
-            "opposition_score": 0.45787415601313114
-          },
-          {
-            "agent_a": "Philosophy",
-            "agent_b": "Empathy",
-            "claim_a": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
-            "claim_b": "Dismissing emotional responses as irrelevant is itself an emotional decision (the emotion of wanting to appear rational) and discards valuable signal about how 'Should AI systems be required to explain their decisions",
-            "conflict_type": "framework",
-            "conflict_strength": 0.16273841753012777,
-            "confidence_a": 0.604,
-            "confidence_b": 0.5934375000000001,
-            "semantic_overlap": 0.3103448275862069,
-            "opposition_score": 0.4540233236178756
+            "conflict_strength": 0.17540811308490906,
+            "confidence_a": 0.597,
+            "confidence_b": 0.629,
+            "semantic_overlap": 0.47058823529411764,
+            "opposition_score": 0.4671159536018968
           }
         ],
         "conflict_summary": {
-          "total_conflicts": 5,
-          "avg_conflict_strength": 0.1720575787341286,
+          "total_conflicts": 6,
+          "avg_conflict_strength": 0.1791988715857452,
           "by_type": {
-            "framework": 5
+            "framework": 6
           },
           "type_avg_strength": {
-            "framework": 0.1720575787341286
+            "framework": 0.1791988715857452
           },
           "top_conflicts": [
             {
               "agent_a": "Philosophy",
               "agent_b": "Empathy",
               "type": "framework",
-              "strength": 0.18225268054443586,
+              "strength": 0.19122187578608282,
               "claim_a_excerpt": "Examining the ontological status of 'Should AI systems be required to explain their decisions",
-              "claim_b_excerpt": "Mapping the emotional landscape of 'Should AI systems be required to explain their decisions"
+              "claim_b_excerpt": "If 'Should AI systems be required to explain their decisions"
             },
             {
               "agent_a": "Philosophy",
               "agent_b": "Empathy",
               "type": "framework",
-              "strength": 0.17417602533774917,
-              "claim_a_excerpt": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
-              "claim_b_excerpt": "Mapping the emotional landscape of 'Should AI systems be required to explain their decisions"
-            },
-            {
-              "agent_a": "Philosophy",
-              "agent_b": "Empathy",
-              "type": "framework",
-              "strength": 0.17401713154511345,
+              "strength": 0.18180084499947263,
               "claim_a_excerpt": "Examining the ontological status of 'Should AI systems be required to explain their decisions",
-              "claim_b_excerpt": "For those directly involved, 'Should AI systems be required to explain their decisions"
+              "claim_b_excerpt": "Assessing the psychological safety implications of 'Should AI systems be required to explain their d"
             },
             {
               "agent_a": "Philosophy",
               "agent_b": "Empathy",
               "type": "framework",
-              "strength": 0.16710363871321685,
+              "strength": 0.18034328334458805,
               "claim_a_excerpt": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
-              "claim_b_excerpt": "For those directly involved, 'Should AI systems be required to explain their decisions"
+              "claim_b_excerpt": "If 'Should AI systems be required to explain their decisions"
             },
             {
               "agent_a": "Philosophy",
               "agent_b": "Empathy",
               "type": "framework",
-              "strength": 0.16273841753012777,
+              "strength": 0.17708717837273436,
+              "claim_a_excerpt": "Examining the ontological status of 'Should AI systems be required to explain their decisions",
+              "claim_b_excerpt": "The intellectual quality of engagement with 'Should AI systems be required to explain their decision"
+            },
+            {
+              "agent_a": "Philosophy",
+              "agent_b": "Empathy",
+              "type": "framework",
+              "strength": 0.17540811308490906,
               "claim_a_excerpt": "The ontological commitment we make about 'Should AI systems be required to explain their decisions",
-              "claim_b_excerpt": "Dismissing emotional responses as irrelevant is itself an emotional decision (the emotion of wanting"
+              "claim_b_excerpt": "Assessing the psychological safety implications of 'Should AI systems be required to explain their d"
             }
           ]
         },
         "phase_3_metrics": {
-          "total_tracked": 1,
+          "total_tracked": 2,
           "resolved": 1,
           "hard_victory": 0,
           "soft_consensus": 0,
-          "stalled": 0,
+          "stalled": 1,
           "worsened": 0,
-          "avg_resolution_rate": 1.0,
+          "avg_resolution_rate": 0.5,
           "by_type": {
             "resolved": 1,
             "hard_victory": 0,
             "soft_consensus": 0,
-            "stalled": 0,
+            "stalled": 1,
             "worsened": 0
           }
         },
         "evolution_data": [
           {
             "agents": "Philosophy_vs_Empathy",
-            "resolved_in_round": 1,
+            "resolved_in_round": -1,
+            "resolution_rate": 0.0,
+            "resolution_type": "stalled",
+            "trajectory": [
+              {
+                "strength": 0.19122187578608282,
+                "addressing_score": 0.0,
+                "softening_score": 0.0
+              },
+              {
+                "strength": 0.20700090248568642,
+                "addressing_score": 1.0,
+                "softening_score": 1.0
+              },
+              {
+                "strength": 0.20928586370229307,
+                "addressing_score": 1.0,
+                "softening_score": 1.0
+              }
+            ]
+          },
+          {
+            "agents": "Philosophy_vs_newton",
+            "resolved_in_round": 2,
             "resolution_rate": 1.0,
             "resolution_type": "resolved",
             "trajectory": [
               {
-                "strength": 0.18225268054443586,
+                "strength": 0.19908364239165588,
                 "addressing_score": 0.0,
                 "softening_score": 0.0
               },
@@ -2236,7 +3600,7 @@
         "gamma_metrics": {
           "health_history": [
             {
-              "timestamp": 1773977898.2193768,
+              "timestamp": 1773978753.9644673,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
@@ -2244,7 +3608,15 @@
               "weight_variance": 0.5
             },
             {
-              "timestamp": 1773977898.3279154,
+              "timestamp": 1773978754.8547988,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.0017862636287000713,
+              "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978754.919721,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
@@ -2252,7 +3624,7 @@
               "weight_variance": 0.5
             },
             {
-              "timestamp": 1773977898.4542787,
+              "timestamp": 1773978755.5066674,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
@@ -2260,7 +3632,7 @@
               "weight_variance": 0.5
             },
             {
-              "timestamp": 1773977898.6458035,
+              "timestamp": 1773978755.5549133,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
@@ -2268,17 +3640,49 @@
               "weight_variance": 0.5
             },
             {
-              "timestamp": 1773977898.8668382,
+              "timestamp": 1773978755.778562,
               "gamma": 0.375,
               "conflict": 0.5,
               "diversity": 1.0,
-              "resolution": 1.0,
+              "resolution": 0.0009876543209876231,
+              "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978755.8214705,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.0,
+              "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978757.139675,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.0,
+              "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978757.2215085,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.0,
+              "weight_variance": 0.5
+            },
+            {
+              "timestamp": 1773978757.5097818,
+              "gamma": 0.375,
+              "conflict": 0.5,
+              "diversity": 1.0,
+              "resolution": 0.1,
               "weight_variance": 0.5
             }
           ],
           "interventions": [
             {
-              "timestamp": 1773977898.2193768,
+              "timestamp": 1773978753.9644673,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
@@ -2286,7 +3690,15 @@
               "result": "Injected newton perspective"
             },
             {
-              "timestamp": 1773977898.3279154,
+              "timestamp": 1773978754.8547988,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
+            },
+            {
+              "timestamp": 1773978754.919721,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
@@ -2294,7 +3706,15 @@
               "result": "Injected newton perspective"
             },
             {
-              "timestamp": 1773977898.4542787,
+              "timestamp": 1773978755.5066674,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
+            },
+            {
+              "timestamp": 1773978755.5549133,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
@@ -2302,7 +3722,15 @@
               "result": "Injected newton perspective"
             },
             {
-              "timestamp": 1773977898.6458035,
+              "timestamp": 1773978755.778562,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
+            },
+            {
+              "timestamp": 1773978755.8214705,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
@@ -2310,12 +3738,28 @@
               "result": "Injected newton perspective"
             },
             {
-              "timestamp": 1773977898.8668382,
+              "timestamp": 1773978757.139675,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
+            },
+            {
+              "timestamp": 1773978757.2215085,
               "type": "diversity_injection",
               "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
               "gamma_before": 0.375,
               "recommended": "newton",
               "result": "Injected newton perspective"
+            },
+            {
+              "timestamp": 1773978757.5097818,
+              "type": "diversity_injection",
+              "reason": "System instability detected (\u03b3=0.38 < 0.4). Diversity=100.0%, Weight variance=50.0%. Injecting diverse perspective to break monoculture.",
+              "gamma_before": 0.375,
+              "recommended": "newton",
+              "result": null
             }
           ],
           "summary": {
@@ -2324,15 +3768,15 @@
             "gamma_trend": "degrading",
             "avg_tension": 0.5,
             "avg_diversity": 1.0,
-            "interventions_total": 5,
-            "interventions_recent": 5,
+            "interventions_total": 10,
+            "interventions_recent": 10,
             "status": "collapsing"
           }
         },
         "phase_6_active": true,
         "semantic_tension_engine_ready": true,
         "specialization_metrics": {
-          "timestamp": "2026-03-19T22:38:18.939864",
+          "timestamp": "2026-03-19T22:52:37.521810",
           "global_specialization": {
             "Newton": {
               "general": 0.125,
@@ -2366,7 +3810,7 @@
             }
           },
           "system_health": {
-            "timestamp": "2026-03-19T22:38:18.940865",
+            "timestamp": "2026-03-19T22:52:37.521810",
             "total_adapters": 6,
             "health_by_adapter": {
               "Newton": {
@@ -2471,13 +3915,19 @@
             "lam": 1.0
           },
           "predicted_pairs_count": 0,
-          "conflict_profiles": {},
+          "conflict_profiles": {
+            "psi_conflicts": 0,
+            "tau_conflicts": 0,
+            "chi_conflicts": 0,
+            "phi_conflicts": 0,
+            "lam_conflicts": 0
+          },
           "recommendations": {
             "boost": [],
             "suppress": [],
-            "reason": "no_prediction"
+            "reason": null
           },
-          "preflight_confidence": 0.0
+          "preflight_confidence": 0.3
         }
       }
     }
@@ -2485,7 +3935,7 @@
   "phase_6_no_preflight": [
     {
       "condition": "phase_6_no_preflight",
-      "question_id": 8095,
+      "question_id": 6580,
       "query": "What is the speed of light in vacuum?",
       "synthesis": "[phase 6 no preflight placeholder]",
       "correctness_score": 0.65,
@@ -2499,7 +3949,7 @@
     },
     {
       "condition": "phase_6_no_preflight",
-      "question_id": 8700,
+      "question_id": 9127,
       "query": "Explain why the sky appears blue during the day",
       "synthesis": "[phase 6 no preflight placeholder]",
       "correctness_score": 0.65,
@@ -2513,7 +3963,7 @@
     },
     {
       "condition": "phase_6_no_preflight",
-      "question_id": 5319,
+      "question_id": 5645,
       "query": "What is the relationship between entropy and time's arrow?",
       "synthesis": "[phase 6 no preflight placeholder]",
       "correctness_score": 0.65,
@@ -2527,7 +3977,7 @@
     },
     {
       "condition": "phase_6_no_preflight",
-      "question_id": 443,
+      "question_id": 959,
       "query": "Is it ethical to lie to save someone's life?",
       "synthesis": "[phase 6 no preflight placeholder]",
       "correctness_score": 0.65,
@@ -2541,7 +3991,7 @@
     },
     {
       "condition": "phase_6_no_preflight",
-      "question_id": 7774,
+      "question_id": 3117,
       "query": "Should AI systems be required to explain their decisions?",
       "synthesis": "[phase 6 no preflight placeholder]",
       "correctness_score": 0.65,

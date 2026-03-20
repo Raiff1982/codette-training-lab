@@ -37,6 +37,7 @@ from reasoning_forge.token_confidence import TokenConfidenceEngine
 from reasoning_forge.conflict_engine import ConflictEngine, ConflictTracker
 from reasoning_forge.memory_weighting import MemoryWeighting
 from reasoning_forge.coherence_field import CoherenceFieldGamma
+from reasoning_forge.quantum_spiderweb import QuantumSpiderweb
 
 
 SYSTEM_PROMPT = (
@@ -78,6 +79,7 @@ class ForgeEngine:
         self.synthesis = SynthesisEngine()
         self.problem_generator = ProblemGenerator()
         self.epistemic = EpistemicMetrics()
+        self.spiderweb = QuantumSpiderweb()  # Initialize Spiderweb for preflight prediction
 
         # Store living_memory for Phase 2
         self.living_memory = living_memory
@@ -126,9 +128,8 @@ class ForgeEngine:
         # Predict conflicts before debate using Spiderweb injection
         try:
             from reasoning_forge.preflight_predictor import PreFlightConflictPredictor
-            spiderweb = getattr(self, 'spiderweb', None)
             self.preflight_predictor = PreFlightConflictPredictor(
-                spiderweb=spiderweb,
+                spiderweb=self.spiderweb,
                 memory_weighting=self.memory_weighting,
                 semantic_engine=self.semantic_tension_engine
             )
