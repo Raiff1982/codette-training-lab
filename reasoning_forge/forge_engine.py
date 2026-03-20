@@ -38,6 +38,7 @@ from reasoning_forge.conflict_engine import ConflictEngine, ConflictTracker
 from reasoning_forge.memory_weighting import MemoryWeighting
 from reasoning_forge.coherence_field import CoherenceFieldGamma
 from reasoning_forge.quantum_spiderweb import QuantumSpiderweb
+from reasoning_forge.query_classifier import QueryClassifier, QueryComplexity
 
 
 SYSTEM_PROMPT = (
@@ -430,7 +431,11 @@ class ForgeEngine:
         for agent in active_agents:
             analyses[agent.name] = agent.analyze(concept)
 
-        round_analyses = [dict(analyses)]  # snapshot for tension tracking
+            # Verbose: show each agent's contribution
+            import os
+            if os.environ.get('CODETTE_VERBOSE', '0') == '1':
+                response_preview = analyses[agent.name][:200].replace('\n', ' ')
+                logger.info(f"  [R0] {agent.name:12} → {len(analyses[agent.name])} chars. Preview: {response_preview}...")
         debate_log = []
 
         # === Phase 3/4: Initialize conflict tracker ===

@@ -61,6 +61,10 @@ def run_evaluation_sprint(
         print(f"  - specialization tracker: {'READY' if forge.specialization else 'MISSING'}")
         print(f"  - preflight_predictor: {'READY' if forge.preflight_predictor else 'MISSING'}")
 
+        # Check GPU status from orchestrator
+        if forge.newton.orchestrator:
+            print(f"  - GPU acceleration: ✓ ENABLED ({forge.newton.orchestrator.n_gpu_layers} layers)")
+
     except Exception as e:
         print(f"  ERROR: {e}")
         return False

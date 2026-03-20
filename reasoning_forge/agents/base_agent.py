@@ -69,6 +69,14 @@ class ReasoningAgent(ABC):
         template = self.select_template(concept)
         system_prompt = template.replace("{concept}", concept)
 
+        # Log debug info if verbose
+        import os
+        verbose = os.environ.get('CODETTE_VERBOSE', '0') == '1'
+        if verbose:
+            logger.info(f"\n[{self.name}] Analyzing '{concept[:50]}...'")
+            logger.info(f"  Adapter: {self.adapter_name}")
+            logger.info(f"  System prompt: {system_prompt[:100]}...")
+
         # Generate using the LLM with this agent's adapter
         response, tokens, _ = self.orchestrator.generate(
             query=concept,
@@ -76,6 +84,10 @@ class ReasoningAgent(ABC):
             system_prompt=system_prompt,
             enable_tools=False
         )
+
+        if verbose:
+            logger.info(f"  Generated: {len(response)} chars, {tokens} tokens")
+            logger.info(f"  Response preview: {response[:150]}...")
 
         return response.strip()
 

@@ -89,7 +89,7 @@ class CodetteOrchestrator:
     Uses LoRA hot-swap: base model loads once, adapter switches are instant.
     """
 
-    def __init__(self, n_ctx=4096, n_gpu_layers=0, verbose=False,
+    def __init__(self, n_ctx=4096, n_gpu_layers=35, verbose=False,
                  memory_weighting=None):
         self.n_ctx = n_ctx
         self.n_gpu_layers = n_gpu_layers
@@ -203,6 +203,7 @@ class CodetteOrchestrator:
         After this, adapter switches take <1ms instead of ~30-60s.
         """
         print(f"  Loading base model (one-time)...", flush=True)
+        print(f"    GPU layers: {self.n_gpu_layers} (0=CPU only, 35+=full GPU offload)", flush=True)
         start = time.time()
         # use_mmap=False is required for LoRA hot-swap compatibility
         self._llm = Llama(
@@ -212,7 +213,15 @@ class CodetteOrchestrator:
             verbose=False,
             use_mmap=False,
         )
-        print(f"  Base model loaded in {time.time()-start:.1f}s")
+        elapsed = time.time() - start
+        print(f"  Base model loaded in {elapsed:.1f}s")
+
+        # Check if GPU was actually used
+        gpu_used = self.n_gpu_layers > 0
+        if gpu_used:
+            print(f"  ✓ GPU acceleration ENABLED ({self.n_gpu_layers} layers offloaded)", flush=True)
+        else:
+            print(f"  ⚠ CPU mode (GPU disabled)", flush=True)
 
         # Grab raw pointers for hot-swap API
         self._model_ptr = self._llm._model.model

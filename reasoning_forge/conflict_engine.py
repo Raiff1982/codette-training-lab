@@ -98,6 +98,8 @@ class ConflictEngine:
         contradiction_threshold: float = 0.7,
         overlap_threshold: float = 0.3,
         semantic_tension_engine: Optional[object] = None,
+        max_conflicts_per_pair: int = 2,  # Cap generation at source
+        max_total_conflicts: int = 12,    # Total budget (was 10 after capping from 71)
     ):
         """
         Initialize conflict detection engine.
@@ -107,11 +109,15 @@ class ConflictEngine:
             contradiction_threshold: Semantic overlap needed to consider claims related
             overlap_threshold: Threshold for identifying same-claim conflicts
             semantic_tension_engine: (Phase 6) SemanticTensionEngine for embedding-based tension
+            max_conflicts_per_pair: Max conflicts to generate per agent pair (default: 2)
+            max_total_conflicts: Max total conflicts allowed (default: 12)
         """
         self.token_confidence = token_confidence_engine
         self.contradiction_threshold = contradiction_threshold
         self.overlap_threshold = overlap_threshold
         self.semantic_tension_engine = semantic_tension_engine  # Phase 6
+        self.max_conflicts_per_pair = max_conflicts_per_pair
+        self.max_total_conflicts = max_total_conflicts
 
         # Contradiction pattern pairs (negation patterns)
         self.negation_patterns = [
@@ -169,9 +175,16 @@ class ConflictEngine:
                     else self._extract_simple_claims(agent_analyses[agent_b])
                 )
 
+                # === FIX: Cap conflicts at source (per-pair) ===
+                pair_conflicts = []
+
                 # Check each claim pair
                 for claim_a in claims_a:
                     for claim_b in claims_b:
+                        # Stop early if we've already hit per-pair limit
+                        if len(pair_conflicts) >= self.max_conflicts_per_pair:
+                            break
+
                         # Compute semantic overlap
                         overlap = self._compute_semantic_overlap(claim_a.text, claim_b.text)
 
@@ -201,7 +214,14 @@ class ConflictEngine:
                                     semantic_overlap=overlap,
                                     opposition_score=opposition_score,
                                 )
-                                conflicts.append(conflict)
+                                pair_conflicts.append(conflict)
+
+                    # Stop outer loop too if limit reached
+                    if len(pair_conflicts) >= self.max_conflicts_per_pair:
+                        break
+
+                # Add this pair's conflicts to global list
+                conflicts.extend(pair_conflicts)
 
         # Sort by strength descending
         conflicts.sort(key=lambda c: c.conflict_strength, reverse=True)
@@ -217,12 +237,14 @@ class ConflictEngine:
         # Re-sort after adjustment
         conflicts.sort(key=lambda c: c.conflict_strength, reverse=True)
 
-        # === PATCH 2: Top-K Conflict Selection (Hard Cap) ===
-        # Prevent combinatorial explosion by limiting to top 10 high-value conflicts
-        max_conflicts = 10
-        if len(conflicts) > max_conflicts:
-            logger.info(f"Capping conflicts: {len(conflicts)} → {max_conflicts} (top by strength)")
-            conflicts = conflicts[:max_conflicts]
+        # === FIX: Use configurable max_total_conflicts (default 12, up from 10) ===
+        # Prevent combinatorial explosion by limiting to max total
+        if len(conflicts) > self.max_total_conflicts:
+            logger.info(
+                f"Capping conflicts: {len(conflicts)} → {self.max_total_conflicts} "
+                f"(per-pair cap: {self.max_conflicts_per_pair}, total budget: {self.max_total_conflicts})"
+            )
+            conflicts = conflicts[: self.max_total_conflicts]
 
         return conflicts
 
