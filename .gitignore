@@ -47,3 +47,7 @@ PLAN.md
 datasets/*.jsonl
 *.png
 *.jpg
+
+# Binary files requiring Git LFS or local storage
+data/codette_sessions.db
+research/experiments/Codette_Quantum_Harmonic_Framework.png
