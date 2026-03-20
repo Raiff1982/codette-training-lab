@@ -421,13 +421,31 @@ class ForgeEngine:
         """
         problems = self.problem_generator.generate_problems(concept)
 
-        # === PATCH 5: Agent Relevance Gating (Query-Specific Activation) ===
+        # === PATCH 5: Query Complexity Classification & Soft Agent Gating ===
+        # Instead of binary domain gating, use complexity-aware agent activation
+        classifier = QueryClassifier()
+        complexity = classifier.classify(concept)
         detected_domain = self._classify_query_domain(concept)
-        active_agents = self._get_agents_for_domain(detected_domain)
-        logger.info(f"Domain-gated activation: detected '{detected_domain}' → {len(active_agents)} agents active")
+
+        # Get soft-gated agent weights based on complexity and domain
+        agent_selection = classifier.select_agents(complexity, detected_domain)
+
+        # For SIMPLE queries, only use primary agent (direct answer mode)
+        if complexity == QueryComplexity.SIMPLE:
+            primary_agent_name = [name for name, weight in agent_selection.items() if weight == 1.0]
+            if primary_agent_name:
+                active_agents = [a for a in self.analysis_agents if a.name == primary_agent_name[0]]
+                logger.info(f"Query complexity: SIMPLE → using primary agent '{active_agents[0].name}' (direct answer mode)")
+            else:
+                active_agents = self._get_agents_for_domain(detected_domain)
+        else:
+            # For MEDIUM/COMPLEX, use weighted activation
+            active_agents = [a for a in self.analysis_agents if a.name in agent_selection and agent_selection[a.name] > 0]
+            logger.info(f"Query complexity: {complexity} → {len(active_agents)} agents active (domain: '{detected_domain}')")
 
         # Round 0: initial analyses
         analyses = {}
+        round_analyses = [{}]  # Initialize to track analyses per round
         for agent in active_agents:
             analyses[agent.name] = agent.analyze(concept)
 
@@ -437,6 +455,7 @@ class ForgeEngine:
                 response_preview = analyses[agent.name][:200].replace('\n', ' ')
                 logger.info(f"  [R0] {agent.name:12} → {len(analyses[agent.name])} chars. Preview: {response_preview}...")
         debate_log = []
+        round_analyses[0] = dict(analyses)  # Store Round 0 analyses
 
         # === Phase 3/4: Initialize conflict tracker ===
         if not hasattr(self, "conflict_tracker"):
@@ -472,6 +491,22 @@ class ForgeEngine:
             "conflict_strength_summary": conflicts_summary_r0,
             "conflicts": [c.to_dict() for c in conflicts_round_0] if conflicts_round_0 else [],
         })
+
+        # === PATCH 5: Confidence Override - Skip debate if agents are confident & low disagreement ===
+        # For SIMPLE queries with high confidence, skip to synthesis immediately
+        if complexity == QueryComplexity.SIMPLE:
+            max_conflict_strength = max([c.conflict_strength for c in conflicts_round_0], default=0.0)
+            if len(conflicts_round_0) < 2 and max_conflict_strength < 0.3:
+                logger.info(f"Confidence override: Query is SIMPLE with low disagreement ({max_conflict_strength:.2f}). Skipping debate.")
+                debate_log.append({
+                    "round": "synthesis",
+                    "type": "confidence_override",
+                    "reason": "High confidence, low disagreement",
+                    "conflicts_found": len(conflicts_round_0),
+                    "max_conflict_strength": max_conflict_strength,
+                })
+                # Jump directly to synthesis
+                debate_rounds = 0  # Skip debate loops
 
         # === Phase 6: Pre-Flight Conflict Prediction ===
         # Predict which adapter pairs will clash BEFORE debate starts
