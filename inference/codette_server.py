@@ -48,6 +48,10 @@ _orchestrator_lock = threading.Lock()
 _orchestrator_status = {"state": "idle", "message": "Not loaded"}
 _load_error = None
 
+# Phase 6 bridge (optional, wraps orchestrator)
+_forge_bridge = None
+_use_phase6 = True  # Enable Phase 6 by default
+
 # Current session
 _session: CodetteSession = None
 _session_store: SessionStore = None
@@ -59,7 +63,7 @@ _response_queues = {}  # request_id -> queue.Queue
 
 def _get_orchestrator():
     """Lazy-load the orchestrator (first call takes ~60s)."""
-    global _orchestrator, _orchestrator_status, _load_error
+    global _orchestrator, _orchestrator_status, _load_error, _forge_bridge
     if _orchestrator is not None:
         return _orchestrator
 
@@ -79,6 +83,18 @@ def _get_orchestrator():
                 "adapters": _orchestrator.available_adapters,
             }
             print(f"  Orchestrator ready: {_orchestrator.available_adapters}")
+
+            # Initialize Phase 6 bridge (wraps orchestrator with ForgeEngine)
+            if _use_phase6:
+                try:
+                    from codette_forge_bridge import CodetteForgeBridge
+                    _forge_bridge = CodetteForgeBridge(_orchestrator, use_phase6=True, verbose=True)
+                    print(f"  Phase 6 bridge initialized")
+                    _orchestrator_status["phase6"] = "enabled"
+                except Exception as e:
+                    print(f"  Phase 6 bridge failed (using lightweight routing): {e}")
+                    _orchestrator_status["phase6"] = "disabled"
+
             return _orchestrator
         except Exception as e:
             _load_error = str(e)
@@ -117,14 +133,16 @@ def _worker_thread():
             # Send "thinking" event
             response_q.put({"event": "thinking", "adapter": adapter or "auto"})
 
-            # Route and generate
-            force = adapter if adapter and adapter != "auto" else None
-            result = orch.route_and_generate(
-                query,
-                max_adapters=max_adapters,
-                strategy="keyword",
-                force_adapter=force,
-            )
+            # Route and generate — use Phase 6 bridge if available, else orchestrator
+            if _forge_bridge:
+                result = _forge_bridge.generate(query, adapter=adapter, max_adapters=max_adapters)
+            else:
+                result = orch.route_and_generate(
+                    query,
+                    max_adapters=max_adapters,
+                    strategy="keyword",
+                    force_adapter=adapter if adapter and adapter != "auto" else None,
+                )
 
             # Update session
             if _session:
