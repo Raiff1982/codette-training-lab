@@ -60,10 +60,20 @@ if gamma_value < 0.3:
 ```
 **Logs**: "Domain-gated activation: detected 'physics' → 2 agents active"
 
-### Patch 6: Pre-Flight Integration (Predictor Must Suppress) ⏳
-**Status**: Designed but not yet implementing
-**Issue**: `preflight_predictor.predict_conflicts()` returns 0 pairs
-**Next step**: Debug why predictor isn't integrating with Spiderweb
+### Patch 6: Pre-Flight Integration (Predictor Must Suppress) ✅ (Partial)
+**Status**: Integration FIXED, Prediction Logic Needs Tuning
+**Fix Applied**:
+- Added QuantumSpiderweb import to forge_engine.py
+- Initialize self.spiderweb = QuantumSpiderweb() in __init__
+- Pass self.spiderweb directly to PreFlightConflictPredictor
+**Result**: "Could not build spiderweb" warning eliminated ✓
+**Current Behavior**:
+- Spiderweb builds successfully
+- Query state encoding works (psi, tau, chi, phi, lam computed)
+- Propagation runs without errors
+- **Issue**: Tension threshold (> 1.0) is too high for initial agent states
+- **Predicted pairs**: 0 (expected; agents start neutral)
+**Next Phase**: Lower threshold or enhance state differentiation**Status**: Designed but not yet implementing
 
 ### Patch 7: Hard Output Guarantee (Fallback) ⏳
 **Status**: Designed but not yet implementing

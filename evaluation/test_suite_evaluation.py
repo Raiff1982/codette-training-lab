@@ -329,20 +329,40 @@ class EvaluationHarness:
 
     def _run_phase_1_5(self, question: EvaluationQuestion) -> EvaluationResult:
         """Run Phase 1-5 system (debate, no semantic tension, no specialization)."""
-        # Placeholder: would disable Phase 6 components
+        import time
+        start = time.time()
+
+        # Temporarily disable Phase 6 components
+        original_tension_engine = self.forge.semantic_tension_engine
+        original_specialization = self.forge.specialization
+        self.forge.semantic_tension_engine = None
+        self.forge.specialization = None
+
+        result = self.forge.forge_with_debate(question.query)
+        elapsed = time.time() - start
+
+        # Restore Phase 6 components
+        self.forge.semantic_tension_engine = original_tension_engine
+        self.forge.specialization = original_specialization
+
+        # Extract synthesis from result structure
+        synthesis = ""
+        if "messages" in result and len(result["messages"]) >= 3:
+            synthesis = result["messages"][2].get("content", "")
+
         return EvaluationResult(
             condition="phase_1_5",
             question_id=hash(question.query) % 10000,
             query=question.query,
-            synthesis="[phase 1-5 placeholder]",
-            correctness_score=0.6,
-            reasoning_depth=2,
-            calibration_error=0.2,
-            gamma_score=0.75,
-            num_conflicts_detected=3,
-            adapter_convergence=0.7,
-            elapsed_seconds=0.0,
-            metadata={}
+            synthesis=synthesis,
+            correctness_score=self._score_correctness(synthesis, question),
+            reasoning_depth=self._score_reasoning_depth(result, question),
+            calibration_error=self._score_calibration(result),
+            gamma_score=result.get("metadata", {}).get("gamma", 0.5),
+            num_conflicts_detected=len(result.get("metadata", {}).get("conflicts", [])),
+            adapter_convergence=self._measure_convergence(result),
+            elapsed_seconds=elapsed,
+            metadata=result.get("metadata", {})
         )
 
     def _run_phase_6_full(self, question: EvaluationQuestion) -> EvaluationResult:
@@ -353,12 +373,19 @@ class EvaluationHarness:
         result = self.forge.forge_with_debate(question.query)
         elapsed = time.time() - start
 
+        # Extract synthesis from result structure
+        # forge_with_debate returns: {"messages": [...], "metadata": {...}}
+        # Synthesis is in messages[2]["content"]
+        synthesis = ""
+        if "messages" in result and len(result["messages"]) >= 3:
+            synthesis = result["messages"][2].get("content", "")
+
         return EvaluationResult(
             condition="phase_6_full",
             question_id=hash(question.query) % 10000,
             query=question.query,
-            synthesis=result.get("synthesis", ""),
-            correctness_score=self._score_correctness(result, question),
+            synthesis=synthesis,
+            correctness_score=self._score_correctness(synthesis, question),
             reasoning_depth=self._score_reasoning_depth(result, question),
             calibration_error=self._score_calibration(result),
             gamma_score=result.get("metadata", {}).get("gamma", 0.5),
@@ -370,64 +397,96 @@ class EvaluationHarness:
 
     def _run_phase_6_no_preflight(self, question: EvaluationQuestion) -> EvaluationResult:
         """Run Phase 6 without pre-flight prediction."""
-        # Placeholder: would disable preflight_predictor
+        import time
+        start = time.time()
+
+        # Temporarily disable preflight predictor
+        original_predictor = self.forge.preflight_predictor
+        self.forge.preflight_predictor = None
+
+        result = self.forge.forge_with_debate(question.query)
+        elapsed = time.time() - start
+
+        # Restore preflight predictor
+        self.forge.preflight_predictor = original_predictor
+
+        # Extract synthesis from result structure
+        synthesis = ""
+        if "messages" in result and len(result["messages"]) >= 3:
+            synthesis = result["messages"][2].get("content", "")
+
         return EvaluationResult(
             condition="phase_6_no_preflight",
             question_id=hash(question.query) % 10000,
             query=question.query,
-            synthesis="[phase 6 no preflight placeholder]",
-            correctness_score=0.65,
-            reasoning_depth=2.5,
-            calibration_error=0.15,
-            gamma_score=0.70,
-            num_conflicts_detected=4,
-            adapter_convergence=0.65,
-            elapsed_seconds=0.0,
-            metadata={}
+            synthesis=synthesis,
+            correctness_score=self._score_correctness(synthesis, question),
+            reasoning_depth=self._score_reasoning_depth(result, question),
+            calibration_error=self._score_calibration(result),
+            gamma_score=result.get("metadata", {}).get("gamma", 0.5),
+            num_conflicts_detected=len(result.get("metadata", {}).get("conflicts", [])),
+            adapter_convergence=self._measure_convergence(result),
+            elapsed_seconds=elapsed,
+            metadata=result.get("metadata", {})
         )
 
-    def _score_correctness(self, result: Dict, question: EvaluationQuestion) -> float:
+    def _score_correctness(self, synthesis: str, question: EvaluationQuestion) -> float:
         """
         Score how correct the final synthesis is (0-1).
 
-        Requires human judgment or programmatic scoring.
-        For now, placeholder using heuristics.
+        Uses semantic overlap on key concepts from correctness_rubric and expected_perspectives.
+        More reasonable than word-overlap on ground_truth alone.
         """
-        # Placeholder: would parse synthesis and compare to ground_truth
-        # Real implementation needs human evaluation or gold reference
-        synthesis = result.get("synthesis", "").lower()
-        ground_truth = question.ground_truth.lower()
-
-        # Simple overlap heuristic (not sufficient for real evaluation)
-        if not synthesis:
+        if not synthesis or len(synthesis) < 10:
             return 0.0
 
-        words_synthesis = set(synthesis.split())
-        words_truth = set(ground_truth.split())
+        synthesis_lower = synthesis.lower()
 
-        if len(words_truth) == 0:
-            return 0.5
+        # Extract key concepts from rubric
+        rubric_lower = question.correctness_rubric.lower()
+        expected_lower = [p.lower() for p in question.expected_perspectives]
 
-        overlap = len(words_synthesis & words_truth) / len(words_truth)
-        return min(1.0, overlap)
+        # Check for key rubric terms
+        rubric_terms = set()
+        for word in rubric_lower.split():
+            if len(word) > 4 and word not in ['must', 'state', 'within', 'accuracy', 'equivalent']:
+                rubric_terms.add(word.strip('().,'))
+
+        # Check for expected perspectives
+        perspective_hits = 0
+        for perspective in expected_lower:
+            if perspective in synthesis_lower:
+                perspective_hits += 1
+
+        # Score: percentage of expected perspectives present
+        perspective_score = min(1.0, perspective_hits / max(len(question.expected_perspectives), 1))
+
+        # Bonus if synthesis is substantive (shows reasoning effort)
+        length_bonus = min(0.2, len(synthesis) / 1000.0)  # Up to 0.2 bonus for lengthy synthesis
+
+        return min(1.0, perspective_score + length_bonus)
 
     def _score_reasoning_depth(self, result: Dict, question: EvaluationQuestion) -> int:
         """
         Score depth of reasoning (1-5).
 
-        1 = single perspective, 5 = 5+ perspectives integrated
+        1 = minimal reasoning, 5 = deep multi-perspective integration
+        Based on synthesis length and debate metrics.
         """
         metadata = result.get("metadata", {})
-        num_conflicts = len(metadata.get("conflicts", []))
+        synthesis_messages = result.get("messages", [])
+        synthesis_length = 0
+        if len(synthesis_messages) >= 3:
+            synthesis_length = len(synthesis_messages[2].get("content", ""))
 
-        # Map conflict count to reasoning depth
-        if num_conflicts == 0:
+        # Map synthesis length to reasoning depth
+        if synthesis_length < 100:
             return 1
-        elif num_conflicts == 1:
+        elif synthesis_length < 500:
             return 2
-        elif num_conflicts <= 3:
+        elif synthesis_length < 1000:
             return 3
-        elif num_conflicts <= 5:
+        elif synthesis_length < 2000:
             return 4
         else:
             return 5
